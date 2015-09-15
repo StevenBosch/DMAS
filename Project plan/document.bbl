@@ -1,0 +1,14 @@
+\begin{thebibliography}{1}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Goh et~al.()Goh, Quek, Tan, and Abbass]{Goh}
+C.K. Goh, H.Y. Quek, K.C. Tan, and H.A. Abbass.
+\newblock Modeling civil violence: An evolutionary multi-agent, game-theoretic
+  approach.
+\newblock \emph{Evolutionary Computation}.
+
+\end{thebibliography}

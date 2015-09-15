@@ -1,0 +1,21 @@
+This is BibTeX, Version 0.99dThe top-level auxiliary file: document.aux
+The style file: plainnat.bst
+Database file #1: mybib.bib
+You're missing a field name---line 5 of file mybib.bib
+ :   
+ :   %volume = "",
+(Error may have been on previous line)
+I'm skipping whatever remains of this entry
+You're missing a field name---line 15 of file mybib.bib
+ :     
+ :     %number   = "",
+(Error may have been on previous line)
+I'm skipping whatever remains of this entry
+You're missing a field name---line 27 of file mybib.bib
+ :     
+ :     %volume   = "",
+(Error may have been on previous line)
+I'm skipping whatever remains of this entry
+Warning--empty year in Goh
+Warning--empty year in Goh
+(There were 3 error messages)
