@@ -5,6 +5,7 @@
  */
 package civilviolence;
 
+
 /**
  *
  * @author maikel
@@ -17,6 +18,16 @@ public class CivilViolence {
     public static void main(String[] args) {
         // TODO code application logic here
         System.out.println("Hello Violence");
+        Cell[] board = new Cell[2];
+        board[0] = new Cell();
+        board[0].nrBad = 10;
+        
+        System.out.println(board[0].nrBad);
+        
+        
+        
+        
+        
     }
     
 }
