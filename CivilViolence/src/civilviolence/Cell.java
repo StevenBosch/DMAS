@@ -5,15 +5,70 @@
  */
 package civilviolence;
 
+import java.util.Random;
+
 /**
  *
- * @author maikel
+ * @author maleco
  */
 public class Cell {
-    public int nrGood = 1;
-    public int nrBad = 1;
-    public int nrCivilians = 4;
+    /* The standard variables of each cell */
+    // The available peoples
+    private int nrBad;
+    private int nrNeutral;
     
-    public double percentageOfInterest;
+    // The available agents on this cell
+    public Agent[] availableAgents;
+
+    // The general consensus on the cell (0 - 256)
+    private int despair;
+    
+    public Cell() {
+        Random rand = new Random();
+        this.despair =  rand.nextInt(256);
+    }
+    
+    /**
+     * @return the nrBad
+     */
+    public int getNrBad() {
+        return nrBad;
+    }
+
+    /**
+     * @param nrBad the nrBad to set
+     */
+    public void setNrBad(int nrBad) {
+        this.nrBad = nrBad;
+    }
+
+    /**
+     * @return the nrNeutral
+     */
+    public int getNrNeutral() {
+        return nrNeutral;
+    }
+
+    /**
+     * @param nrNeutral the nrNeutral to set
+     */
+    public void setNrNeutral(int nrNeutral) {
+        this.nrNeutral = nrNeutral;
+    }
+
+    /**
+     * @return the despair
+     */
+    public int getDespair() {
+        return despair;
+    }
+
+    /**
+     * @param despair the despair to set
+     */
+    public void setDespair(int despair) {
+        this.despair = despair;
+    }
+    
     
 }
