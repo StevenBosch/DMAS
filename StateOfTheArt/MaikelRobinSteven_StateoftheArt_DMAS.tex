@@ -1,0 +1,56 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[a4paper]{geometry}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{float}
+
+\usepackage{amsmath, amscd, amsthm, amssymb, mathrsfs,amsfonts}
+\usepackage{subfigure}
+\usepackage[font=small,labelfont=bf]{caption}
+\usepackage{listings}
+\usepackage{color} %red, green, blue, yellow, cyan, magenta, black, white
+\definecolor{mygreen}{RGB}{28,172,0} % color values Red, Green, Blue
+\definecolor{mylilas}{RGB}{170,55,241}
+
+\usepackage[round]{natbib}   % omit 'round' option if you prefer square brackets
+\bibliographystyle{plainnat}
+\usepackage{enumitem}
+
+\lstset{language=Java,%
+	basicstyle=\small \ttfamily \bfseries,%basicstyle=\color{red},
+	breaklines=true,%
+	morekeywords={matlab2tikz},
+	keywordstyle=\color{blue},%
+	morekeywords=[2]{1}, keywordstyle=[2]{\color{black}},
+	identifierstyle=\color{black},%
+	stringstyle=\color{mylilas},
+	commentstyle=\color{mygreen},%
+	showstringspaces=false,%without this there will be a symbol in the places where there is a space
+	numbers=left,%
+	numberstyle={\tiny \color{black}},% size of the numbers
+	numbersep=9pt, % this defines how far the numbers are from the text
+	emph=[1]{for,end,break},emphstyle=[1]\color{red}, %some words to emphasise
+	%emph=[2]{word1,word2}, emphstyle=[2]{style}, 
+	captionpos=t, 
+	frame=single,
+	title=\lstname
+}
+
+\title{Goh et al.: ``Modeling Civil Violence: An Evolutionary Multi-Agent, Game-Theoretic Approach"}
+\author{Maikel Withagen (s1867733) \and Steven Bosch (s1861948) \and Robin Kramer (s1970755)}
+\date{\today}
+
+\begin{document}
+	\maketitle
+
+		\noindent The article we use as state of the art is ``Modeling Civil Violence: An Evolutionary Multi-Agent, Game-Theoretic Approach" by Goh et al.
+		
+		The problem \citet{Goh} focus on is the design and development of a spatial Multi-Agent Social Network (EMAS) model for examining the emergent macroscopic-behavioural dynamics of civil violence, as a result of microscopic local movement and game-theoretic interactions between multiple goal-oriented agents in various scenarios. Their evolutionary approach is based solely on performance of agents in terms of wins and losses (determined by iterated prisoner's dilemma results). 
+		
+		The new idea they use in their approach is that agents look at the performance of other agents and try to imitate top performers by imitating their behaviour. 
+		
+		Their results show agent strategies that evolve autonomously under information exchange and independent learning, resulting in behavioural development of agents which consequently influences macroscopic temporal statistics and spatial patterns.
+		
+		As for relevance, Goh et al. state that it's crucial to the holistic understanding of the fundamental nature of civil violence to study how the underlying behavioural dynamics evolve under different situational setups.
+		
+	\end{document}
