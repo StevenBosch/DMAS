@@ -1,0 +1,34 @@
+Reinforcement learning system
+
+Expectation of new situation based on previous success and assessment current situation.
+
+
+Learning function:
+Success rate * Temp * assessment current situation
+
+
+Success rate:
+(saves + kills - losses)/(saves + kills + losses)
+
+Assessment current situation:
+noise * agents/(agents + hostiles)
+noise * hostiles/(agents + hostiles)
+
+
+Pay off tables:
+
+Agents:	Hostiles: Run Shoot
+Save 
+Shoot
+
+
+Decision tables (agents):
+
+	Overtal Ondertal
+Save
+Shoot
+
+Decision tables (hostiles):
+	Overtal Ondertal
+Run
+Shoot
