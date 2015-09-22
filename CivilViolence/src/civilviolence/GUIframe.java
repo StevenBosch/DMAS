@@ -32,29 +32,121 @@ public class GUIframe extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
+        jButton4 = new javax.swing.JButton();
+        jButton5 = new javax.swing.JButton();
+        jButton6 = new javax.swing.JButton();
+        jButton7 = new javax.swing.JButton();
+        jButton8 = new javax.swing.JButton();
+        jButton9 = new javax.swing.JButton();
+        jButton10 = new javax.swing.JButton();
+        jButton11 = new javax.swing.JButton();
+        jButton12 = new javax.swing.JButton();
+        jButton13 = new javax.swing.JButton();
+        jButton14 = new javax.swing.JButton();
+        jButton15 = new javax.swing.JButton();
+        jButton16 = new javax.swing.JButton();
+        jButton17 = new javax.swing.JButton();
+        jButton18 = new javax.swing.JButton();
+        jButton19 = new javax.swing.JButton();
+        jButton20 = new javax.swing.JButton();
+        jButton21 = new javax.swing.JButton();
+        jButton22 = new javax.swing.JButton();
+        jButton23 = new javax.swing.JButton();
+        jButton24 = new javax.swing.JButton();
+        jButton25 = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
         jButton27 = new javax.swing.JButton();
         jButton28 = new javax.swing.JButton();
         jButton26 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setPreferredSize(new java.awt.Dimension(600, 400));
+        setPreferredSize(new java.awt.Dimension(800, 600));
 
         jSplitPane1.setDividerLocation(400);
         jSplitPane1.setDividerSize(2);
-        jSplitPane1.setMinimumSize(new java.awt.Dimension(400, 400));
+        jSplitPane1.setMinimumSize(new java.awt.Dimension(600, 400));
         jSplitPane1.setPreferredSize(new java.awt.Dimension(600, 400));
 
         jPanel1.setMinimumSize(new java.awt.Dimension(400, 400));
+        jPanel1.setPreferredSize(new java.awt.Dimension(400, 400));
         jPanel1.setRequestFocusEnabled(false);
         jPanel1.setLayout(new java.awt.GridLayout(5, 5));
 
-        jButton1.setText("jButton1");
         buttonGroup1.add(jButton1);
         jPanel1.add(jButton1);
 
-        jButton2.setText("jButton2");
+        buttonGroup1.add(jButton2);
         jPanel1.add(jButton2);
+
+        buttonGroup1.add(jButton3);
+        jPanel1.add(jButton3);
+
+        buttonGroup1.add(jButton4);
+        jPanel1.add(jButton4);
+
+        buttonGroup1.add(jButton5);
+        jPanel1.add(jButton5);
+
+        buttonGroup1.add(jButton6);
+        jPanel1.add(jButton6);
+
+        buttonGroup1.add(jButton7);
+        jPanel1.add(jButton7);
+
+        buttonGroup1.add(jButton8);
+        jPanel1.add(jButton8);
+
+        buttonGroup1.add(jButton9);
+        jPanel1.add(jButton9);
+
+        buttonGroup1.add(jButton10);
+        jPanel1.add(jButton10);
+
+        buttonGroup1.add(jButton11);
+        jPanel1.add(jButton11);
+
+        buttonGroup1.add(jButton12);
+        jPanel1.add(jButton12);
+
+        buttonGroup1.add(jButton13);
+        jPanel1.add(jButton13);
+
+        buttonGroup1.add(jButton14);
+        jPanel1.add(jButton14);
+
+        buttonGroup1.add(jButton15);
+        jPanel1.add(jButton15);
+
+        buttonGroup1.add(jButton16);
+        jPanel1.add(jButton16);
+
+        buttonGroup1.add(jButton17);
+        jPanel1.add(jButton17);
+
+        buttonGroup1.add(jButton18);
+        jPanel1.add(jButton18);
+
+        buttonGroup1.add(jButton19);
+        jPanel1.add(jButton19);
+
+        buttonGroup1.add(jButton20);
+        jPanel1.add(jButton20);
+
+        buttonGroup1.add(jButton21);
+        jPanel1.add(jButton21);
+
+        buttonGroup1.add(jButton22);
+        jPanel1.add(jButton22);
+
+        buttonGroup1.add(jButton23);
+        jPanel1.add(jButton23);
+
+        buttonGroup1.add(jButton24);
+        jPanel1.add(jButton24);
+
+        buttonGroup1.add(jButton25);
+        jPanel1.add(jButton25);
 
         jSplitPane1.setLeftComponent(jPanel1);
 
@@ -75,11 +167,11 @@ public class GUIframe extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 625, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jSplitPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 415, Short.MAX_VALUE)
         );
 
         getAccessibleContext().setAccessibleParent(this);
@@ -126,11 +218,34 @@ public class GUIframe extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     public javax.swing.ButtonGroup buttonGroup1;
     public javax.swing.JButton jButton1;
+    public javax.swing.JButton jButton10;
+    public javax.swing.JButton jButton11;
+    public javax.swing.JButton jButton12;
+    public javax.swing.JButton jButton13;
+    public javax.swing.JButton jButton14;
+    public javax.swing.JButton jButton15;
+    public javax.swing.JButton jButton16;
+    public javax.swing.JButton jButton17;
+    public javax.swing.JButton jButton18;
+    public javax.swing.JButton jButton19;
     private javax.swing.JButton jButton2;
+    public javax.swing.JButton jButton20;
+    public javax.swing.JButton jButton21;
+    public javax.swing.JButton jButton22;
+    public javax.swing.JButton jButton23;
+    public javax.swing.JButton jButton24;
+    public javax.swing.JButton jButton25;
     private javax.swing.JButton jButton26;
     private javax.swing.JButton jButton27;
     private javax.swing.JButton jButton28;
-    private javax.swing.JPanel jPanel1;
+    public javax.swing.JButton jButton3;
+    public javax.swing.JButton jButton4;
+    public javax.swing.JButton jButton5;
+    public javax.swing.JButton jButton6;
+    public javax.swing.JButton jButton7;
+    public javax.swing.JButton jButton8;
+    public javax.swing.JButton jButton9;
+    public javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JSplitPane jSplitPane1;
     // End of variables declaration//GEN-END:variables

@@ -8,6 +8,7 @@ package civilviolence;
 import java.awt.Color;
 import java.util.Enumeration;
 import javax.swing.AbstractButton;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 
 /**
@@ -23,10 +24,13 @@ public class Dmas {
         // TODO code application logic here
         System.out.println("Hello World!");
 
-        // Create the grid
+        int LENGTH = 5;
+        int WIDTH = 5;
+
+        // Create the griddy
         Cell[][] grid = new Cell[5][5];
-        for (int i = 0; i < 5; ++i) {
-            for (int j = 0; j < 5; ++j) {
+        for (int i = 0; i < LENGTH; ++i) {
+            for (int j = 0; j < WIDTH; ++j) {
                 grid[i][j] = new Cell();
             }
         }
@@ -40,24 +44,18 @@ public class Dmas {
             System.out.print('\n');
         }
 
+        // Create a nice frame to show the griddy
         JFrame frame = new JFrame();
-       //Display the window.
-        GUIframe test = new GUIframe();
-        for (int i = 0; i < 5; ++i) {
-            System.out.print("|\t");
-            for (int j = 0; j < 5; ++j) {
 
-        }
-        for (Enumeration<AbstractButton> buttons = test.buttonGroup1.getElements(); buttons.hasMoreElements();) {
-            AbstractButton button = buttons.nextElement();
-            button.setBackground(Color.yellow);
-        }
-        test.getComponents();
+        // Import the layout to show the griddy
+        GUIframe test = new GUIframe();
+
+        JButton testbutton = new javax.swing.JButton();
+        testbutton.setBackground(Color.BLACK);
+        test.buttonGroup1.add(testbutton);
+        test.jPanel1.add(testbutton);
         test.setVisible(true);
 
-
-
-    }
     }
 }
-
+}
