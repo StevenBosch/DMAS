@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2015.9.8)  23 SEP 2015 12:01
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2015.9.8)  24 SEP 2015 14:26
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -331,6 +331,9 @@ Package caption3 Info: TeX engine: e-TeX on input line 57.
 )
 \c@ContinuedFloat=\count92
 )
+(/usr/share/texlive/texmf-dist/tex/latex/multirow/multirow.sty
+\bigstrutjot=\dimen124
+)
 (/usr/share/texmf/tex/latex/pgf/frontendlayer/tikz.sty
 (/usr/share/texmf/tex/latex/pgf/basiclayer/pgf.sty
 (/usr/share/texmf/tex/latex/pgf/utilities/pgfrcs.sty
@@ -374,8 +377,8 @@ Package: ltxcmds 2011/11/09 v1.22 LaTeX kernel commands for general use (HO)
 )
 \Gread@gobject=\count93
 ))
-\Gin@req@height=\dimen124
-\Gin@req@width=\dimen125
+\Gin@req@height=\dimen125
+\Gin@req@width=\dimen126
 )
 (/usr/share/texmf/tex/latex/pgf/systemlayer/pgfsys.sty
 (/usr/share/texmf/tex/generic/pgf/systemlayer/pgfsys.code.tex
@@ -388,14 +391,14 @@ Package: pgfsys 2010/06/30 v2.10 (rcs-revision 1.37)
 (/usr/share/texmf/tex/generic/pgf/utilities/pgfkeysfiltered.code.tex
 \pgfkeys@tmptoks=\toks22
 ))
-\pgf@x=\dimen126
-\pgf@y=\dimen127
-\pgf@xa=\dimen128
-\pgf@ya=\dimen129
-\pgf@xb=\dimen130
-\pgf@yb=\dimen131
-\pgf@xc=\dimen132
-\pgf@yc=\dimen133
+\pgf@x=\dimen127
+\pgf@y=\dimen128
+\pgf@xa=\dimen129
+\pgf@ya=\dimen130
+\pgf@xb=\dimen131
+\pgf@yb=\dimen132
+\pgf@xc=\dimen133
+\pgf@yc=\dimen134
 \w@pgf@writea=\write3
 \r@pgf@reada=\read1
 \c@pgf@counta=\count94
@@ -446,7 +449,7 @@ Package: pgfcore 2010/04/11 v2.10 (rcs-revision 1.7)
 (/usr/share/texmf/tex/generic/pgf/math/pgfmathcalc.code.tex
 (/usr/share/texmf/tex/generic/pgf/math/pgfmathutil.code.tex)
 (/usr/share/texmf/tex/generic/pgf/math/pgfmathparser.code.tex
-\pgfmath@dimen=\dimen134
+\pgfmath@dimen=\dimen135
 \pgfmath@count=\count100
 \pgfmath@box=\box28
 \pgfmath@toks=\toks23
@@ -466,30 +469,30 @@ Package: pgfcore 2010/04/11 v2.10 (rcs-revision 1.7)
 ))
 (/usr/share/texmf/tex/generic/pgf/basiclayer/pgfcorepoints.code.tex
 File: pgfcorepoints.code.tex 2010/04/09  (rcs-revision 1.20)
-\pgf@picminx=\dimen135
-\pgf@picmaxx=\dimen136
-\pgf@picminy=\dimen137
-\pgf@picmaxy=\dimen138
-\pgf@pathminx=\dimen139
-\pgf@pathmaxx=\dimen140
-\pgf@pathminy=\dimen141
-\pgf@pathmaxy=\dimen142
-\pgf@xx=\dimen143
-\pgf@xy=\dimen144
-\pgf@yx=\dimen145
-\pgf@yy=\dimen146
-\pgf@zx=\dimen147
-\pgf@zy=\dimen148
+\pgf@picminx=\dimen136
+\pgf@picmaxx=\dimen137
+\pgf@picminy=\dimen138
+\pgf@picmaxy=\dimen139
+\pgf@pathminx=\dimen140
+\pgf@pathmaxx=\dimen141
+\pgf@pathminy=\dimen142
+\pgf@pathmaxy=\dimen143
+\pgf@xx=\dimen144
+\pgf@xy=\dimen145
+\pgf@yx=\dimen146
+\pgf@yy=\dimen147
+\pgf@zx=\dimen148
+\pgf@zy=\dimen149
 )
 (/usr/share/texmf/tex/generic/pgf/basiclayer/pgfcorepathconstruct.code.tex
 File: pgfcorepathconstruct.code.tex 2010/08/03  (rcs-revision 1.24)
-\pgf@path@lastx=\dimen149
-\pgf@path@lasty=\dimen150
+\pgf@path@lastx=\dimen150
+\pgf@path@lasty=\dimen151
 )
 (/usr/share/texmf/tex/generic/pgf/basiclayer/pgfcorepathusage.code.tex
 File: pgfcorepathusage.code.tex 2008/04/22  (rcs-revision 1.12)
-\pgf@shorten@end@additional=\dimen151
-\pgf@shorten@start@additional=\dimen152
+\pgf@shorten@end@additional=\dimen152
+\pgf@shorten@start@additional=\dimen153
 )
 (/usr/share/texmf/tex/generic/pgf/basiclayer/pgfcorescopes.code.tex
 File: pgfcorescopes.code.tex 2010/09/08  (rcs-revision 1.34)
@@ -500,13 +503,13 @@ File: pgfcorescopes.code.tex 2010/09/08  (rcs-revision 1.34)
 )
 (/usr/share/texmf/tex/generic/pgf/basiclayer/pgfcoregraphicstate.code.tex
 File: pgfcoregraphicstate.code.tex 2008/04/22  (rcs-revision 1.9)
-\pgflinewidth=\dimen153
+\pgflinewidth=\dimen154
 )
 (/usr/share/texmf/tex/generic/pgf/basiclayer/pgfcoretransformations.code.tex
 File: pgfcoretransformations.code.tex 2009/06/10  (rcs-revision 1.11)
-\pgf@pt@x=\dimen154
-\pgf@pt@y=\dimen155
-\pgf@pt@temp=\dimen156
+\pgf@pt@x=\dimen155
+\pgf@pt@y=\dimen156
+\pgf@pt@temp=\dimen157
 )
 (/usr/share/texmf/tex/generic/pgf/basiclayer/pgfcorequick.code.tex
 File: pgfcorequick.code.tex 2008/10/09  (rcs-revision 1.3)
@@ -522,7 +525,7 @@ File: pgfcorearrows.code.tex 2008/04/23  (rcs-revision 1.11)
 )
 (/usr/share/texmf/tex/generic/pgf/basiclayer/pgfcoreshade.code.tex
 File: pgfcoreshade.code.tex 2008/11/23  (rcs-revision 1.13)
-\pgf@max=\dimen157
+\pgf@max=\dimen158
 \pgf@sys@shading@range@num=\count103
 )
 (/usr/share/texmf/tex/generic/pgf/basiclayer/pgfcoreimage.code.tex
@@ -550,8 +553,8 @@ File: pgfmoduleplot.code.tex 2010/10/22  (rcs-revision 1.8)
 )
 (/usr/share/texmf/tex/latex/pgf/compatibility/pgfcomp-version-0-65.sty
 Package: pgfcomp-version-0-65 2007/07/03 v2.10 (rcs-revision 1.7)
-\pgf@nodesepstart=\dimen158
-\pgf@nodesepend=\dimen159
+\pgf@nodesepstart=\dimen159
+\pgf@nodesepend=\dimen160
 )
 (/usr/share/texmf/tex/latex/pgf/compatibility/pgfcomp-version-1-18.sty
 Package: pgfcomp-version-1-18 2007/07/23 v2.10 (rcs-revision 1.1)
@@ -561,8 +564,8 @@ Package: pgfcomp-version-1-18 2007/07/23 v2.10 (rcs-revision 1.1)
 (/usr/share/texmf/tex/generic/pgf/utilities/pgfkeys.code.tex))
 (/usr/share/texmf/tex/generic/pgf/utilities/pgffor.code.tex
 Package: pgffor 2010/03/23 v2.10 (rcs-revision 1.18)
-\pgffor@iter=\dimen160
-\pgffor@skip=\dimen161
+\pgffor@iter=\dimen161
+\pgffor@skip=\dimen162
 \pgffor@stack=\toks26
 \pgffor@toks=\toks27
 ))
@@ -572,14 +575,14 @@ Package: tikz 2010/10/13 v2.10 (rcs-revision 1.76)
 (/usr/share/texmf/tex/generic/pgf/libraries/pgflibraryplothandlers.code.tex
 File: pgflibraryplothandlers.code.tex 2010/05/31 v2.10 (rcs-revision 1.15)
 \pgf@plot@mark@count=\count104
-\pgfplotmarksize=\dimen162
+\pgfplotmarksize=\dimen163
 )
-\tikz@lastx=\dimen163
-\tikz@lasty=\dimen164
-\tikz@lastxsaved=\dimen165
-\tikz@lastysaved=\dimen166
-\tikzleveldistance=\dimen167
-\tikzsiblingdistance=\dimen168
+\tikz@lastx=\dimen164
+\tikz@lasty=\dimen165
+\tikz@lastxsaved=\dimen166
+\tikz@lastysaved=\dimen167
+\tikzleveldistance=\dimen168
+\tikzsiblingdistance=\dimen169
 \tikz@figbox=\box34
 \tikz@tempbox=\box35
 \tikztreelevel=\count105
@@ -677,7 +680,7 @@ File: tikzlibraryarrows.code.tex 2008/01/09 v2.10 (rcs-revision 1.1)
 
 (/usr/share/texmf/tex/generic/pgf/libraries/pgflibraryarrows.code.tex
 File: pgflibraryarrows.code.tex 2008/10/27 v2.10 (rcs-revision 1.9)
-\arrowsize=\dimen169
+\arrowsize=\dimen170
 ))
 \treeheight=\skip45
 
@@ -694,14 +697,14 @@ Package: float 2001/11/08 v1.3d Float enhancements (AL)
 \lst@gtempboxa=\box58
 \lst@token=\toks30
 \lst@length=\count115
-\lst@currlwidth=\dimen170
+\lst@currlwidth=\dimen171
 \lst@column=\count116
 \lst@pos=\count117
-\lst@lostspace=\dimen171
-\lst@width=\dimen172
+\lst@lostspace=\dimen172
+\lst@width=\dimen173
 \lst@newlines=\count118
 \lst@lineno=\count119
-\lst@maxwidth=\dimen173
+\lst@maxwidth=\dimen174
 
 (/usr/share/texlive/texmf-dist/tex/latex/listings/lstmisc.sty
 File: lstmisc.sty 2013/08/26 1.5b (Carsten Heinz)
@@ -772,13 +775,13 @@ ABD: EveryShipout initializing macros
 (/usr/share/texlive/texmf-dist/tex/context/base/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
 \scratchcounter=\count122
-\scratchdimen=\dimen174
+\scratchdimen=\dimen175
 \scratchbox=\box60
 \nofMPsegments=\count123
 \nofMParguments=\count124
 \everyMPshowfont=\toks31
 \MPscratchCnt=\count125
-\MPscratchDim=\dimen175
+\MPscratchDim=\dimen176
 \MPnumerator=\count126
 \makeMPintoPDFobject=\count127
 \everyMPtoPDFconversion=\toks32
@@ -856,34 +859,37 @@ Chapter 1.
 
 ]) (./chapter/02Method.tex [3]
 Chapter 2.
-) (./chapter/09Reflection.tex [4
+[4
 
-]
+]) (./chapter/09Reflection.tex [5]
 Chapter 3.
-) [5
+) [6
 
 ] (./MaikelRobinSteven_Report_DMAS.aux) ) 
 Here is how much of TeX's memory you used:
- 15758 strings out of 494985
- 300896 string characters out of 6180357
- 382644 words of memory out of 5000000
- 18641 multiletter control sequences out of 15000+600000
- 13884 words of font info for 33 fonts, out of 8000000 for 9000
+ 15783 strings out of 494985
+ 301358 string characters out of 6180357
+ 383853 words of memory out of 5000000
+ 18661 multiletter control sequences out of 15000+600000
+ 14647 words of font info for 34 fonts, out of 8000000 for 9000
  36 hyphenation exceptions out of 8191
- 63i,5n,58p,1758b,266s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 63i,10n,58p,1758b,378s stack positions out of 5000i,500n,10000p,200000b,80000s
  </home/robin/.texmf-var/fonts/pk/ljfo
-ur/jknappen/ec/ecsl1095.600pk> </home/robin/.texmf-var/fonts/pk/ljfour/jknappen
-/ec/ecrm1095.600pk> </home/robin/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecbx109
-5.600pk> </home/robin/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecbx1728.600pk> </
-home/robin/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecrm1200.600pk> </home/robin/
-.texmf-var/fonts/pk/ljfour/jknappen/ec/ecti1200.600pk> </home/robin/.texmf-var/
-fonts/pk/ljfour/jknappen/ec/ecbx2074.600pk> </home/robin/.texmf-var/fonts/pk/lj
-four/jknappen/ec/eccc1440.600pk></usr/share/texlive/texmf-dist/fonts/type1/publ
-ic/amsfonts/cm/cmmi10.pfb>
-Output written on MaikelRobinSteven_Report_DMAS.pdf (6 pages, 675812 bytes).
+ur/jknappen/ec/ecrm1000.600pk> </home/robin/.texmf-var/fonts/pk/ljfour/jknappen
+/ec/ecsl1095.600pk> </home/robin/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecrm109
+5.600pk> </home/robin/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecbx1095.600pk> </
+home/robin/.texmf-var/fonts/pk/ljfour/jknappen/ec/ecbx1728.600pk> </home/robin/
+.texmf-var/fonts/pk/ljfour/jknappen/ec/ecrm1200.600pk> </home/robin/.texmf-var/
+fonts/pk/ljfour/jknappen/ec/ecti1200.600pk> </home/robin/.texmf-var/fonts/pk/lj
+four/jknappen/ec/ecbx2074.600pk> </home/robin/.texmf-var/fonts/pk/ljfour/jknapp
+en/ec/eccc1440.600pk></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts
+/cm/cmmi10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cm
+r10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pf
+b>
+Output written on MaikelRobinSteven_Report_DMAS.pdf (7 pages, 708968 bytes).
 PDF statistics:
- 261 PDF objects out of 1000 (max. 8388607)
- 52 compressed objects within 1 object stream
+ 314 PDF objects out of 1000 (max. 8388607)
+ 66 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
  18 words of extra memory for PDF output out of 10000 (max. 10000000)
 

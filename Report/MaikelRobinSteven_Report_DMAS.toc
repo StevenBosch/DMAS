@@ -1,4 +1,7 @@
 \select@language {english}
 \contentsline {chapter}{\numberline {1}Problem}{2}
 \contentsline {chapter}{\numberline {2}Method}{4}
-\contentsline {chapter}{\numberline {3}Reflection}{5}
+\contentsline {paragraph}{Goals and Actions}{4}
+\contentsline {paragraph}{Learning}{5}
+\contentsline {paragraph}{Scenarios}{5}
+\contentsline {chapter}{\numberline {3}Reflection}{6}
