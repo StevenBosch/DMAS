@@ -31,9 +31,7 @@ public class GUIFrame extends javax.swing.JFrame {
         jSplitPane1 = new javax.swing.JSplitPane();
         jPanel1 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
-        infoField = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        infoField = new javax.swing.JTextPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setPreferredSize(new java.awt.Dimension(1024, 768));
@@ -62,14 +60,8 @@ public class GUIFrame extends javax.swing.JFrame {
 
         jPanel2.setLayout(new java.awt.GridLayout(0, 1));
 
-        infoField.setText("informatie over ietjs..");
+        infoField.setFont(new java.awt.Font("Cantarell", 0, 24)); // NOI18N
         jPanel2.add(infoField);
-
-        jButton1.setText("jButton1");
-        jPanel2.add(jButton1);
-
-        jButton2.setText("jButton2");
-        jPanel2.add(jButton2);
 
         jSplitPane1.setRightComponent(jPanel2);
 
@@ -129,9 +121,7 @@ public class GUIFrame extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     public javax.swing.ButtonGroup buttonGroup1;
-    public javax.swing.JTextField infoField;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
+    public javax.swing.JTextPane infoField;
     public javax.swing.JPanel jPanel1;
     public javax.swing.JPanel jPanel2;
     public javax.swing.JSplitPane jSplitPane1;

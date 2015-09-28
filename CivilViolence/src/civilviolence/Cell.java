@@ -7,36 +7,41 @@ package civilviolence;
 
 import java.util.*;
 
-
 /**
  *
  * @author maleco
  */
 public class Cell {
     /* The standard variables of each cell */
+
     // The available peoples
+
     private int nrBad;
     private int nrNeutral;
     private int nrGood;
-    
+
     private int saves;
     private int kills;
     private int lossesCops;
     private int lossesNeutral;
-    
+
     private double succes;
-    
+
     // The available agents on this cell
-    public List<Agent> agents = new ArrayList<Agent>();
+    public List<Agent> agents = new ArrayList<>();
 
     // The general consensus on the cell (0 - 256)
     private int despair;
-    
-    public Cell() {
+
+    Cell(HashMap<String, Integer> param) {
         Random rand = new Random();
-        this.despair =  rand.nextInt(255);
-    }
-    
+        this.despair = rand.nextInt(255);
+        this.nrNeutral = (int) Math.round(rand.nextGaussian() * param.get("STDNEUTRAL") + param.get("MEANNEUTRAL"));
+        this.nrBad = (int) Math.round(rand.nextGaussian() * param.get("STDHOSTILES") + param.get("MEANHOSTILES"));
+        param.put("TOTALNRNEUTRAL", param.get("TOTALNRNEUTRAL")+this.nrNeutral);
+        param.put("TOTALNRHOSTILES", param.get("TOTALNRHOSTILES")+this.nrBad);
+   }
+
     /**
      * @return the nrBad
      */
@@ -162,6 +167,5 @@ public class Cell {
     public void setLossesNeutral(int lossesNeutral) {
         this.lossesNeutral = lossesNeutral;
     }
-    
-    
+
 }
