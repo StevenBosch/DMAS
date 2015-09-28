@@ -14,16 +14,20 @@ import java.util.*;
  */
 public class Agent {
     private int learningRate;
-    private double awareness; // The rate agents/hostiles
+    private double awareness; // The rate agents/(hostiles+agents)
+    private double danger; // The rate civilians/(hostiles+civilians)
     private int[] location; // x, y
    
     private agentActions action;
     
-    private double[][] decTable; // row 0: action save, row 1: action shoot. Column 0: majority cops, column 1: minority cops.
-    
+    private double[][] decTable; // row 0: action save, row 1: action shoot. Column 0, 1: majority cops; column 0: majority civilians, column 1: minority civilians. Column 2, 3: minority cops; column 2: majority civilians; column 3: minority civilians.
     public Agent() {
-        this.decTable = new double[2][2];
+        this.decTable = new double[][] {
+        {0.5, 0.5, 0.5, 0.5}, // Action save. ++, +-, -+, --
+        {0.5, 0.5, 0.5, 0.5} // Action shoot. ++, +-, -+, --
+        };
     }
+    private int currentSituation;
     
     /**
      * @return the learningRate
@@ -79,6 +83,34 @@ public class Agent {
      */
     public void setDecTable(double[][] decTable) {
         this.decTable = decTable;
+    }
+
+    /**
+     * @return the danger
+     */
+    public double getDanger() {
+        return danger;
+    }
+
+    /**
+     * @param danger the danger to set
+     */
+    public void setDanger(double danger) {
+        this.danger = danger;
+    }
+
+    /**
+     * @return the currentSituation
+     */
+    public int getCurrentSituation() {
+        return currentSituation;
+    }
+
+    /**
+     * @param currentSituation the currentSituation to set
+     */
+    public void setCurrentSituation(int currentSituation) {
+        this.currentSituation = currentSituation;
     }
    
 }

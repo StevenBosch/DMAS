@@ -24,8 +24,6 @@ public class Cell {
     private int lossesCops;
     private int lossesNeutral;
     
-    private double succes;
-    
     // The available agents on this cell
     public List<Agent> agents = new ArrayList<Agent>();
 
@@ -35,6 +33,10 @@ public class Cell {
     public Cell() {
         Random rand = new Random();
         this.despair =  rand.nextInt(255);
+    }
+    
+    public double getSuccess() {
+        return ((this.saves + this.kills - this.lossesCops - this.lossesNeutral) / (this.saves + this.kills + this.lossesCops + this.lossesNeutral));
     }
     
     /**
@@ -133,20 +135,6 @@ public class Cell {
      */
     public void setNrGood(int nrGood) {
         this.nrGood = nrGood;
-    }
-
-    /**
-     * @return the succes
-     */
-    public double getSucces() {
-        return succes;
-    }
-
-    /**
-     * @param succes the succes to set
-     */
-    public void setSucces(double succes) {
-        this.succes = succes;
     }
 
     /**
