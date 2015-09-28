@@ -15,7 +15,6 @@ import java.util.*;
 public class Agent {
     private int learningRate;
     private double awareness; // The rate agents/hostiles
-    private double successRate;
    
     private agentActions action;
     
@@ -47,20 +46,6 @@ public class Agent {
      */
     public void setAwareness(double awareness) {
         this.awareness = awareness;
-    }
-
-    /**
-     * @return the successRate
-     */
-    public double getSuccessRate() {
-        return successRate;
-    }
-
-    /**
-     * @param successRate the successRate to set
-     */
-    public void setSuccessRate(double successRate) {
-        this.successRate = successRate;
     }
 
     /**

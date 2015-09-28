@@ -46,8 +46,15 @@ public class Dmas {
         }
 
         
-        
         cell.setNrNeutral(cell.getNrNeutral()-cell.getSaves());
+    }
+    
+    public static void updateAgents(Cell cell) {
+        // Update the decision tables of the agents
+        double successRate = 0;
+        for (Agent ag: cell.agents) {
+                
+        }
     }
     
     public static void updateCells(int length, int width, Cell cells[][], double noise) {
@@ -55,17 +62,11 @@ public class Dmas {
         for (int i = 0; i < length; ++i) {
             for (int j = 0; i < width; ++j) {
                 playGame(cells[i][j], noise);
+                updateAgents(cells[i][j]);
             }
         }
     }
-    
-        public static void updateAgentSuccess(Agent agent) {
-        // Update the success rates of the Agents
-        double successRate = 0;
-        
-        agent.setSuccessRate(successRate);
-    }
-    
+      
     /**
      * @param args the command line arguments
      */
@@ -94,6 +95,10 @@ public class Dmas {
             }
             System.out.print('\n');
         }
+        
+        initAgents(grid);
+        updateCells(LENGTH, WIDTH, grid, noise);
+        
 
         // Create a nice frame to show the griddy
         JFrame frame = new JFrame();

@@ -23,6 +23,8 @@ public class Cell {
     private int kills;
     private int losses;
     
+    private double succes;
+    
     // The available agents on this cell
     public List<Agent> agents = new ArrayList<Agent>();
 
@@ -130,6 +132,20 @@ public class Cell {
      */
     public void setNrGood(int nrGood) {
         this.nrGood = nrGood;
+    }
+
+    /**
+     * @return the succes
+     */
+    public double getSucces() {
+        return succes;
+    }
+
+    /**
+     * @param succes the succes to set
+     */
+    public void setSucces(double succes) {
+        this.succes = succes;
     }
     
     
