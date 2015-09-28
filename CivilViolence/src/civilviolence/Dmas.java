@@ -62,6 +62,7 @@ public class Dmas {
         for (int i = 0; i < length; ++i) {
             for (int j = 0; i < width; ++j) {
                 playGame(cells[i][j], noise);
+                
                 updateAgents(cells[i][j]);
             }
         }
