@@ -129,7 +129,7 @@ public class Dmas implements ActionListener {
     public static void updateCells(Cell[][] grid, HashMap<String, Integer> param) {
         // Loop through all the cells, run the simulation in each cell and let all the agents move
         for (int i = 0; i < param.get("LENGTH"); ++i) {
-            for (int j = 0; i < param.get("WIDTH"); ++j) {
+            for (int j = 0; j < param.get("WIDTH"); ++j) {
                 playGame(grid[i][j], param.get("NOISE"));
                 killAgents(grid[i][j]);
                 updateAgents(grid[i][j]);
@@ -235,6 +235,6 @@ public class Dmas implements ActionListener {
         gFrame.setVisible(true);
 
         // Lets do a simulation
-        //updateCells(LENGTH, WIDTH, grid, noise);
+        updateCells(grid, param);
     }
 }
