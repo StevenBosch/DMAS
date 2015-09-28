@@ -1,6 +1,6 @@
 \section{Method}
 \subsection{Simulation model}
-Three types of agents will be included in this simulation: cops, hostiles and civilians. The goal of the cops is to keep (civil and cop) casualties as low as possible. The hostiles on the other hand have only one goal: to kill as many civilians as possible, to cause mayhem and despair. Civilians have no particular function, but are subject to the actions taken by cops and hostiles. The simulation takes place in a 20x20 2D matrix. In every box of the matrix at most 50 agents can reside. The agents that reside in this box can only see the other agents in that box. This allows for easier computation of interactions with visible agents. In every simulation, 15.000 agents (5000 agents of each grop) will be randomly spawned.  
+Three types of agents will be included in this simulation: cops, hostiles and civilians. The goal of the cops is to keep (civil and cop) casualties as low as possible. The hostiles on the other hand have only one goal: to kill as many civilians as possible, to cause mayhem and despair. Civilians have no particular function, but are subject to the actions taken by cops and hostiles. The simulation takes place in a 20x20 2D matrix. In every box of the matrix at most 50 agents can reside. The agents that reside in this box can only see the other agents in that box. This allows for easier computation of interactions with visible agents. In every simulation, around 15.000 agents ($\pm$ 5000 agents of each group) will be randomly spawned in the matrix.  
 
 \subsubsection{Goals and Actions}
 The cops' goal is to keep casualties as low as possible. To achieve this, every cop must choose one of two actions. The cop can shoot a hostile, which eliminates a treath of future killings, but at the same time there is the risk of killing a civilian. The second action is to to save a civilian, who is then safe from being killed, with a higher risk of being killed by a hostile. Hostiles only have one action: to kill. Depending on the amount of civilians and cops, one group has a larger possibility to get killed by the hostiles. When, for example, only cops and hostiles reside in a box, the possibility that cops are targeted is 100 percent. It depends on the amount of hostiles how many civilians and cops may die.
@@ -22,28 +22,31 @@ The cops' goal is to keep casualties as low as possible. To achieve this, every 
 \label{tab:scenarios}
 \end{center}
 \end{table}
-
-All the cops, during every epoch, can either save or shoot once. Based on the overall result of the cops, a reward is given to the individual agent. This reward can be either positive or negative. If many civilians die, for instance, a negative reward will be given, whilst when many hostiles were killed, a positive reward will be given. The decision that rewards are given based on group success, as opposed to individual success, is based on the idea that in a crowded situation it is not always clear what the results of individual actions are, but that a general idea of group performance can be perceived. 
+All the cops, during every epoch, can either save or shoot once. Based on the overall result in that block, a reward is given to the individual agent. This reward can be either positive or negative. If many civilians die, for instance, a negative reward will be given, whilst when many hostiles were killed, a positive reward will be given. The decision that rewards are given based on group success, as opposed to individual success, is based on the idea that in a crowded situation it is not always clear what the results of individual actions are, but that a general idea of group performance can be perceived. 
 
 The reward is used to update the utility of the particular actions in a specific circumstance. These circumstances are shown in Table \ref{tab:scenarios}. The cops must thus decide, based on the amount of team members, opponents and civilians what action would be most successful, that is have the highest utility. In the beginning of the simulation, all the utilities are set to equal values, such that no biases may exist. Reward of an action can be calculated as following: 
-$$ R = (Kills + Saves - Deaths)/(Kills + Saves + Deaths)$$
-in which $Kills$ are the amount of killed hostiles, $Saves$ the amount of saved civilians, and $Deaths$ the amount of killed cops. Based on these calculations the reward will lie between -1 (only deaths) and 1 (only kills and saves). Because hostiles only have one action, to shoot, no learning is necessary. 
+$$ R = \frac{Kills + Saves - Losses}{Kills + Saves + Losses}$$
+in which $Kills$ are the amount of killed hostiles, $Saves$ the amount of saved civilians, and $Losses$ the amount of killed cops and civilians. Based on these calculations the reward will lie between -1 (only deaths) and 1 (only kills and saves). Because hostiles only have one action, no learning is necessary. 
 
-As the Table \ref{tab:scenarios} also shows, there is no situation in which the teams are of equal size. It is assumed that the agents have no perfect knowledge of the area and, therefore, must decide which team has the overhand. This decision is made according to the following function:
+As the Table \ref{tab:scenarios} also shows, there is no situation in which the teams are of equal size. It is assumed that the agents have no perfect knowledge of the area and, therefore, decide which team has the overhand. This decision is made according to the following function:
 $$ \Omega = \frac{n_{cops} + (n_{cops}-n_{hostiles})*\sigma}{n_{cops} + n_{hostiles}} $$
-in which $\omega$ is a value between 0 and 1, $n$ is the amount of agents of a group in that box and $\sigma$ is a random value between -1 and 1 to make the decision stochastic. If $\Omega$ is higher than $0.5$, the cops considers to have the overhand.
+in which $\Omega$ is a value between 0 and 1, $n$ is the amount of agents of a group in that box and $\sigma$ is a random value between -1 and 1 to make the decision stochastic. If $\Omega$ is higher than $0.5$, the cops considers to have the overhand.
 
 After each epoch, the agents can decide to move to a neighboring box in the matrix. If the agent decides to move it will go to the place, in which the action with the highest utility can be applied. In other words, the cops will move to where he/she will thrive best. If several 
-$$ Will-This-Be-Done-With-Some-Function-With-Randomness-Questionmark$$
+$$ Will-This-Be-Done-With-Some-Function-With-Randomness-Question$$
 
 \subsubsection{Learning}
-In many re\"inforcement learning algorithms, such as Q-learning or Temporal Difference learning, have implemented the fact that newer experiences have a reduced influence  (Watkins \& Dayan, 1992: Q-Learning, technical notes; REF TD). Q-learning implements a decrese in learning rate by adjusting the learning rate variable $\lambda$ over time, which allows the function to converge to the true Q-value, that is the utility value. In temporal difference learning this is achieved by storing memories (of actions and results) in time (REF). Over time these memories will decay (less often experienced ones quicker than more experienced ones) allowing a flexible learning of the best actions/strategies. For this simulation, the learning rate variable will be implemented, similar to the Q-learning algorithm. 
+Many reinforcement learning algorithms, such as Q-learning or Temporal-Difference learning, have implemented the fact that newer experiences have a reduced influence  (Watkins \& Dayan, 1992: Q-Learning, technical notes; REF TD). Q-learning implements a decrese in learning rate by adjusting the learning rate variable $\lambda$ over time, which allows the function to converge to the true Q-value, that is the utility value. In temporal difference learning this is achieved by storing memories (of actions and results) in time (REF). Over time these memories will decay (less often experienced ones quicker than more experienced ones) allowing a flexible learning of the best actions/strategies. For simplicity reasons, the learning rate variable is used, similar to the Q-learning algorithm. 
 
-The update function is as follows:
-$$ U_x(t) = U_x(t-1) + $$
+The utility will be updated according to the following function:
+$$ U_{as}(t) = U_{as}(t-1) + \lambda * R_{as}(t) $$
+in which $U_x(t)$ is the new utility of an action $a$ in situation $s$, $t$ is the moment in time, $\lambda$ is the learning rate factor ranging from 0 to 1, and $R(t)$ is the reward, as calculated before. After each epoch, in which one action could be taken by each agent, the utility functions will be updated.
 
+To initialize the cop agents and set the learning rate variable, random values between 0 and 1 will be taken from a Gaussian distribution. This allows us to create a team with mixed levels of experience, which increases the realism of the simulation. By setting the skewness of the Gaussian distribution we can manipulate the mean learning rate value to be low and high, which allows the comparison of highly experienced teams (low mean learning rate) with less experienced teams (high mean learning rate). 
 
-\subsubsection{Scenarios}
-Overtal/Ondertal, veel civilians/weinig civilians. 
+\subsection{Experiment Design}
+Three simulations were run. In the first simulation, learning rate values were drawn from a normal Gaussian distribution, having a mean value of $0.5$. For the other two simulations, the Gaussian distribution were postively and negative skewed, therefore moving the mean learning rate to the left and right respectivly. 
 
-\subsection{Simulations}
+During the simulation, the following information was kept track of: (1) The number of killed hostiles per box, and the overall number of kills, (2) the number of overall dead cops and per box, and the amount of saved and killed civilians, (3) the number of saved civilians per box and the overall amount. The simulation of one riot is finished when all hostiles or cops have been killed, or when there are no civilians left in the area. \textbf{MORE STOP CRITERIA?}. 
+ 
+The simulations, as described above, were run ten times. One simulation is considered to be more successful if the mean successvalue (which is the same as the reward function) over these ten simulations was significantly higher compared to the other simulations. 
