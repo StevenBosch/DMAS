@@ -21,7 +21,8 @@ public class Cell {
     
     private int saves;
     private int kills;
-    private int losses;
+    private int lossesCops;
+    private int lossesNeutral;
     
     private double succes;
     
@@ -107,17 +108,17 @@ public class Cell {
     }
 
     /**
-     * @return the losses
+     * @return the lossesCops
      */
-    public int getLosses() {
-        return losses;
+    public int getLossesCops() {
+        return lossesCops;
     }
 
     /**
-     * @param losses the losses to set
+     * @param losses the lossesCops to set
      */
-    public void setLosses(int losses) {
-        this.losses = losses;
+    public void setLossesCops(int lossesCops) {
+        this.lossesCops = lossesCops;
     }
 
     /**
@@ -146,6 +147,20 @@ public class Cell {
      */
     public void setSucces(double succes) {
         this.succes = succes;
+    }
+
+    /**
+     * @return the lossesNeutral
+     */
+    public int getLossesNeutral() {
+        return lossesNeutral;
+    }
+
+    /**
+     * @param lossesNeutral the lossesNeutral to set
+     */
+    public void setLossesNeutral(int lossesNeutral) {
+        this.lossesNeutral = lossesNeutral;
     }
     
     

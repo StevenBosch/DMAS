@@ -29,28 +29,45 @@ public class Dmas implements ActionListener {
     
     public static void initAgents(Cell cells[][]) {
         // Initialize the grid with a new set of agents
-        
         int totalCops;
         int totalHostiles;
         int totalCivilians;
         
+        
     }
     
     public static void determineAction(Agent ag) {
-        
+        if (ag.getAwareness() > 0.5) { // Cops are a majority
+            if (ag.getDecTable()[0][0] > ag.getDecTable()[1][0]){ // SAVE save has a higher utility
+                ag.setAction(agentActions.SAVE);
+            } else ag.setAction(agentActions.SHOOT); // SHOOT has a higher utility
+        } else { // Cops are a minority
+            if (ag.getDecTable()[0][1] > ag.getDecTable()[1][1]) { // SAVE has a higher utility
+                ag.setAction(agentActions.SAVE);
+            } else ag.setAction(agentActions.SHOOT); // SHOOT has a higher utility
+        }
     }
     
     public static void playGame(Cell cell, double noise) {
         // Let all the agents in the cell determine their action and update the number of saves, kills and losses accordingly
+        int shootingCops = cell.agents.size(); // The number of cops that chooses to shoot
+        double aim = 0.5; // The uncertainty of actually hitting someone
+        double hostileAimCops = 0.5; // The extent to which hostiles aim at cops.
+        
         for (Agent ag: cell.agents) {
-            ag.setAwareness((double)(cell.getNrGood()/cell.getNrBad())*noise);
+            ag.setAwareness((double)(cell.getNrGood()/(cell.getNrBad()+cell.getNrGood()))*noise);
             determineAction(ag);
-            if (ag.getAction() == agentActions.SAVE) {
-                cell.setSaves(cell.getSaves()+1);
+            if (ag.getAction() == agentActions.SAVE) { // If the current agent chooses to save a civilian
+                if (cell.getNrNeutral() > 0) { // And there are still civilians left
+                    cell.setSaves(cell.getSaves()+1); // Increase the number of saves
+                    cell.setNrNeutral(cell.getNrNeutral()-1); // Decrease the number of civilians
+                }
+                shootingCops--; // Decrease the number of shooting cops
             }
         }
-
-        cell.setNrNeutral(cell.getNrNeutral()-cell.getSaves());
+        cell.setKills((int)(shootingCops*aim)); // Set the number of kills by cops
+        cell.setLossesCops((int)(aim*hostileAimCops*cell.getNrBad())); // Set the number of cop losses
+        cell.setLossesCops((int)(aim*(1-hostileAimCops)*cell.getNrBad())); // Set the number of civilian losses
     }
     
     public static void updateAgents(Cell cell) {
@@ -100,10 +117,10 @@ public class Dmas implements ActionListener {
             System.out.print('\n');
         }
         
-        initAgents(grid);
-        updateCells(LENGTH, WIDTH, grid, noise);
+        //initAgents(grid);
+        //updateCells(LENGTH, WIDTH, grid, noise);
         
-
+        
         // Create a nice frame to show the griddy
         JFrame frame = new JFrame();
 
