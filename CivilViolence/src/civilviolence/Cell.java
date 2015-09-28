@@ -5,7 +5,8 @@
  */
 package civilviolence;
 
-import java.util.Random;
+import java.util.*;
+
 
 /**
  *
@@ -16,9 +17,14 @@ public class Cell {
     // The available peoples
     private int nrBad;
     private int nrNeutral;
+    private int nrGood;
+    
+    private int saves;
+    private int kills;
+    private int losses;
     
     // The available agents on this cell
-    public Agent[] availableAgents;
+    public List<Agent> agents = new ArrayList<Agent>();
 
     // The general consensus on the cell (0 - 256)
     private int despair;
@@ -68,6 +74,62 @@ public class Cell {
      */
     public void setDespair(int despair) {
         this.despair = despair;
+    }
+
+    /**
+     * @return the saves
+     */
+    public int getSaves() {
+        return saves;
+    }
+
+    /**
+     * @param saves the saves to set
+     */
+    public void setSaves(int saves) {
+        this.saves = saves;
+    }
+
+    /**
+     * @return the kills
+     */
+    public int getKills() {
+        return kills;
+    }
+
+    /**
+     * @param kills the kills to set
+     */
+    public void setKills(int kills) {
+        this.kills = kills;
+    }
+
+    /**
+     * @return the losses
+     */
+    public int getLosses() {
+        return losses;
+    }
+
+    /**
+     * @param losses the losses to set
+     */
+    public void setLosses(int losses) {
+        this.losses = losses;
+    }
+
+    /**
+     * @return the nrGood
+     */
+    public int getNrGood() {
+        return nrGood;
+    }
+
+    /**
+     * @param nrGood the nrGood to set
+     */
+    public void setNrGood(int nrGood) {
+        this.nrGood = nrGood;
     }
     
     
