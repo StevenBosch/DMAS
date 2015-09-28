@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package civilviolence;
 
 import java.awt.*;
@@ -72,7 +67,7 @@ public class Dmas implements ActionListener {
         double hostileAimCops = 0.5; // The extent to which hostiles aim at cops.
 
         for (Agent ag : cell.agents) {
-            ag.setAwareness((double) (cell.getNrGood() / (cell.getNrBad() + cell.getNrGood())) * noise);
+            ag.setAwareness((double) (cell.getNrGood() / (cell.getNrHostiles() + cell.getNrGood())) * noise);
             determineAction(ag);
             if (ag.getAction() == agentActions.SAVE) { // If the current agent chooses to save a civilian
                 if (cell.getNrNeutral() > 0) { // And there are still civilians left
@@ -83,8 +78,8 @@ public class Dmas implements ActionListener {
             }
         }
         cell.setKills((int) (shootingCops * aim)); // Set the number of kills by cops
-        cell.setLossesCops((int) (aim * hostileAimCops * cell.getNrBad())); // Set the number of cop losses
-        cell.setLossesCops((int) (aim * (1 - hostileAimCops) * cell.getNrBad())); // Set the number of civilian losses
+        cell.setLossesCops((int) (aim * hostileAimCops * cell.getNrHostiles())); // Set the number of cop losses
+        cell.setLossesCops((int) (aim * (1 - hostileAimCops) * cell.getNrHostiles())); // Set the number of civilian losses
     }
 
     public static void updateAgents(Cell cell) {
@@ -167,7 +162,7 @@ public class Dmas implements ActionListener {
                 final int finalRow = row;
                 final int finalCol = col;
                 final int nrNeutral = grid[row][col].getNrNeutral();
-                final int nrHostiles = grid[row][col].getNrBad();
+                final int nrHostiles = grid[row][col].getNrHostiles();
 
                 // Create the button
                 JButton btn = new javax.swing.JButton();

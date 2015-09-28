@@ -16,7 +16,7 @@ public class Cell {
 
     // The available peoples
 
-    private int nrBad;
+    private int nrHostiles;
     private int nrNeutral;
     private int nrGood;
 
@@ -37,23 +37,23 @@ public class Cell {
         Random rand = new Random();
         this.despair = rand.nextInt(255);
         this.nrNeutral = (int) Math.round(rand.nextGaussian() * param.get("STDNEUTRAL") + param.get("MEANNEUTRAL"));
-        this.nrBad = (int) Math.round(rand.nextGaussian() * param.get("STDHOSTILES") + param.get("MEANHOSTILES"));
+        this.nrHostiles = (int) Math.round(rand.nextGaussian() * param.get("STDHOSTILES") + param.get("MEANHOSTILES"));
         param.put("TOTALNRNEUTRAL", param.get("TOTALNRNEUTRAL")+this.nrNeutral);
-        param.put("TOTALNRHOSTILES", param.get("TOTALNRHOSTILES")+this.nrBad);
+        param.put("TOTALNRHOSTILES", param.get("TOTALNRHOSTILES")+this.nrHostiles);
    }
 
     /**
-     * @return the nrBad
+     * @return the nrHostiles
      */
-    public int getNrBad() {
-        return nrBad;
+    public int getNrHostiles() {
+        return nrHostiles;
     }
 
     /**
-     * @param nrBad the nrBad to set
+     * @param nrHostiles the nrHostiles to set
      */
-    public void setNrBad(int nrBad) {
-        this.nrBad = nrBad;
+    public void setNrHostiles(int nrHostiles) {
+        this.nrHostiles = nrHostiles;
     }
 
     /**
