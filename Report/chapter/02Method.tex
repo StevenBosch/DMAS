@@ -1,20 +1,20 @@
-\chapter{Method}
-\paragraph{Setup of Simulator}
-The simulation consists three types of agents: cops, hostiles and civilians. The goal of the cops is to keep (civil and cop) casualties as low as possible. The hostiles on the other hand have only one goal. Their only goal is to kill as many civilians as possible, to cause mayhem and despair. Civilians have no particular function, but are subject to the actions taken by cops and hostiles. The simulation takes place in a NxN 2D matrix. In every box of the matrix 20 agents can reside. The agents that reside in this box can only see the 19 other agents in that box. This allows for easier computation of interactions with visible agents. 
+\section{Method}
+\subsection{Simulation model}
+Three types of agents will be included in this simulation: cops, hostiles and civilians. The goal of the cops is to keep (civil and cop) casualties as low as possible. The hostiles on the other hand have only one goal: to kill as many civilians as possible, to cause mayhem and despair. Civilians have no particular function, but are subject to the actions taken by cops and hostiles. The simulation takes place in a 20x20 2D matrix. In every box of the matrix at most 50 agents can reside. The agents that reside in this box can only see the other agents in that box. This allows for easier computation of interactions with visible agents. In every simulation, 15.000 agents (5000 agents of each grop) will be randomly spawned.  
 
-\subparagraph{Goals and Actions}
-The cops goal is to keep casualties as low as possible. To achieve this, the cop must choose one of two actions: shooting a hostile, with a risk of killing a civilian, or saving a civilian, with the risk of being killed by a hostile. Hostiles also have two options. They can either choose to shoot at the civilians with a chance of hitting an agent, or they can shoot at the cops for self defence, with a chance of hitting a civilian. All the cops and hostiles, during every epoch, can perform one of these actions. Based on the outcome of the agent's individual action, a reward is given to this individual agent. This reward can be either positive or negative. If a cop kills a civilian, for instance, a negative reward will be given, whilst when he has killed a hostile, a positive reward will be given. 
+\subsubsection{Goals and Actions}
+The cops' goal is to keep casualties as low as possible. To achieve this, every cop must choose one of two actions. The cop can shoot a hostile, which eliminates a treath of future killings, but at the same time there is the risk of killing a civilian. The second action is to to save a civilian, who is then safe from being killed, with a higher risk of being killed by a hostile. Hostiles only have one action: to kill. Depending on the amount of civilians and cops, one group has a larger possibility to get killed by the hostiles. When, for example, only cops and hostiles reside in a box, the possibility that cops are targeted is 100 percent. It depends on the amount of hostiles how many civilians and cops may die.
 
 \begin{table}[!ht]
 \begin{center}
 \begin{tabular}{l l | l l}
 \hline
- & & Action 1 & Action 2 \\
+ & & Shoot & Save \\
 \hline
-\multirow{2}{*}{Size Team 1 > Team 2} & Many civilians & Ux & Uy \\
+\multirow{2}{*}{\# Cops > \# Hostiles} & Many civilians & Ux & Uy \\
  & Few civilians & Ur & Ut \\
 \hline
-\multirow{2}{*}{Size Team 1 < Team 2} & Many civilians & Ua & Ub\\
+\multirow{2}{*}{\# Cops < \# Hostiles} & Many civilians & Ua & Ub\\
  & Few civilians & Uc & Ud\\
 \hline
 \end{tabular}
@@ -23,25 +23,27 @@ The cops goal is to keep casualties as low as possible. To achieve this, the cop
 \end{center}
 \end{table}
 
-The reward is used to update the utility of the particular actions in particular circumstances. These circumstances are shown in Table \ref{tab:scenarios}. The agents must thus decide, based on the amount of team members, opponents and civilians what action would be most successful. In the beginning of the simulation, all the utilities are set to equal values, such that no biases may exist. Reward of an action can be calculated as following for cops: 
+All the cops, during every epoch, can either save or shoot once. Based on the overall result of the cops, a reward is given to the individual agent. This reward can be either positive or negative. If many civilians die, for instance, a negative reward will be given, whilst when many hostiles were killed, a positive reward will be given. The decision that rewards are given based on group success, as opposed to individual success, is based on the idea that in a crowded situation it is not always clear what the results of individual actions are, but that a general idea of group performance can be perceived. 
+
+The reward is used to update the utility of the particular actions in a specific circumstance. These circumstances are shown in Table \ref{tab:scenarios}. The cops must thus decide, based on the amount of team members, opponents and civilians what action would be most successful, that is have the highest utility. In the beginning of the simulation, all the utilities are set to equal values, such that no biases may exist. Reward of an action can be calculated as following: 
 $$ R = (Kills + Saves - Deaths)/(Kills + Saves + Deaths)$$
-in which $Kills$ are the amount of killed hostiles, $Saves$ the amount of saved civilians, and $Deaths$ the amount of killed cops. Based on these calculations the reward will lie between -1 (only deaths) and 1 (only kills and saves). For hostiles the reward function is as follows:
-$$ R = (Kills - Deaths)/(Kills + Deaths)$$
-, in which $Kills$ is the amount of killed civilians and cops, and $Deaths$ the amount of killed fellow hostiles. Again, the reward ranges from -1 (only deaths) to 1 (only kills). 
+in which $Kills$ are the amount of killed hostiles, $Saves$ the amount of saved civilians, and $Deaths$ the amount of killed cops. Based on these calculations the reward will lie between -1 (only deaths) and 1 (only kills and saves). Because hostiles only have one action, to shoot, no learning is necessary. 
 
-As the Table \ref{tab:scenarios} also shows, there is no situation in which the teams are of equal size. It is assumed that the agents have no perfect knowledge of the area and, therefore, must decide which team has the overhand. This decision is made according to the following stochastic function:
-$$ function-that-determines-which-team-has-the-overhand. $$
+As the Table \ref{tab:scenarios} also shows, there is no situation in which the teams are of equal size. It is assumed that the agents have no perfect knowledge of the area and, therefore, must decide which team has the overhand. This decision is made according to the following function:
+$$ \Omega = \frac{n_{cops} + (n_{cops}-n_{hostiles})*\sigma}{n_{cops} + n_{hostiles}} $$
+in which $\omega$ is a value between 0 and 1, $n$ is the amount of agents of a group in that box and $\sigma$ is a random value between -1 and 1 to make the decision stochastic. If $\Omega$ is higher than $0.5$, the cops considers to have the overhand.
 
-After each epoch, the agents can decide to move to a neighboring box in the matrix. If the agent decides to move it will go to the place, in which the action with the highest utility will be applied. In other words, the agents will move to where he thrives best. 
-$$ Will-This-Be-Done-With-Some-Function-Questionmark$$
+After each epoch, the agents can decide to move to a neighboring box in the matrix. If the agent decides to move it will go to the place, in which the action with the highest utility can be applied. In other words, the cops will move to where he/she will thrive best. If several 
+$$ Will-This-Be-Done-With-Some-Function-With-Randomness-Questionmark$$
 
-\subparagraph{Learning}
+\subsubsection{Learning}
+In many re\"inforcement learning algorithms, such as Q-learning or Temporal Difference learning, have implemented the fact that newer experiences have a reduced influence  (Watkins \& Dayan, 1992: Q-Learning, technical notes; REF TD). Q-learning implements a decrese in learning rate by adjusting the learning rate variable $\lambda$ over time, which allows the function to converge to the true Q-value, that is the utility value. In temporal difference learning this is achieved by storing memories (of actions and results) in time (REF). Over time these memories will decay (less often experienced ones quicker than more experienced ones) allowing a flexible learning of the best actions/strategies. For this simulation, the learning rate variable will be implemented, similar to the Q-learning algorithm. 
+
+The update function is as follows:
+$$ U_x(t) = U_x(t-1) + $$
 
 
-
-Q-learning implements a decrese in learning rate by adjusting the learning rate variable $\lambda$ over time (REF). In temporal difference learning this is achieved by storing memories (of actions and results) in time (REF). Over time these memories will decay (less often experienced ones quicker than more experienced ones) allowing a flexible learning of the best actions/strategies. For this simulation, the learning rate variable will be implemented. 
-
-\subparagraph{Scenarios}
+\subsubsection{Scenarios}
 Overtal/Ondertal, veel civilians/weinig civilians. 
 
-\paragraph{The simulations}
+\subsection{Simulations}
