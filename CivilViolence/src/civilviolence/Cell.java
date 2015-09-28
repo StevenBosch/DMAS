@@ -33,7 +33,7 @@ public class Cell {
     
     public Cell() {
         Random rand = new Random();
-        this.despair =  rand.nextInt(256);
+        this.despair =  rand.nextInt(255);
     }
     
     /**
