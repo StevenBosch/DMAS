@@ -6,7 +6,6 @@
 package civilviolence;
 
 import civilviolence.Dmas.agentActions;
-import java.util.*;
 
 /**
  *
@@ -22,6 +21,7 @@ public class Agent {
     
     private double[][] decTable; // row 0: action save, row 1: action shoot. Column 0, 1: majority cops; column 0: majority civilians, column 1: minority civilians. Column 2, 3: minority cops; column 2: majority civilians; column 3: minority civilians.
     public Agent() {
+
         this.decTable = new double[][] {
         {0.5, 0.5, 0.5, 0.5}, // Action save. ++, +-, -+, --
         {0.5, 0.5, 0.5, 0.5} // Action shoot. ++, +-, -+, --
@@ -32,55 +32,43 @@ public class Agent {
     /**
      * @return the learningRate
      */
+
     public int getLearningRate() {
         return learningRate;
     }
 
-    /**
-     * @param learningRate the learningRate to set
-     */
     public void setLearningRate(int learningRate) {
         this.learningRate = learningRate;
     }
 
-    /**
-     * @return the awareness
-     */
     public double getAwareness() {
         return awareness;
     }
 
-    /**
-     * @param awareness the awareness to set
-     */
     public void setAwareness(double awareness) {
         this.awareness = awareness;
     }
 
-    /**
-     * @return the action
-     */
+    public int[] getLocation() {
+        return location;
+    }
+
+    public void setLocation(int[] location) {
+        this.location = location;
+    }
+
     public agentActions getAction() {
         return action;
     }
 
-    /**
-     * @param action the action to set
-     */
     public void setAction(agentActions action) {
         this.action = action;
     }
 
-    /**
-     * @return the decTable
-     */
     public double[][] getDecTable() {
         return decTable;
     }
 
-    /**
-     * @param decTable the decTable to set
-     */
     public void setDecTable(double[][] decTable) {
         this.decTable = decTable;
     }
@@ -112,5 +100,5 @@ public class Agent {
     public void setCurrentSituation(int currentSituation) {
         this.currentSituation = currentSituation;
     }
-   
+
 }
