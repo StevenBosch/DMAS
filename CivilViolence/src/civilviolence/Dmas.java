@@ -8,7 +8,9 @@ package civilviolence;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.*;
+import java.awt.Color;
+import javax.swing.JButton;
+import javax.swing.JFrame;
 
 /**
  *
@@ -16,15 +18,67 @@ import javax.swing.*;
  */
 public class Dmas implements ActionListener {
 
+    @Override
+    public void actionPerformed(ActionEvent ae) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    public enum agentActions {
+        SAVE, SHOOT;
+    }
+    
+    public static void initAgents(Cell cells[][]) {
+        // Initialize the grid with a new set of agents
+        
+        int totalCops;
+        int totalHostiles;
+        int totalCivilians;
+        
+    }
+    
+    public static void determineAction(Agent ag) {
+        
+    }
+    
+    public static void playGame(Cell cell, double noise) {
+        // Let all the agents in the cell determine their action and update the number of saves, kills and losses accordingly
+        for (Agent ag: cell.agents) {
+            ag.setAwareness((double)(cell.getNrGood()/cell.getNrBad())*noise);
+            determineAction(ag);
+            if (ag.getAction() == agentActions.SAVE) {
+                cell.setSaves(cell.getSaves()+1);
+            }
+        }
+
+        cell.setNrNeutral(cell.getNrNeutral()-cell.getSaves());
+    }
+    
+    public static void updateCells(int length, int width, Cell cells[][], double noise) {
+        // Loop through all the cells, run the simulation in each cell and let all the agents move
+        for (int i = 0; i < length; ++i) {
+            for (int j = 0; i < width; ++j) {
+                playGame(cells[i][j], noise);
+            }
+        }
+    }
+    
+        public static void updateAgentSuccess(Agent agent) {
+        // Update the success rates of the Agents
+        double successRate = 0;
+        
+        agent.setSuccessRate(successRate);
+    }
+    
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        // TODO code application logic here
         System.out.println("Hello World!");
 
         int LENGTH = 20;
         int WIDTH = 20;
+        int vision = 1; // Field of view for every agent
+        double noise = 0; // Noise for the awareness of agents
 
         // Create the griddy
         Cell[][] grid = new Cell[LENGTH][WIDTH];
@@ -80,11 +134,5 @@ public class Dmas implements ActionListener {
         }
 
         test.setVisible(true);
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent ae
-    ) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
