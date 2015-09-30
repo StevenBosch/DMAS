@@ -40,7 +40,7 @@ Many reinforcement learning algorithms, such as Q-learning or Temporal-Differenc
 
 The utility will be updated according to the following function:
 $$ U_{as}(t) = U_{as}(t-1) + U_{as}(t-1) * \lambda * R_{as}(t) $$
-in which $U_x(t)$ is the new utility of an action $a$ in situation $s$, $t$ is the moment in time, $\lambda$ is the learning rate factor ranging from 0 to 1, and $R(t)$ is the reward, as calculated before. After each epoch, in which one action could be taken by each agent, the utility functions will be updated. \textbf{\emph{The downside of this formula is that utility is update really slowly in the beginning, but when U exceeds 1, it will skyrocket. Alternative formula:}}
+in which $U_x(t)$ is the new utility of an action $a$ in situation $s$, $t$ is the moment in time, $\lambda$ is the learning rate factor ranging from 0 to 1, and $R(t)$ is the reward, as calculated before. After each epoch, in which one action could be taken by each agent, the utility functions will be updated. \textbf{\emph{The downside of this formula is that utility is updated really slowly in the beginning, but when $U$ exceeds 1, it will skyrocket. Alternative formula:}}
 $$ U_{as}(t) = \frac{U_{as}(t-1) + \lambda * R_{as}(t)}{1+\lambda} $$
 
 To initialize the cop agents and set the learning rate variable, random values between 0 and 1 will be taken from a Gaussian distribution. This allows us to create a team with mixed levels of experience, which increases the realism of the simulation. By setting the skewness of the Gaussian distribution we can manipulate the mean learning rate value to be low and high, which allows the comparison of highly experienced teams (low mean learning rate) with less experienced teams (high mean learning rate). 
