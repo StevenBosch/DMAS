@@ -9,6 +9,7 @@ import javax.swing.JFrame;
  *
  * @author maleco
  */
+import java.util.Random;
 public class Dmas implements ActionListener {
 
     @Override
@@ -24,16 +25,17 @@ public class Dmas implements ActionListener {
         for (int i = 0; i < param.get("LENGTH"); ++i) {
             for (int j = 0; j < param.get("WIDTH"); ++j) {
                 grid[i][j] = new Cell(param);
-                initAgents(grid[i][j], param);
             }
         }
     }
 
-    public static void initAgents(Cell cell, HashMap<String, Integer> param) {
+    public static void initAgents(Cell grid[][], HashMap<String, Integer> param) {
+        Random rand = new Random();
+
         // Initialize the grid with a new set of agents
         for (int i = 0; i < param.get("NRCOPS"); ++i) {
             Agent agent = new Agent();
-            cell.addAgent(agent);
+            grid[rand.nextInt(param.get("LENGTH"))][rand.nextInt(param.get("WIDTH"))].addAgent(agent);
         }
     }
 
@@ -167,6 +169,7 @@ public class Dmas implements ActionListener {
         // Create and initialize the griddy
         Cell[][] grid = new Cell[param.get("LENGTH")][param.get("WIDTH")];
         initGrid(grid, param);
+        initAgents(grid, param);
 
         // Create a nice frame to show the griddy
         JFrame frame = new JFrame();
