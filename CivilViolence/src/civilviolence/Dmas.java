@@ -10,6 +10,7 @@ import javax.swing.JFrame;
  *
  * @author maleco
  */
+import java.util.Random;
 public class Dmas implements ActionListener {
 
     @Override
@@ -25,16 +26,17 @@ public class Dmas implements ActionListener {
         for (int i = 0; i < param.get("LENGTH"); ++i) {
             for (int j = 0; j < param.get("WIDTH"); ++j) {
                 grid[i][j] = new Cell(param);
-                initAgents(grid[i][j], param);
             }
         }
     }
 
-    public static void initAgents(Cell cell, HashMap<String, Integer> param) {
+    public static void initAgents(Cell grid[][], HashMap<String, Integer> param) {
+        Random rand = new Random();
+
         // Initialize the grid with a new set of agents
         for (int i = 0; i < param.get("NRCOPS"); ++i) {
             Agent agent = new Agent();
-            cell.addAgent(agent);
+            grid[rand.nextInt(param.get("LENGTH"))][rand.nextInt(param.get("WIDTH"))].addAgent(agent);
         }
     }
 
@@ -75,8 +77,12 @@ public class Dmas implements ActionListener {
         double hostileAimCops = 0.5; // The extent to which hostiles aim at cops.
         
         for (Agent ag: cell.getAgents()) {
-            ag.setAwareness((double)(cell.getNrGood()/(cell.getNrHostiles()+cell.getNrGood()))*noise);
-            ag.setDanger((double)(cell.getNrNeutral()/(cell.getNrHostiles()+cell.getNrNeutral()))*noise);
+            if ((cell.getNrHostiles()+cell.getAgents().size()) != 0) {
+                ag.setAwareness((double)(cell.getAgents().size()/(cell.getNrHostiles()+cell.getAgents().size()))*noise);
+            } else ag.setAwareness(1);
+            if ((cell.getNrHostiles()+cell.getNrNeutral()) != 0) {
+                ag.setDanger((double)(cell.getNrNeutral()/(cell.getNrHostiles()+cell.getNrNeutral()))*noise);
+            } else ag.setDanger(1);
             determineAction(ag);
             if (ag.getAction() == agentActions.SAVE) { // If the current agent chooses to save a civilian
                 if (cell.getNrNeutral() > 0) { // And there are still civilians left
@@ -92,8 +98,8 @@ public class Dmas implements ActionListener {
         } else {
             cell.setKills((int) (shootingCops * aim)); // Else just set the number of kills by cops
         }
-        if ((aim * hostileAimCops * cell.getNrHostiles()) > cell.getNrGood()) { // If the hostiles would kill more cops than there are
-            cell.setLossesCops(cell.getNrGood()); // All the cops are killed
+        if ((aim * hostileAimCops * cell.getNrHostiles()) > cell.getAgents().size()) { // If the hostiles would kill more cops than there are
+            cell.setLossesCops(cell.getAgents().size()); // All the cops are killed
         } else {
             cell.setLossesCops((int) (aim * hostileAimCops * cell.getNrHostiles())); // Set the number of cop losses
         }
@@ -104,7 +110,6 @@ public class Dmas implements ActionListener {
 
         // Update the numbers in the cell
         cell.setNrHostiles(cell.getNrHostiles() - cell.getKills());
-        cell.setNrGood(cell.getNrGood() - cell.getLossesCops());
         cell.setNrNeutral(cell.getNrNeutral() - cell.getLossesNeutral());
     }
 
@@ -139,11 +144,6 @@ public class Dmas implements ActionListener {
         }
     }
 
-    // Run one iteration of a simulation
-    public static void run(Cell cells[][]) {
-        //Determine the actions of each agents
-    }
-
     public static void main(String[] args) {
 
         // The parameters
@@ -153,7 +153,7 @@ public class Dmas implements ActionListener {
                 put("WIDTH", 20);
                 put("FOV", 1);
                 put("NOISE", 0);
-                put("NRCOPS", 400);
+                put("NRCOPS", 4000);
                 put("NRHOSTILES", 10);
                 put("MEANNEUTRAL", 200);
                 put("STDNEUTRAL", 40);
@@ -168,6 +168,7 @@ public class Dmas implements ActionListener {
         // Create and initialize the griddy
         Cell[][] grid = new Cell[param.get("LENGTH")][param.get("WIDTH")];
         initGrid(grid, param);
+        initAgents(grid, param);
 
         // Create a nice frame to show the griddy
         JFrame frame = new JFrame();
@@ -185,8 +186,8 @@ public class Dmas implements ActionListener {
         gFrame.ControlFrame.add(btn);
         // Display the gui frame
         gFrame.setVisible(true);
-
-        // Lets do a simulation
-        //updateCells(grid, param);
+        
+        // Run the simulation
+        updateCells(grid, param);
     }
 }

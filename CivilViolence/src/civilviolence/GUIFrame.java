@@ -57,7 +57,9 @@ public class GUIFrame extends javax.swing.JFrame {
                 final JButton btn = new javax.swing.JButton();
                 final int finalRow = row;
                 final int finalCol = col;
-                
+                final int nrNeutral = grid[row][col].getNrNeutral();
+                final int nrHostiles = grid[row][col].getNrHostiles();
+                final int nrCops = grid[row][col].getAgents().size();
 
                 btn.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent event) {
