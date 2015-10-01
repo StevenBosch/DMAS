@@ -28,7 +28,7 @@ The reward is used to update the utility of the particular actions in a specific
 $$ R(t) = \frac{Kills(t) + Saves(t) - Losses(t)}{Kills(t) + Saves(t) + Losses(t)}$$
 in which $Kills$ are the amount of killed hostiles in timepoint $t$, $Saves$ the amount of saved civilians, and $Losses$ the amount of killed cops and civilians. Based on these calculations the reward will lie between -1 (only deaths) and 1 (only kills and saves). Because hostiles only have one action, no learning is necessary. 
 
-As the Table \ref{tab:scenarios} also shows, there is no situation in which the teams are of equal size. The cops must decide whether they have the overhand or not, which is done according to the following function:
+As the \autoref{tab:scenarios} also shows, there is no situation in which the teams are of equal size. The cops must decide whether they have the overhand or not, which is done according to the following function:
 $$ \Omega = \frac{n_{cops} + (n_{cops}-n_{hostiles})*\sigma}{n_{cops} + n_{hostiles}} $$
 in which $\Omega$ is a value between 0 and 1, $n$ is the amount of agents of a group in that box and $\sigma$ is a random value between -1 and 1 to make the decision stochastic. It is assumed namely that the cops have no perfect knowledge of their environmnet. If $\Omega$ is higher than $0.5$, the cops assume they have the overhand.
 
