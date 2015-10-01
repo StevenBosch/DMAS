@@ -71,7 +71,7 @@ public class GUIFrame extends javax.swing.JFrame {
                 final int finalCol = col;
                 final int nrNeutral = grid[row][col].getNrNeutral();
                 final int nrHostiles = grid[row][col].getNrHostiles();
-                final int nrCops = grid[row][col].getNrGood();
+                final int nrCops = grid[row][col].getAgents().size();
 
                 // Create the button
                 JButton btn = new javax.swing.JButton();
