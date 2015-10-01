@@ -26,7 +26,7 @@ public class Cell {
     private int lossesNeutral;
 
     // The available agents on this cell
-    public List<Agent> agents = new ArrayList<>();
+    private List<Agent> agents = new ArrayList<>();
 
     // The general consensus on the cell (0 - 256)
     private int despair;
@@ -39,6 +39,10 @@ public class Cell {
         param.put("TOTALNRNEUTRAL", param.get("TOTALNRNEUTRAL")+this.nrNeutral);
         param.put("TOTALNRHOSTILES", param.get("TOTALNRHOSTILES")+this.nrHostiles);
    }
+    
+    public void addAgent(Agent agent) {
+        agents.add(agent);
+    }
     
     public double getSuccess() {
         return 1;//((this.saves + this.kills - this.lossesCops - this.lossesNeutral) / (this.saves + this.kills + this.lossesCops + this.lossesNeutral));
@@ -154,6 +158,20 @@ public class Cell {
      */
     public void setLossesNeutral(int lossesNeutral) {
         this.lossesNeutral = lossesNeutral;
+    }
+
+    /**
+     * @return the agents
+     */
+    public List<Agent> getAgents() {
+        return agents;
+    }
+
+    /**
+     * @param agents the agents to set
+     */
+    public void setAgents(List<Agent> agents) {
+        this.agents = agents;
     }
 
 }
