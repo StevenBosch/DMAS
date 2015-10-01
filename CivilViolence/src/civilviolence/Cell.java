@@ -41,7 +41,7 @@ public class Cell {
    }
     
     public double getSuccess() {
-        return ((this.saves + this.kills - this.lossesCops - this.lossesNeutral) / (this.saves + this.kills + this.lossesCops + this.lossesNeutral));
+        return 1;//((this.saves + this.kills - this.lossesCops - this.lossesNeutral) / (this.saves + this.kills + this.lossesCops + this.lossesNeutral));
     }
 
     /**

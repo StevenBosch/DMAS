@@ -147,7 +147,7 @@ public class Dmas implements ActionListener {
 
         // The parameters
 
-        HashMap<String, Integer> param = new HashMap<String, Integer>() {{
+        final HashMap<String, Integer> param = new HashMap<String, Integer>() {{
                 put("LENGTH", 20);
                 put("WIDTH", 20);
                 put("FOV", 1);
@@ -176,7 +176,7 @@ public class Dmas implements ActionListener {
         JFrame frame = new JFrame();
 
         // Import/Edit the layout to show the griddy
-        GUIFrame gFrame = new GUIFrame();
+        final GUIFrame gFrame = new GUIFrame();
         gFrame.jPanel1.setLayout(
                 new GridLayout(
                         param.get("LENGTH"),
@@ -215,7 +215,9 @@ public class Dmas implements ActionListener {
                 );
 
                 // Adjust the information box on buttonclick
-                btn.addActionListener((ActionEvent e) -> {
+                // btn.addActionListener((ActionEvent e) -> {
+                btn.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent event) {
                     gFrame.infoField.setText(
                             "\n\n\t Number of neutrals on this site:\t" + nrNeutral + '\n'
                             + "\t Number of hostiles on this site:\t" + nrHostiles
@@ -223,6 +225,7 @@ public class Dmas implements ActionListener {
                             + "\t Total of neutral on this site:\t" + param.get("TOTALNRNEUTRAL") + '\n'
                             + "\t Total of hostiles on this site:\t" + param.get("TOTALNRHOSTILES")
                     );
+                    }
                 });
 
                 // Add the button to the group and the panel
