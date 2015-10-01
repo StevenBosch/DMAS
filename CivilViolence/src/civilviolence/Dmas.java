@@ -17,7 +17,6 @@ public class Dmas implements ActionListener {
     }
 
     public enum agentActions {
-
         SAVE, SHOOT;
     }
 
@@ -25,20 +24,17 @@ public class Dmas implements ActionListener {
         for (int i = 0; i < param.get("LENGTH"); ++i) {
             for (int j = 0; j < param.get("WIDTH"); ++j) {
                 grid[i][j] = new Cell(param);
+                initAgents(grid[i][j], param);
             }
         }
     }
 
-    public static void initAgents(Agent[] agents, Cell cells[][], HashMap<String, Integer> param) {
+    public static void initAgents(Cell cell, HashMap<String, Integer> param) {
         // Initialize the grid with a new set of agents
         for (int i = 0; i < param.get("NRCOPS"); ++i) {
-            agents[i] = new Agent();
+            Agent agent = new Agent();
+            cell.addAgent(agent);
         }
-
-        int totalCops;
-        int totalHostiles;
-        int totalCivilians;
-
     }
 
     public static void determineAction(Agent ag) {
@@ -58,30 +54,28 @@ public class Dmas implements ActionListener {
             }
         } else if (ag.getAwareness() <= 0.5 && ag.getDanger() > 0.5) { // Cops are a minority and civilians are a majority
             ag.setCurrentSituation(2);
-            if (ag.getDecTable()[0][0] > ag.getDecTable()[1][0]) { // SAVE save has a higher utility
+            if (ag.getDecTable()[0][2] > ag.getDecTable()[1][2]){ // SAVE save has a higher utility
                 ag.setAction(agentActions.SAVE);
             } else {
                 ag.setAction(agentActions.SHOOT); // SHOOT has a higher utility
             }
         } else if (ag.getAwareness() >= 0.5 && ag.getDanger() <= 0.5) { // Cops and civilians are a minority
             ag.setCurrentSituation(3);
-            if (ag.getDecTable()[0][1] > ag.getDecTable()[1][1]) { // SAVE save has a higher utility
+            if (ag.getDecTable()[0][3] > ag.getDecTable()[1][3]){ // SAVE save has a higher utility
                 ag.setAction(agentActions.SAVE);
-            } else {
-                ag.setAction(agentActions.SHOOT); // SHOOT has a higher utility
-            }
+            } else ag.setAction(agentActions.SHOOT); // SHOOT has a higher utility
         }
     }
 
     public static void playGame(Cell cell, double noise) {
         // Let all the agents in the cell determine their action and update the number of saves, kills and losses accordingly
-        int shootingCops = cell.agents.size(); // The number of cops that chooses to shoot
+        int shootingCops = cell.getAgents().size(); // The number of cops that chooses to shoot
         double aim = 0.5; // The uncertainty of actually hitting someone
         double hostileAimCops = 0.5; // The extent to which hostiles aim at cops.
-
-        for (Agent ag : cell.agents) {
-            ag.setAwareness((double) (cell.getNrGood() / (cell.getNrHostiles() + cell.getNrGood())) * noise);
-            ag.setDanger((double) (cell.getNrNeutral() / (cell.getNrHostiles() + cell.getNrNeutral())) * noise);
+        
+        for (Agent ag: cell.getAgents()) {
+            ag.setAwareness((double)(cell.getNrGood()/(cell.getNrHostiles()+cell.getNrGood()))*noise);
+            ag.setDanger((double)(cell.getNrNeutral()/(cell.getNrHostiles()+cell.getNrNeutral()))*noise);
             determineAction(ag);
             if (ag.getAction() == agentActions.SAVE) { // If the current agent chooses to save a civilian
                 if (cell.getNrNeutral() > 0) { // And there are still civilians left
@@ -115,18 +109,16 @@ public class Dmas implements ActionListener {
 
     public static void killAgents(Cell cell) {
         // Remove killed agents from the list 
-        cell.agents = cell.agents.subList(0, cell.agents.size() - cell.getLossesCops());
+        cell.setAgents(cell.getAgents().subList(0, cell.getAgents().size() - cell.getLossesCops()));
     }
 
     public static void updateAgents(Cell cell) {
         // Update the decision tables of the agents
         double success = cell.getSuccess();
-        for (Agent ag : cell.agents) {
-            if (ag.getAction() == agentActions.SAVE) {
-                ag.getDecTable()[0][ag.getCurrentSituation()] = ag.getDecTable()[0][ag.getCurrentSituation()] + ag.getDecTable()[0][ag.getCurrentSituation()] * cell.getSuccess() * ag.getLearningRate();
-            } else {
-                ag.getDecTable()[1][ag.getCurrentSituation()] = ag.getDecTable()[1][ag.getCurrentSituation()] + ag.getDecTable()[1][ag.getCurrentSituation()] * cell.getSuccess() * ag.getLearningRate();
-            }
+        for (Agent ag : cell.getAgents()) {
+            if(ag.getAction() == agentActions.SAVE) {
+                ag.getDecTable()[0][ag.getCurrentSituation()] = (ag.getDecTable()[0][ag.getCurrentSituation()] + cell.getSuccess() * ag.getLearningRate())/(1+ag.getLearningRate());
+            } else ag.getDecTable()[1][ag.getCurrentSituation()] = (ag.getDecTable()[1][ag.getCurrentSituation()] + cell.getSuccess() * ag.getLearningRate())/(1+ag.getLearningRate());
         }
     }
 
@@ -172,13 +164,9 @@ public class Dmas implements ActionListener {
             }
         };
 
-        // Create the griddy
+        // Create and initialize the griddy
         Cell[][] grid = new Cell[param.get("LENGTH")][param.get("WIDTH")];
         initGrid(grid, param);
-
-        // Initialize the griddy
-        Agent[] agents = new Agent[param.get("NRCOPS")];
-        initAgents(agents, grid, param);
 
         // Create a nice frame to show the griddy
         JFrame frame = new JFrame();
