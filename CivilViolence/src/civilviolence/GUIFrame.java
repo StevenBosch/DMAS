@@ -5,6 +5,18 @@
  */
 package civilviolence;
 
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.GridLayout;
+import java.awt.Insets;
+import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.HashMap;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+
 /**
  *
  * @author maleco
@@ -13,9 +25,97 @@ public class GUIFrame extends javax.swing.JFrame {
 
     /**
      * Creates new form NewJFrame
+     *
+     * @param grid
+     * @param param
      */
-    public GUIFrame() {
+    public GUIFrame(Cell[][] grid, final HashMap<String, Integer> param) {
         initComponents();
+
+        // Set the layouts
+        GridPanel.setLayout(
+                new GridLayout(
+                        param.get("LENGTH"),
+                        param.get("WIDTH")
+                ));
+        ControlFrame.setLayout(new GridLayout(1, 3));
+
+        // Maximize the screen
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
+
+        // Set the panel split
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        jSplitPane1.setDividerLocation(screenSize.height);
+        jSplitPane1.setEnabled(false);
+
+        // Add the grid buttons
+        setGridButtons(grid, param);
+        
+        // Add the control buttons
+        JButton btn = new javax.swing.JButton("Knopje 1");
+        ControlFrame.add(btn);
+        JButton btn2 = new javax.swing.JButton("Knopje 2");
+        ControlFrame.add(btn2);
+        JButton btn3 = new javax.swing.JButton("Knopje 3");
+        ControlFrame.add(btn3);
+    }
+
+    private void setGridButtons(Cell[][] grid, final HashMap<String, Integer> param) {
+        // Add the grid buttons
+        for (int row = 0; row < param.get("LENGTH"); ++row) {
+            for (int col = 0; col < param.get("WIDTH"); ++col) {
+
+                // Variables to be used in the action listener
+                // (have to be final for some reason)
+                final int finalRow = row;
+                final int finalCol = col;
+                final int nrNeutral = grid[row][col].getNrNeutral();
+                final int nrHostiles = grid[row][col].getNrHostiles();
+                final int nrCops = grid[row][col].getNrGood();
+
+                // Create the button
+                JButton btn = new javax.swing.JButton();
+
+                // Set a random background
+                if (nrHostiles == 0) {
+                    btn.setBackground(new Color(0, 0, 255));
+                } else if (nrCops == 0 & nrHostiles != 0) {
+                    btn.setBackground(new Color(255, 0, 0));
+                } else {
+                    // Range from -1 to 1
+                    float temp = ((((float) (nrCops - nrHostiles) / (nrCops + nrHostiles)) + 1) / 2) * 255;
+                    btn.setBackground(new Color(
+                            (int) (255 - temp),
+                            0,
+                            (int) temp
+                    ));
+                }
+                // Set the text as number of neutrals
+                btn.setFont(new Font("Arial", Font.PLAIN, 12));
+                btn.setMargin(new Insets(0, 0, 0, 0));
+                btn.setForeground(Color.WHITE);
+                btn.setText("" + grid[row][col].getNrNeutral());
+
+                // Adjust the information box on buttonclick
+                // btn.addActionListener((ActionEvent e) -> {
+                btn.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent event) {
+                        infoField.setText(
+                                "\n\n\t Number of neutrals on this site:\t" + nrNeutral + '\n'
+                                + "\t Number of hostiles on this site:\t" + nrHostiles + '\n'
+                                + "\t Number of cops on this site:\t\t" + nrCops
+                                + "\n\n"
+                                + "\t Total of neutral on this site:\t" + param.get("TOTALNRNEUTRAL") + '\n'
+                                + "\t Total of hostiles on this site:\t" + param.get("TOTALNRHOSTILES")
+                        );
+                    }
+                });
+
+                // Add the button to the group and the panel
+                buttonGroup1.add(btn);
+                GridPanel.add(btn);
+            }
+        }
     }
 
     /**
@@ -29,9 +129,10 @@ public class GUIFrame extends javax.swing.JFrame {
 
         buttonGroup1 = new javax.swing.ButtonGroup();
         jSplitPane1 = new javax.swing.JSplitPane();
-        jPanel1 = new javax.swing.JPanel();
-        jPanel2 = new javax.swing.JPanel();
+        GridPanel = new javax.swing.JPanel();
+        RightPanel = new javax.swing.JPanel();
         infoField = new javax.swing.JTextPane();
+        ControlFrame = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setPreferredSize(new java.awt.Dimension(1024, 768));
@@ -41,29 +142,32 @@ public class GUIFrame extends javax.swing.JFrame {
         jSplitPane1.setMinimumSize(new java.awt.Dimension(600, 400));
         jSplitPane1.setPreferredSize(new java.awt.Dimension(600, 400));
 
-        jPanel1.setMinimumSize(new java.awt.Dimension(400, 400));
-        jPanel1.setPreferredSize(new java.awt.Dimension(400, 400));
-        jPanel1.setRequestFocusEnabled(false);
+        GridPanel.setMinimumSize(new java.awt.Dimension(400, 400));
+        GridPanel.setPreferredSize(new java.awt.Dimension(400, 400));
+        GridPanel.setRequestFocusEnabled(false);
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        javax.swing.GroupLayout GridPanelLayout = new javax.swing.GroupLayout(GridPanel);
+        GridPanel.setLayout(GridPanelLayout);
+        GridPanelLayout.setHorizontalGroup(
+            GridPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 400, Short.MAX_VALUE)
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 766, Short.MAX_VALUE)
+        GridPanelLayout.setVerticalGroup(
+            GridPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 400, Short.MAX_VALUE)
         );
 
-        jSplitPane1.setLeftComponent(jPanel1);
+        jSplitPane1.setLeftComponent(GridPanel);
 
-        jPanel2.setLayout(new java.awt.GridLayout(0, 1));
+        RightPanel.setLayout(new java.awt.GridLayout(0, 1));
 
         infoField.setFont(new java.awt.Font("Cantarell", 0, 24)); // NOI18N
-        jPanel2.add(infoField);
+        RightPanel.add(infoField);
 
-        jSplitPane1.setRightComponent(jPanel2);
+        ControlFrame.setLayout(new java.awt.GridLayout());
+        RightPanel.add(ControlFrame);
+
+        jSplitPane1.setRightComponent(RightPanel);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -112,18 +216,14 @@ public class GUIFrame extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new GUIFrame().setVisible(true);
-            }
-        });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    public javax.swing.JPanel ControlFrame;
+    public javax.swing.JPanel GridPanel;
+    public javax.swing.JPanel RightPanel;
     public javax.swing.ButtonGroup buttonGroup1;
     public javax.swing.JTextPane infoField;
-    public javax.swing.JPanel jPanel1;
-    public javax.swing.JPanel jPanel2;
     public javax.swing.JSplitPane jSplitPane1;
     // End of variables declaration//GEN-END:variables
 }
