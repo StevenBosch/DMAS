@@ -29,9 +29,10 @@ public class GUIFrame extends javax.swing.JFrame {
 
         buttonGroup1 = new javax.swing.ButtonGroup();
         jSplitPane1 = new javax.swing.JSplitPane();
-        jPanel1 = new javax.swing.JPanel();
-        jPanel2 = new javax.swing.JPanel();
+        GridPanel = new javax.swing.JPanel();
+        RightPanel = new javax.swing.JPanel();
         infoField = new javax.swing.JTextPane();
+        ControlFrame = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setPreferredSize(new java.awt.Dimension(1024, 768));
@@ -41,29 +42,32 @@ public class GUIFrame extends javax.swing.JFrame {
         jSplitPane1.setMinimumSize(new java.awt.Dimension(600, 400));
         jSplitPane1.setPreferredSize(new java.awt.Dimension(600, 400));
 
-        jPanel1.setMinimumSize(new java.awt.Dimension(400, 400));
-        jPanel1.setPreferredSize(new java.awt.Dimension(400, 400));
-        jPanel1.setRequestFocusEnabled(false);
+        GridPanel.setMinimumSize(new java.awt.Dimension(400, 400));
+        GridPanel.setPreferredSize(new java.awt.Dimension(400, 400));
+        GridPanel.setRequestFocusEnabled(false);
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        javax.swing.GroupLayout GridPanelLayout = new javax.swing.GroupLayout(GridPanel);
+        GridPanel.setLayout(GridPanelLayout);
+        GridPanelLayout.setHorizontalGroup(
+            GridPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 400, Short.MAX_VALUE)
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 766, Short.MAX_VALUE)
+        GridPanelLayout.setVerticalGroup(
+            GridPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 400, Short.MAX_VALUE)
         );
 
-        jSplitPane1.setLeftComponent(jPanel1);
+        jSplitPane1.setLeftComponent(GridPanel);
 
-        jPanel2.setLayout(new java.awt.GridLayout(0, 1));
+        RightPanel.setLayout(new java.awt.GridLayout(0, 1));
 
         infoField.setFont(new java.awt.Font("Cantarell", 0, 24)); // NOI18N
-        jPanel2.add(infoField);
+        RightPanel.add(infoField);
 
-        jSplitPane1.setRightComponent(jPanel2);
+        ControlFrame.setLayout(new java.awt.GridLayout());
+        RightPanel.add(ControlFrame);
+
+        jSplitPane1.setRightComponent(RightPanel);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -120,10 +124,11 @@ public class GUIFrame extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    public javax.swing.JPanel ControlFrame;
+    public javax.swing.JPanel GridPanel;
+    public javax.swing.JPanel RightPanel;
     public javax.swing.ButtonGroup buttonGroup1;
     public javax.swing.JTextPane infoField;
-    public javax.swing.JPanel jPanel1;
-    public javax.swing.JPanel jPanel2;
     public javax.swing.JSplitPane jSplitPane1;
     // End of variables declaration//GEN-END:variables
 }
