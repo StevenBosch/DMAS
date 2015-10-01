@@ -8,7 +8,9 @@ import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 
@@ -26,6 +28,8 @@ public class GUIFrame extends javax.swing.JFrame {
      */
     public GUIFrame(Cell[][] grid, final HashMap<String, Integer> param) {
         initComponents();
+        
+        gridbuttons = new ArrayList<>();
 
         // Set the layouts
         GridPanel.setLayout(
@@ -105,7 +109,7 @@ public class GUIFrame extends javax.swing.JFrame {
                 });
                 btn.doClick(1);
                 // Add the button to the group and the panel
-                buttonGroup1.add(btn);
+                gridbuttons.add(btn);
                 GridPanel.add(btn);
             }
         }
@@ -232,4 +236,5 @@ public class GUIFrame extends javax.swing.JFrame {
     public javax.swing.JTextPane infoField;
     public javax.swing.JSplitPane jSplitPane1;
     // End of variables declaration//GEN-END:variables
+    public List<JButton> gridbuttons;
 }

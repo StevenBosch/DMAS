@@ -181,6 +181,8 @@ public class Dmas implements ActionListener {
         btn.addActionListener(new ActionListener() {           
             public void actionPerformed(ActionEvent e) {
                 updateCells(grid2, param);
+                for (JButton btn : gFrame.gridbuttons)
+                    btn.doClick(1);
             }
         });
         gFrame.ControlFrame.add(btn);
