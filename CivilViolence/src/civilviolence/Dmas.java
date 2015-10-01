@@ -187,6 +187,6 @@ public class Dmas implements ActionListener {
         gFrame.setVisible(true);
 
         // Lets do a simulation
-        updateCells(grid, param);
+        //updateCells(grid, param);
     }
 }

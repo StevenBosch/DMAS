@@ -48,7 +48,7 @@ public class GUIFrame extends javax.swing.JFrame {
 
     }
 
-    private void setGridButtons(final Cell[][] grid, HashMap<String, Integer> param) {
+    private void setGridButtons(final Cell[][] grid, final HashMap<String, Integer> param) {
         // Add the grid buttons
         for (int row = 0; row < param.get("LENGTH"); ++row) {
             for (int col = 0; col < param.get("WIDTH"); ++col) {
@@ -57,15 +57,17 @@ public class GUIFrame extends javax.swing.JFrame {
                 final JButton btn = new javax.swing.JButton();
                 final int finalRow = row;
                 final int finalCol = col;
+                
 
                 btn.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent event) {
 
-                        final int nrNeutral = grid[finalRow][finalCol].getNrNeutral();
-                        final int nrHostiles = grid[finalRow][finalCol].getNrHostiles();
-                        final int nrCops = grid[finalRow][finalCol].getNrGood();
-                        final int totalNeutrals = grid[finalRow][finalCol].getNrNeutral();
-                        final int totalHostiles = grid[finalRow][finalCol].getNrHostiles();
+                        int nrNeutral = grid[finalRow][finalCol].getNrNeutral();
+                        int nrHostiles = grid[finalRow][finalCol].getNrHostiles();
+                  
+                        int nrCops = grid[finalRow][finalCol].getNrGood();
+                        int totalNeutrals = param.get("TOTALNRNEUTRAL");
+                        int totalHostiles = param.get("TOTALNRHOSTILES");
 
                         // Set the background
                         if (nrHostiles == 0) {
@@ -99,7 +101,7 @@ public class GUIFrame extends javax.swing.JFrame {
                         );
                     }
                 });
-
+                btn.doClick(1);
                 // Add the button to the group and the panel
                 buttonGroup1.add(btn);
                 GridPanel.add(btn);
