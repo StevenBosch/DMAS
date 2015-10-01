@@ -67,7 +67,7 @@ public class GUIFrame extends javax.swing.JFrame {
                         int nrNeutral = grid[finalRow][finalCol].getNrNeutral();
                         int nrHostiles = grid[finalRow][finalCol].getNrHostiles();
                   
-                        int nrCops = grid[finalRow][finalCol].getNrGood();
+                        int nrCops = grid[finalRow][finalCol].getAgents().size();
                         int totalNeutrals = param.get("TOTALNRNEUTRAL");
                         int totalHostiles = param.get("TOTALNRHOSTILES");
 

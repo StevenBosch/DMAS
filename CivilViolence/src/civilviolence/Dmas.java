@@ -153,11 +153,11 @@ public class Dmas implements ActionListener {
                 put("WIDTH", 20);
                 put("FOV", 1);
                 put("NOISE", 0);
-                put("NRCOPS", 4000);
+                put("NRCOPS", 40000);
                 put("NRHOSTILES", 10);
                 put("MEANNEUTRAL", 200);
                 put("STDNEUTRAL", 40);
-                put("MEANHOSTILES", 20);
+                put("MEANHOSTILES", 100);
                 put("STDHOSTILES", 5);
                 put("SUCCESCRIT", 0);
                 put("TOTALNRNEUTRAL", 0);
