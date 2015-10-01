@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package civilviolence;
 
 import java.awt.Color;
@@ -50,63 +45,57 @@ public class GUIFrame extends javax.swing.JFrame {
 
         // Add the grid buttons
         setGridButtons(grid, param);
-        
-        // Add the control buttons
-        JButton btn = new javax.swing.JButton("Knopje 1");
-        ControlFrame.add(btn);
-        JButton btn2 = new javax.swing.JButton("Knopje 2");
-        ControlFrame.add(btn2);
-        JButton btn3 = new javax.swing.JButton("Knopje 3");
-        ControlFrame.add(btn3);
+
     }
 
-    private void setGridButtons(Cell[][] grid, final HashMap<String, Integer> param) {
+    private void setGridButtons(final Cell[][] grid, HashMap<String, Integer> param) {
         // Add the grid buttons
         for (int row = 0; row < param.get("LENGTH"); ++row) {
             for (int col = 0; col < param.get("WIDTH"); ++col) {
 
-                // Variables to be used in the action listener
-                // (have to be final for some reason)
+                // Create the button
+                final JButton btn = new javax.swing.JButton();
                 final int finalRow = row;
                 final int finalCol = col;
-                final int nrNeutral = grid[row][col].getNrNeutral();
-                final int nrHostiles = grid[row][col].getNrHostiles();
-                final int nrCops = grid[row][col].getNrGood();
 
-                // Create the button
-                JButton btn = new javax.swing.JButton();
-
-                // Set a random background
-                if (nrHostiles == 0) {
-                    btn.setBackground(new Color(0, 0, 255));
-                } else if (nrCops == 0 & nrHostiles != 0) {
-                    btn.setBackground(new Color(255, 0, 0));
-                } else {
-                    // Range from -1 to 1
-                    float temp = ((((float) (nrCops - nrHostiles) / (nrCops + nrHostiles)) + 1) / 2) * 255;
-                    btn.setBackground(new Color(
-                            (int) (255 - temp),
-                            0,
-                            (int) temp
-                    ));
-                }
-                // Set the text as number of neutrals
-                btn.setFont(new Font("Arial", Font.PLAIN, 12));
-                btn.setMargin(new Insets(0, 0, 0, 0));
-                btn.setForeground(Color.WHITE);
-                btn.setText("" + grid[row][col].getNrNeutral());
-
-                // Adjust the information box on buttonclick
-                // btn.addActionListener((ActionEvent e) -> {
                 btn.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent event) {
+
+                        final int nrNeutral = grid[finalRow][finalCol].getNrNeutral();
+                        final int nrHostiles = grid[finalRow][finalCol].getNrHostiles();
+                        final int nrCops = grid[finalRow][finalCol].getNrGood();
+                        final int totalNeutrals = grid[finalRow][finalCol].getNrNeutral();
+                        final int totalHostiles = grid[finalRow][finalCol].getNrHostiles();
+
+                        // Set the background
+                        if (nrHostiles == 0) {
+                            btn.setBackground(new Color(0, 0, 255));
+                        } else if (nrCops == 0 & nrHostiles != 0) {
+                            btn.setBackground(new Color(255, 0, 0));
+                        } else {
+                            // Range from -1 to 1
+                            float temp = ((((float) (nrCops - nrHostiles) / (nrCops + nrHostiles)) + 1) / 2) * 255;
+                            btn.setBackground(new Color(
+                                    (int) (255 - temp),
+                                    0,
+                                    (int) temp
+                            ));
+                        }
+                        // Set the text as number of neutrals
+                        btn.setFont(new Font("Arial", Font.PLAIN, 12));
+                        btn.setMargin(new Insets(0, 0, 0, 0));
+                        btn.setForeground(Color.WHITE);
+                        btn.setText("" + grid[finalRow][finalCol].getNrNeutral());
+
+                        // Adjust the information box on buttonclick
+                        // btn.addActionListener((ActionEvent e) -> {
                         infoField.setText(
                                 "\n\n\t Number of neutrals on this site:\t" + nrNeutral + '\n'
                                 + "\t Number of hostiles on this site:\t" + nrHostiles + '\n'
                                 + "\t Number of cops on this site:\t\t" + nrCops
                                 + "\n\n"
-                                + "\t Total of neutral on this site:\t" + param.get("TOTALNRNEUTRAL") + '\n'
-                                + "\t Total of hostiles on this site:\t" + param.get("TOTALNRHOSTILES")
+                                + "\t Total of neutral on this site:\t" + totalNeutrals + '\n'
+                                + "\t Total of hostiles on this site:\t" + totalHostiles
                         );
                     }
                 });
@@ -116,6 +105,9 @@ public class GUIFrame extends javax.swing.JFrame {
                 GridPanel.add(btn);
             }
         }
+    }
+
+    public void updateGUI() {
     }
 
     /**
@@ -154,7 +146,7 @@ public class GUIFrame extends javax.swing.JFrame {
         );
         GridPanelLayout.setVerticalGroup(
             GridPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGap(0, 766, Short.MAX_VALUE)
         );
 
         jSplitPane1.setLeftComponent(GridPanel);
@@ -164,7 +156,17 @@ public class GUIFrame extends javax.swing.JFrame {
         infoField.setFont(new java.awt.Font("Cantarell", 0, 24)); // NOI18N
         RightPanel.add(infoField);
 
-        ControlFrame.setLayout(new java.awt.GridLayout());
+        javax.swing.GroupLayout ControlFrameLayout = new javax.swing.GroupLayout(ControlFrame);
+        ControlFrame.setLayout(ControlFrameLayout);
+        ControlFrameLayout.setHorizontalGroup(
+            ControlFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 173, Short.MAX_VALUE)
+        );
+        ControlFrameLayout.setVerticalGroup(
+            ControlFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 199, Short.MAX_VALUE)
+        );
+
         RightPanel.add(ControlFrame);
 
         jSplitPane1.setRightComponent(RightPanel);

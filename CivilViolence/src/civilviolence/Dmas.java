@@ -3,6 +3,7 @@ package civilviolence;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 
 /**
@@ -174,10 +175,18 @@ public class Dmas implements ActionListener {
         // Import/Edit the layout to show the griddy
         final GUIFrame gFrame = new GUIFrame(grid, param);
         
+        JButton btn = new javax.swing.JButton("Doe een rondje");
+        final Cell[][] grid2 = grid;
+        btn.addActionListener(new ActionListener() {           
+            public void actionPerformed(ActionEvent e) {
+                updateCells(grid2, param);
+            }
+        });
+        gFrame.ControlFrame.add(btn);
         // Display the gui frame
         gFrame.setVisible(true);
 
         // Lets do a simulation
-        //updateCells(grid, param);
+        updateCells(grid, param);
     }
 }
