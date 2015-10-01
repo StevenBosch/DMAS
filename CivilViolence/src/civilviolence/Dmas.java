@@ -153,7 +153,7 @@ public class Dmas implements ActionListener {
                 put("WIDTH", 20);
                 put("FOV", 1);
                 put("NOISE", 0);
-                put("NRCOPS", 4000);
+                put("NRCOPS", 40000);
                 put("NRHOSTILES", 10);
                 put("MEANNEUTRAL", 200);
                 put("STDNEUTRAL", 40);
@@ -181,6 +181,8 @@ public class Dmas implements ActionListener {
         btn.addActionListener(new ActionListener() {           
             public void actionPerformed(ActionEvent e) {
                 updateCells(grid2, param);
+                for (JButton btn : gFrame.gridbuttons)
+                    btn.doClick(1);
             }
         });
         gFrame.ControlFrame.add(btn);
