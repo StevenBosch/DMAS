@@ -176,13 +176,12 @@ public class Dmas implements ActionListener {
         // Import/Edit the layout to show the griddy
         final GUIFrame gFrame = new GUIFrame(grid, param);
         
-        JButton btn = new javax.swing.JButton("Doe een rondje");
+        JButton btn = new javax.swing.JButton("Epoch");
         final Cell[][] grid2 = grid;
         btn.addActionListener(new ActionListener() {           
             public void actionPerformed(ActionEvent e) {
                 updateCells(grid2, param);
-                for (JButton btn : gFrame.gridbuttons)
-                    btn.doClick(1);
+                gFrame.updateGridButtons(grid2, param);
             }
         });
         gFrame.ControlFrame.add(btn);

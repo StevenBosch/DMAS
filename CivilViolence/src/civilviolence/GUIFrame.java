@@ -28,8 +28,8 @@ public class GUIFrame extends javax.swing.JFrame {
      */
     public GUIFrame(Cell[][] grid, final HashMap<String, Integer> param) {
         initComponents();
-        
-        gridbuttons = new ArrayList<>();
+
+        gridButtons = new JButton[param.get("LENGTH")][param.get("WIDTH")];
 
         // Set the layouts
         GridPanel.setLayout(
@@ -58,64 +58,86 @@ public class GUIFrame extends javax.swing.JFrame {
             for (int col = 0; col < param.get("WIDTH"); ++col) {
 
                 // Create the button
-                final JButton btn = new javax.swing.JButton();
+                JButton btn = new javax.swing.JButton();
+
+                int nrHostiles = grid[row][col].getNrHostiles();
+                int nrCops = grid[row][col].getAgents().size();
+
+                // Set the background
+                if (nrHostiles == 0) {
+                    btn.setBackground(new Color(0, 0, 255));
+                } else if (nrCops == 0 & nrHostiles != 0) {
+                    btn.setBackground(new Color(255, 0, 0));
+                } else {
+                    // Range from -1 to 1
+                    float temp = ((((float) (nrCops - nrHostiles) / (nrCops + nrHostiles)) + 1) / 2) * 255;
+                    btn.setBackground(new Color(
+                            (int) (255 - temp),
+                            0,
+                            (int) temp
+                    ));
+                }
+
+                // Set the text as number of neutrals
+                btn.setFont(new Font("Arial", Font.PLAIN, 12));
+                btn.setMargin(new Insets(0, 0, 0, 0));
+                btn.setForeground(Color.WHITE);
+                btn.setText("" + grid[row][col].getNrNeutral());
+
+                // Final variables for the actionlistener
                 final int finalRow = row;
                 final int finalCol = col;
-                final int nrNeutral = grid[row][col].getNrNeutral();
-                final int nrHostiles = grid[row][col].getNrHostiles();
-                final int nrCops = grid[row][col].getAgents().size();
-
                 btn.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent event) {
-
-                        int nrNeutral = grid[finalRow][finalCol].getNrNeutral();
-                        int nrHostiles = grid[finalRow][finalCol].getNrHostiles();
-                  
-                        int nrCops = grid[finalRow][finalCol].getAgents().size();
-                        int totalNeutrals = param.get("TOTALNRNEUTRAL");
-                        int totalHostiles = param.get("TOTALNRHOSTILES");
-
-                        // Set the background
-                        if (nrHostiles == 0) {
-                            btn.setBackground(new Color(0, 0, 255));
-                        } else if (nrCops == 0 & nrHostiles != 0) {
-                            btn.setBackground(new Color(255, 0, 0));
-                        } else {
-                            // Range from -1 to 1
-                            float temp = ((((float) (nrCops - nrHostiles) / (nrCops + nrHostiles)) + 1) / 2) * 255;
-                            btn.setBackground(new Color(
-                                    (int) (255 - temp),
-                                    0,
-                                    (int) temp
-                            ));
-                        }
-                        // Set the text as number of neutrals
-                        btn.setFont(new Font("Arial", Font.PLAIN, 12));
-                        btn.setMargin(new Insets(0, 0, 0, 0));
-                        btn.setForeground(Color.WHITE);
-                        btn.setText("" + grid[finalRow][finalCol].getNrNeutral());
-
                         // Adjust the information box on buttonclick
                         // btn.addActionListener((ActionEvent e) -> {
                         infoField.setText(
-                                "\n\n\t Number of neutrals on this site:\t" + nrNeutral + '\n'
-                                + "\t Number of hostiles on this site:\t" + nrHostiles + '\n'
-                                + "\t Number of cops on this site:\t\t" + nrCops
+                                "\n\n\t Number of neutrals on this site:\t" + grid[finalRow][finalCol].getNrNeutral() + '\n'
+                                + "\t Number of hostiles on this site:\t" + grid[finalRow][finalCol].getNrHostiles() + '\n'
+                                + "\t Number of cops on this site:\t\t" + grid[finalRow][finalCol].getAgents().size()
                                 + "\n\n"
-                                + "\t Total of neutral on this site:\t" + totalNeutrals + '\n'
-                                + "\t Total of hostiles on this site:\t" + totalHostiles
+                                + "\t Total of neutral on this site:\t" + param.get("TOTALNRNEUTRAL") + '\n'
+                                + "\t Total of hostiles on this site:\t" + param.get("TOTALNRHOSTILES")
                         );
                     }
                 });
-                btn.doClick(1);
                 // Add the button to the group and the panel
-                gridbuttons.add(btn);
+                gridButtons[row][col] = btn;
                 GridPanel.add(btn);
             }
         }
     }
 
-    public void updateGUI() {
+    public void updateGridButtons(final Cell[][] grid, final HashMap<String, Integer> param) {
+        // Add the grid buttons
+        for (int row = 0; row < param.get("LENGTH"); ++row) {
+            for (int col = 0; col < param.get("WIDTH"); ++col) {
+                // Create the button
+                int finalRow = row;
+                int finalCol = col;
+                int nrNeutral = grid[row][col].getNrNeutral();
+                int nrHostiles = grid[row][col].getNrHostiles();
+                int nrCops = grid[row][col].getAgents().size();
+
+                // Set the background
+                if (nrHostiles == 0) {
+                    gridButtons[row][col].setBackground(new Color(0, 0, 255));
+                } else if (nrCops == 0 & nrHostiles != 0) {
+                    gridButtons[row][col].setBackground(new Color(255, 0, 0));
+                } else {
+                    // Range from -1 to 1
+                    float temp = ((((float) (nrCops - nrHostiles) / (nrCops + nrHostiles)) + 1) / 2) * 255;
+                    gridButtons[row][col].setBackground(new Color(
+                            (int) (255 - temp),
+                            0,
+                            (int) temp
+                    ));
+                }
+                // Set the text of the button (No of neutrals)
+                gridButtons[row][col].setText("" + grid[finalRow][finalCol].getNrNeutral());
+            }
+
+        }
     }
 
     /**
@@ -236,5 +258,7 @@ public class GUIFrame extends javax.swing.JFrame {
     public javax.swing.JTextPane infoField;
     public javax.swing.JSplitPane jSplitPane1;
     // End of variables declaration//GEN-END:variables
-    public List<JButton> gridbuttons;
+
+    // A grid to store the buttons
+    public JButton[][] gridButtons;
 }
