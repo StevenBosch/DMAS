@@ -92,12 +92,17 @@ public class GUIFrame extends javax.swing.JFrame {
                         // Adjust the information box on buttonclick
                         // btn.addActionListener((ActionEvent e) -> {
                         infoField.setText(
-                                "\n\n\t Number of neutrals on this site:\t" + grid[finalRow][finalCol].getNrNeutral() + '\n'
-                                + "\t Number of hostiles on this site:\t" + grid[finalRow][finalCol].getNrHostiles() + '\n'
+                                "\n\n\t Number of neutrals on this site:\t\t" + grid[finalRow][finalCol].getNrNeutral() + '\n'
+                                + "\t Number of neutrals saved on this site:\t" + grid[finalRow][finalCol].getNrNeutralsSaved()+ '\n'
+                                + "\t Number of hostiles on this site:\t\t" + grid[finalRow][finalCol].getNrHostiles() + '\n'
                                 + "\t Number of cops on this site:\t\t" + grid[finalRow][finalCol].getAgents().size()
                                 + "\n\n"
-                                + "\t Total of neutral on this site:\t" + param.get("TOTALNRNEUTRAL") + '\n'
-                                + "\t Total of hostiles on this site:\t" + param.get("TOTALNRHOSTILES")
+                                + "\t Total number of neutrals at start:\t" + param.get("TOTALNRNEUTRAL") + '\n'
+                                + "\t Total number of hostiles at start:\t" + param.get("TOTALNRHOSTILES")
+                                + "\n\n"
+                                + "\t Remaining number of neutrals:\t" + param.get("REMAININGNRNEUTRALS") + '\n'
+                                + "\t Remaining number of hostiles:\t" + param.get("REMAININGNRHOSTILES") + '\n'
+                                + "\t Remaining number of cops :\t"    + param.get("REMAININGNRCOPS")
                         );
                     }
                 });

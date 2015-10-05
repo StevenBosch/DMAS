@@ -1,43 +1,32 @@
 package civilviolence;
-
+/**
+ *
+ * @author maleco
+ */
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
 import javax.swing.JButton;
 import javax.swing.JFrame;
-
-/**
- *
- * @author maleco
- */
 import java.util.Random;
-public class Dmas implements ActionListener {
 
-    @Override
-    public void actionPerformed(ActionEvent ae) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+public class Dmas {
 
     public enum agentActions {
         SAVE, SHOOT;
     }
 
     public static void initGrid(Cell grid[][], HashMap<String, Integer> param) {
-        for (int i = 0; i < param.get("LENGTH"); ++i) {
-            for (int j = 0; j < param.get("WIDTH"); ++j) {
+        for (int i = 0; i < param.get("LENGTH"); ++i)
+            for (int j = 0; j < param.get("WIDTH"); ++j) 
                 grid[i][j] = new Cell(param);
-            }
-        }
     }
 
     public static void initAgents(Cell grid[][], HashMap<String, Integer> param) {
         Random rand = new Random();
-
         // Initialize the grid with a new set of agents
-        for (int i = 0; i < param.get("NRCOPS"); ++i) {
-            Agent agent = new Agent();
-            grid[rand.nextInt(param.get("LENGTH"))][rand.nextInt(param.get("WIDTH"))].addAgent(agent);
-        }
+        for (int i = 0; i < param.get("NRCOPS"); ++i) 
+            grid[rand.nextInt(param.get("LENGTH"))][rand.nextInt(param.get("WIDTH"))].addAgent(new Agent());        
     }
 
     public static void determineAction(Agent ag) {
@@ -70,61 +59,83 @@ public class Dmas implements ActionListener {
         }
     }
 
-    public static void playGame(Cell cell, double noise) {
-        // Let all the agents in the cell determine their action and update the number of saves, kills and losses accordingly
-        int shootingCops = cell.getAgents().size(); // The number of cops that chooses to shoot
-        double aim = 0.5; // The uncertainty of actually hitting someone
-        double hostileAimCops = 0.5; // The extent to which hostiles aim at cops.
+    // Let all the agents in the cell determine their action and update the number of saves, kills and losses accordingly
+    public static void playGame(Cell cell, HashMap<String, Integer> param) {
+        // Some cell variables 
+        int nrHost = cell.getNrHostiles();
+        int nrNeutral = cell.getNrNeutral();
+        int nrCops = cell.getAgents().size();
         
+        // The number of neutrals saved
+        int nrNeutralSaves = 0; 
+        // The uncertainty of actually hitting someone
+        double aim = 0.5; 
+        double noise = param.get("NOISE")/100;
+        // The extent to which hostiles aim at cops.
+        double hostileAimCops = 0.5; 
+        
+        // For every agent
         for (Agent ag: cell.getAgents()) {
-            if ((cell.getNrHostiles()+cell.getAgents().size()) != 0) {
-                ag.setAwareness((double)(cell.getAgents().size()/(cell.getNrHostiles()+cell.getAgents().size()))*noise);
-            } else ag.setAwareness(1);
-            if ((cell.getNrHostiles()+cell.getNrNeutral()) != 0) {
-                ag.setDanger((double)(cell.getNrNeutral()/(cell.getNrHostiles()+cell.getNrNeutral()))*noise);
-            } else ag.setDanger(1);
+            // Calculate the awareness and danger in this cell
+            ag.setAwareness(
+                    ((nrHost + nrCops) != 0)
+                            ? (double) (nrCops / (nrHost + nrCops)) * noise
+                            : 1
+            );
+            ag.setDanger(
+                    ((nrHost + nrNeutral) != 0)
+                            ? (double) (nrNeutral / (nrHost + nrNeutral)) * noise
+                            : 1
+            );
+
+            // Determine the action based on awareness and danger
             determineAction(ag);
-            if (ag.getAction() == agentActions.SAVE) { // If the current agent chooses to save a civilian
-                if (cell.getNrNeutral() > 0) { // And there are still civilians left
-                    cell.setSaves(cell.getSaves() + 1); // Increase the number of saves
-                    cell.setNrNeutral(cell.getNrNeutral() - 1); // Decrease the number of civilians
-                }
-                shootingCops--; // Decrease the number of shooting cops
-            }
+            
+            // If the current agent chooses to save a civilian decrease the number of civilians
+            if (ag.getAction() == agentActions.SAVE && nrNeutral > 0) nrNeutralSaves++;                
         }
-
-        if ((shootingCops * aim) > cell.getNrHostiles()) { // If the cops would kill more hostiles than there are
-            cell.setKills((int) (cell.getNrHostiles())); // The amount of kills is the amount of hostiles
-        } else {
-            cell.setKills((int) (shootingCops * aim)); // Else just set the number of kills by cops
-        }
-        if ((aim * hostileAimCops * cell.getNrHostiles()) > cell.getAgents().size()) { // If the hostiles would kill more cops than there are
-            cell.setLossesCops(cell.getAgents().size()); // All the cops are killed
-        } else {
-            cell.setLossesCops((int) (aim * hostileAimCops * cell.getNrHostiles())); // Set the number of cop losses
-        }
-        if ((aim * (1 - hostileAimCops) * cell.getNrHostiles()) > cell.getNrNeutral()) { // Same for civilian losses
-            cell.setLossesNeutral(cell.getNrNeutral());
-        }
-        cell.setLossesNeutral((int) (aim * (1 - hostileAimCops) * cell.getNrHostiles()));
-
+        // The number of shooting cops == all - the saves
+        int shootingCops = nrCops - nrNeutralSaves;
+        
+        // Set the number of kills in this cell        
+        // If the cops would kill more hostiles than available ,the amount of kills is the amount of hostiles
+        // Else just set the number of kills by cops
+        int nrKills = (int) (((shootingCops * aim) > nrHost) ? 
+                nrHost : 
+                shootingCops * aim
+                );
+        int nrCopKills = (int) (((aim * hostileAimCops * nrHost) > nrCops) ? 
+                nrCops : 
+                aim * hostileAimCops * nrHost
+                );        
+        int nrNeutralKills = (int) (((aim * (1 - hostileAimCops) * nrHost) > nrNeutral) ?
+                nrNeutral :
+                (aim * (1 - hostileAimCops) * nrHost) 
+                );
+        
         // Update the numbers in the cell
-        cell.setNrHostiles(cell.getNrHostiles() - cell.getKills());
-        cell.setNrNeutral(cell.getNrNeutral() - cell.getLossesNeutral());
+        cell.setNrHostiles(nrHost - nrKills);
+        cell.setNrNeutral(nrNeutral - nrNeutralKills - nrNeutralSaves);
+        cell.killAgents(nrCopKills);
+        cell.setNrNeutralsSaved(cell.getNrNeutralsSaved() + nrNeutralSaves); 
+                    
+        // Update the parameters
+        param.put("REMAININGNRNEUTRALS", param.get("REMAININGNRNEUTRALS")-nrNeutralKills - nrNeutralSaves);
+        param.put("REMAININGNRHOSTILES", param.get("REMAININGNRHOSTILES") - nrKills);
+        param.put("REMAININGNRCOPS", param.get("REMAININGNRCOPS") - nrCopKills);
     }
 
-    public static void killAgents(Cell cell) {
-        // Remove killed agents from the list 
-        cell.setAgents(cell.getAgents().subList(0, cell.getAgents().size() - cell.getLossesCops()));
-    }
-
-    public static void updateAgents(Cell cell) {
+    public static void updateAgents(Cell cell, HashMap<String, Integer> param) {
         // Update the decision tables of the agents
         double success = cell.getSuccess();
+        double alpha = (double)param.get("LEARNINGRATE")/100;
+        
         for (Agent ag : cell.getAgents()) {
-            if(ag.getAction() == agentActions.SAVE) {
-                ag.getDecTable()[0][ag.getCurrentSituation()] = (ag.getDecTable()[0][ag.getCurrentSituation()] + cell.getSuccess() * ag.getLearningRate())/(1+ag.getLearningRate());
-            } else ag.getDecTable()[1][ag.getCurrentSituation()] = (ag.getDecTable()[1][ag.getCurrentSituation()] + cell.getSuccess() * ag.getLearningRate())/(1+ag.getLearningRate());
+            if (ag.getAction() == agentActions.SAVE) {
+                ag.getDecTable()[0][ag.getCurrentSituation()] = (ag.getDecTable()[0][ag.getCurrentSituation()] + cell.getSuccess() * alpha) / (1 + alpha);
+            } else {
+                ag.getDecTable()[1][ag.getCurrentSituation()] = (ag.getDecTable()[1][ag.getCurrentSituation()] + cell.getSuccess() * alpha) / (1 + alpha);
+            }
         }
     }
 
@@ -134,14 +145,12 @@ public class Dmas implements ActionListener {
 
     public static void updateCells(Cell[][] grid, HashMap<String, Integer> param) {
         // Loop through all the cells, run the simulation in each cell and let all the agents move
-        for (int i = 0; i < param.get("LENGTH"); ++i) {
+        for (int i = 0; i < param.get("LENGTH"); ++i) 
             for (int j = 0; j < param.get("WIDTH"); ++j) {
-                playGame(grid[i][j], param.get("NOISE"));
-                killAgents(grid[i][j]);
-                updateAgents(grid[i][j]);
+                playGame(grid[i][j], param);                
+                updateAgents(grid[i][j], param);
                 updateMovements(grid, grid[i][j]);
             }
-        }
     }
 
     public static void main(String[] args) {
@@ -151,17 +160,25 @@ public class Dmas implements ActionListener {
             {
                 put("LENGTH", 20);
                 put("WIDTH", 20);
-                put("FOV", 1);
-                put("NOISE", 0);
-                put("NRCOPS", 40000);
-                put("NRHOSTILES", 10);
+                put("FOV", 1);                
+                
+                put("NRCOPS", 30000);
                 put("MEANNEUTRAL", 200);
                 put("STDNEUTRAL", 40);
                 put("MEANHOSTILES", 100);
                 put("STDHOSTILES", 5);
-                put("SUCCESCRIT", 0);
+                
                 put("TOTALNRNEUTRAL", 0);
                 put("TOTALNRHOSTILES", 0);
+                put("REMAININGNRNEUTRALS", 0);
+                put("REMAININGNRHOSTILES", 0);
+                put("REMAININGNRCOPS", 0);
+                
+                
+                // Following parameters are in percentages! 
+                // (So actual value is divided by 100)
+                put("LEARNINGRATE", 90);
+                put("NOISE", 0);
             }
         };
 
@@ -169,6 +186,9 @@ public class Dmas implements ActionListener {
         Cell[][] grid = new Cell[param.get("LENGTH")][param.get("WIDTH")];
         initGrid(grid, param);
         initAgents(grid, param);
+        param.put("REMAININGNRNEUTRALS", param.get("TOTALNRNEUTRAL"));
+        param.put("REMAININGNRHOSTILES", param.get("TOTALNRHOSTILES"));
+        param.put("REMAININGNRCOPS", param.get("NRCOPS"));
 
         // Create a nice frame to show the griddy
         JFrame frame = new JFrame();
@@ -176,6 +196,7 @@ public class Dmas implements ActionListener {
         // Import/Edit the layout to show the griddy
         final GUIFrame gFrame = new GUIFrame(grid, param);
         
+        // Add the epoch button
         JButton btn = new javax.swing.JButton("Epoch");
         final Cell[][] grid2 = grid;
         btn.addActionListener(new ActionListener() {           
@@ -185,10 +206,9 @@ public class Dmas implements ActionListener {
             }
         });
         gFrame.ControlFrame.add(btn);
-        // Display the gui frame
-        gFrame.setVisible(true);
         
-        // Run the simulation
-        updateCells(grid, param);
+        // SHOW IT ALL!!!
+        gFrame.setVisible(true);    
+
     }
 }

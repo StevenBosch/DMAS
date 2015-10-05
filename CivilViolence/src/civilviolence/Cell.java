@@ -12,151 +12,66 @@ import java.util.*;
  * @author maleco
  */
 public class Cell {
-    /* The standard variables of each cell */
-
     // The available peoples
-
     private int nrHostiles;
     private int nrNeutral;
-
-    private int saves;
-    private int kills;
-    private int lossesCops;
-    private int lossesNeutral;
+    private int nrNeutralsSaved;
 
     // The available agents on this cell
     private List<Agent> agents = new ArrayList<>();
 
-    // The general consensus on the cell (0 - 256)
-    private int despair;
-
     Cell(HashMap<String, Integer> param) {
         Random rand = new Random();
-        this.despair = rand.nextInt(255);
         this.nrNeutral  = (int) Math.round(rand.nextGaussian() * param.get("STDNEUTRAL") + param.get("MEANNEUTRAL"));
         this.nrHostiles = (int) Math.round(rand.nextGaussian() * param.get("STDHOSTILES") + param.get("MEANHOSTILES"));
         param.put("TOTALNRNEUTRAL", param.get("TOTALNRNEUTRAL")+this.nrNeutral);
         param.put("TOTALNRHOSTILES", param.get("TOTALNRHOSTILES")+this.nrHostiles);
+        
+        this.nrNeutralsSaved = 0;
    }
     
     public void addAgent(Agent agent) {
-        agents.add(agent);
+        getAgents().add(agent);
+    }
+    
+    // Kill the number of agents == lossesCops
+    public void killAgents (int kills) {
+        setAgents(getAgents().subList(0, getAgents().size() - kills));
     }
     
     public double getSuccess() {
         return 1;//((this.saves + this.kills - this.lossesCops - this.lossesNeutral) / (this.saves + this.kills + this.lossesCops + this.lossesNeutral));
     }
 
-    /**
-     * @return the nrHostiles
-     */
     public int getNrHostiles() {
         return nrHostiles;
     }
 
-    /**
-     * @param nrHostiles the nrHostiles to set
-     */
     public void setNrHostiles(int nrHostiles) {
         this.nrHostiles = nrHostiles;
     }
 
-    /**
-     * @return the nrNeutral
-     */
     public int getNrNeutral() {
         return nrNeutral;
     }
 
-    /**
-     * @param nrNeutral the nrNeutral to set
-     */
     public void setNrNeutral(int nrNeutral) {
         this.nrNeutral = nrNeutral;
     }
 
-    /**
-     * @return the despair
-     */
-    public int getDespair() {
-        return despair;
+    public int getNrNeutralsSaved() {
+        return nrNeutralsSaved;
     }
 
-    /**
-     * @param despair the despair to set
-     */
-    public void setDespair(int despair) {
-        this.despair = despair;
+    public void setNrNeutralsSaved(int saves) {
+        this.nrNeutralsSaved = saves;
     }
 
-    /**
-     * @return the saves
-     */
-    public int getSaves() {
-        return saves;
-    }
-
-    /**
-     * @param saves the saves to set
-     */
-    public void setSaves(int saves) {
-        this.saves = saves;
-    }
-
-    /**
-     * @return the kills
-     */
-    public int getKills() {
-        return kills;
-    }
-
-    /**
-     * @param kills the kills to set
-     */
-    public void setKills(int kills) {
-        this.kills = kills;
-    }
-
-    /**
-     * @return the lossesCops
-     */
-    public int getLossesCops() {
-        return lossesCops;
-    }
-
-    /**
-     * @param losses the lossesCops to set
-     */
-    public void setLossesCops(int lossesCops) {
-        this.lossesCops = lossesCops;
-    }
-
-    /**
-     * @return the lossesNeutral
-     */
-    public int getLossesNeutral() {
-        return lossesNeutral;
-    }
-
-    /**
-     * @param lossesNeutral the lossesNeutral to set
-     */
-    public void setLossesNeutral(int lossesNeutral) {
-        this.lossesNeutral = lossesNeutral;
-    }
-
-    /**
-     * @return the agents
-     */
     public List<Agent> getAgents() {
         return agents;
     }
 
-    /**
-     * @param agents the agents to set
-     */
     public void setAgents(List<Agent> agents) {
         this.agents = agents;
-    }
-
+    }    
 }
