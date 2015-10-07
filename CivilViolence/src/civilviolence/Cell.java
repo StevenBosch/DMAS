@@ -5,70 +5,70 @@
  */
 package civilviolence;
 
-import java.util.Random;
+import java.util.*;
 
 /**
  *
  * @author maleco
  */
 public class Cell {
-    /* The standard variables of each cell */
     // The available peoples
-    private int nrBad;
+    
+    private int nrHostiles;
     private int nrNeutral;
-    
+    private int nrNeutralsSaved;
+
     // The available agents on this cell
-    public Agent[] availableAgents;
+    private List<Agent> agents = new ArrayList<>();
 
-    // The general consensus on the cell (0 - 256)
-    private int despair;
-    
-    public Cell() {
+    Cell(HashMap<String, Integer> param) {
         Random rand = new Random();
-        this.despair =  rand.nextInt(256);
+        this.nrNeutral  = (int) Math.round(rand.nextGaussian() * param.get("STDNEUTRAL") + param.get("MEANNEUTRAL"));
+        this.nrHostiles = (int) Math.round(rand.nextGaussian() * param.get("STDHOSTILES") + param.get("MEANHOSTILES"));
+        param.put("TOTALNRNEUTRAL", param.get("TOTALNRNEUTRAL")+this.nrNeutral);
+        param.put("TOTALNRHOSTILES", param.get("TOTALNRHOSTILES")+this.nrHostiles);
+        
+        this.nrNeutralsSaved = 0;
+   }
+    
+    public void addAgent(Agent agent) {
+        getAgents().add(agent);
     }
     
-    /**
-     * @return the nrBad
-     */
-    public int getNrBad() {
-        return nrBad;
+    // Kill the number of agents == lossesCops
+    public void killAgents (int kills) {
+        setAgents(getAgents().subList(0, getAgents().size() - kills));
     }
 
-    /**
-     * @param nrBad the nrBad to set
-     */
-    public void setNrBad(int nrBad) {
-        this.nrBad = nrBad;
+    public int getNrHostiles() {
+        return nrHostiles;
     }
 
-    /**
-     * @return the nrNeutral
-     */
+    public void setNrHostiles(int nrHostiles) {
+        this.nrHostiles = nrHostiles;
+    }
+
     public int getNrNeutral() {
         return nrNeutral;
     }
 
-    /**
-     * @param nrNeutral the nrNeutral to set
-     */
     public void setNrNeutral(int nrNeutral) {
         this.nrNeutral = nrNeutral;
     }
 
-    /**
-     * @return the despair
-     */
-    public int getDespair() {
-        return despair;
+    public int getNrNeutralsSaved() {
+        return nrNeutralsSaved;
     }
 
-    /**
-     * @param despair the despair to set
-     */
-    public void setDespair(int despair) {
-        this.despair = despair;
+    public void setNrNeutralsSaved(int saves) {
+        this.nrNeutralsSaved = saves;
     }
-    
-    
+
+    public List<Agent> getAgents() {
+        return agents;
+    }
+
+    public void setAgents(List<Agent> agents) {
+        this.agents = agents;
+    }    
 }

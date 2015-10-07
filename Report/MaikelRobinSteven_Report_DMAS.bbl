@@ -1,0 +1,54 @@
+\begin{thebibliography}{1}
+
+\bibitem{anderson2007mind}
+John~R Anderson and Richard King.
+\newblock {\em How can the human mind occur in the physical universe?}
+\newblock Oxford University Press, 2007.
+
+\bibitem{claus1998dynamics}
+Caroline Claus and Craig Boutilier.
+\newblock The dynamics of reinforcement learning in cooperative multiagent
+  systems.
+\newblock In {\em AAAI/IAAI}, pages 746--752, 1998.
+
+\bibitem{goh2006modeling}
+Chi~Keong Goh, HY~Quek, Kay~Chen Tan, and Hussein~A Abbass.
+\newblock Modeling civil violence: An evolutionary multi-agent, game theoretic
+  approach.
+\newblock In {\em Evolutionary Computation, 2006. CEC 2006. IEEE Congress on},
+  pages 1624--1631. IEEE, 2006.
+
+\bibitem{gulden2002spatial}
+Timothy~R Gulden.
+\newblock Spatial and temporal patterns in civil violence: Guatemala,
+  1977-1986.
+\newblock {\em Politics and the Life Sciences}, pages 26--36, 2002.
+
+\bibitem{myerson1991game}
+Roger~B Myerson.
+\newblock Game theory: analysis of conflict.
+\newblock {\em Harvard University}, 1991.
+
+\bibitem{nason2005soar}
+Shelley Nason and John~E Laird.
+\newblock Soar-rl: Integrating reinforcement learning with soar.
+\newblock {\em Cognitive Systems Research}, 6(1):51--59, 2005.
+
+\bibitem{reagans2005individual}
+Ray Reagans, Linda Argote, and Daria Brooks.
+\newblock Individual experience and experience working together: Predicting
+  learning rates from knowing who knows what and knowing how to work together.
+\newblock {\em Management science}, 51(6):869--881, 2005.
+
+\bibitem{sambanis2001ethnic}
+Nicholas Sambanis.
+\newblock Do ethnic and nonethnic civil wars have the same causes? a
+  theoretical and empirical inquiry (part 1).
+\newblock {\em Journal of Conflict Resolution}, 45(3):259--282, 2001.
+
+\bibitem{watkins1992q}
+Christopher~JCH Watkins and Peter Dayan.
+\newblock Q-learning.
+\newblock {\em Machine learning}, 8(3-4):279--292, 1992.
+
+\end{thebibliography}
