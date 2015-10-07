@@ -203,6 +203,8 @@ public class Dmas {
             public void actionPerformed(ActionEvent e) {
                 updateCells(grid2, param);
                 gFrame.updateGridButtons(grid2, param);
+                gFrame.clickSelectedButton(param);
+                
             }
         });
         gFrame.ControlFrame.add(btn);

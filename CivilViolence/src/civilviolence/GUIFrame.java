@@ -44,6 +44,7 @@ public class GUIFrame extends javax.swing.JFrame {
 
         // Set the panel split
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        System.out.println("height: " + screenSize.height);
         jSplitPane1.setDividerLocation(screenSize.height);
         jSplitPane1.setEnabled(false);
 
@@ -145,6 +146,9 @@ public class GUIFrame extends javax.swing.JFrame {
         }
     }
 
+    public void clickSelectedButton(HashMap<String, Integer> param) {
+        gridButtons[0][0].doClick();
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
