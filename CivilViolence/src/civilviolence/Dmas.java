@@ -1,8 +1,6 @@
 /* TODO:
-1. Aantal epochs tot eind (neutrals are gone)
 2. Succes functie
 3. Movement
-4. Epochknop + simulatieknop
 5. Success zichtbaar
 */
 
