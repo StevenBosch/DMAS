@@ -12,7 +12,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
 import java.util.Random;
-import java.lang.*;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.JButton;
@@ -82,8 +81,8 @@ public class Dmas {
         // The number of neutrals saved
         int nrNeutralSaves = 0; 
         // The uncertainty of actually hitting someone
-        double aim = 0.5; 
-        double noise = param.get("NOISE")/100;
+        double aim = (double)param.get("AIM")/100;
+        double noise = (double)param.get("NOISE")/100;
         // The extent to which hostiles aim at cops.
         double hostileAimCops = 0.5; 
         
@@ -103,7 +102,6 @@ public class Dmas {
 
             // Determine the action based on awareness and danger
             determineAction(ag);
-            //System.out.println(ag.getAction());
             // If the current agent chooses to save a civilian decrease the number of civilians
             if (ag.getAction() == agentActions.SAVE && nrNeutral > 0) nrNeutralSaves++; 
             
@@ -147,13 +145,17 @@ public class Dmas {
         param.put("REMAININGNRHOSTILES", param.get("REMAININGNRHOSTILES") - nrHostileDeaths);
         param.put("REMAININGNRCOPS", param.get("REMAININGNRCOPS") - nrCopDeaths);
         
-        updateAgents(cell, param, (double) (nrNeutralSaves + nrHostileDeaths - nrCopDeaths - nrNeutralDeaths) / (double) (nrNeutralSaves + nrHostileDeaths + nrCopDeaths + nrNeutralDeaths));
+        double success = ((nrNeutralSaves + nrHostileDeaths + nrCopDeaths + nrNeutralDeaths) == 0) ? 0.000000
+                : ((double) (nrNeutralSaves + nrHostileDeaths - nrCopDeaths - nrNeutralDeaths) / 
+                   (double) (nrNeutralSaves + nrHostileDeaths + nrCopDeaths + nrNeutralDeaths));
+    
+        updateAgents(cell, param, success);
     }
 
     public static void updateAgents(Cell cell, HashMap<String, Integer> param, double success) {
         // Update the decision tables of the agents
         double alpha = (double)param.get("LEARNINGRATE")/100;
-        System.out.println(success);
+        //System.out.println(success);
         for (Agent ag : cell.getAgents()) {
             if (ag.getAction() == agentActions.SAVE) {
                 ag.getDecTable()[0][ag.getCurrentSituation()] = ((((ag.getDecTable()[0][ag.getCurrentSituation()] + success * alpha) / (1 + alpha)) < 1)
@@ -171,15 +173,6 @@ public class Dmas {
             // Scale the utilities to between 0 and 1
             ag.getDecTable()[0][ag.getCurrentSituation()] = ag.getDecTable()[0][ag.getCurrentSituation()] / (ag.getDecTable()[0][ag.getCurrentSituation()] + ag.getDecTable()[1][ag.getCurrentSituation()]);
             ag.getDecTable()[1][ag.getCurrentSituation()] = ag.getDecTable()[1][ag.getCurrentSituation()] / (temp + ag.getDecTable()[1][ag.getCurrentSituation()]);
-            
-//            System.out.println("++" + ag.getDecTable()[0][0]);
-//            System.out.println("++" + ag.getDecTable()[1][0]);
-//            System.out.println("+-" +ag.getDecTable()[0][1]);
-//            System.out.println("+-" +ag.getDecTable()[1][1]);
-//            System.out.println("-+" +ag.getDecTable()[0][2]);
-//            System.out.println("-+" +ag.getDecTable()[1][2]);
-//            System.out.println("-+" +ag.getDecTable()[0][3]);
-//            System.out.println("-+" +ag.getDecTable()[1][3]);
         }
     }
 
@@ -188,28 +181,29 @@ public class Dmas {
             for (int j = 0; j < param.get("WIDTH"); ++j) {
                 // Only move if hostiles are gone
                 if (grid[i][j].getNrNeutral() == 0) {
-                    List<Agent> agentlistCopy = new ArrayList<Agent>(grid[i][j].getAgents() );
+                    List<Agent> agentlistCopy = new ArrayList<>(grid[i][j].getAgents() );
                     for (Agent ag : grid[i][j].getAgents()) {                        
                         int scoreNorth = (j == 0) ? Integer.MIN_VALUE
-                                : grid[i][j-1].getNrHostiles();
+                                : grid[i][j-1].getNrHostiles()+grid[i][j-1].getNrNeutral()-grid[i][j-1].getAgents().size();
                         int scoreSouth = (j == param.get("LENGTH") - 1) ? Integer.MIN_VALUE
-                                : grid[i][j+1].getNrHostiles();
+                                : grid[i][j+1].getNrHostiles()+grid[i][j+1].getNrNeutral()-grid[i][j+1].getAgents().size();
                         int scoreWest = (i == 0) ? Integer.MIN_VALUE
-                                : grid[i - 1][j].getNrHostiles();
+                                : grid[i-1][j].getNrHostiles()+grid[i-1][j].getNrNeutral()-grid[i-1][j].getAgents().size();
                         int scoreEast = (i == param.get("WIDTH") - 1) ? Integer.MIN_VALUE
-                                : grid[i + 1][j].getNrHostiles();
+                                : grid[i+1][j].getNrHostiles()+grid[i+1][j].getNrNeutral()-grid[i+1][j].getAgents().size();
 
                         if ((Math.max(Math.max(scoreNorth, scoreSouth), Math.max(scoreEast, scoreWest))) == scoreNorth) {
-                            grid[i][j - 1].addAgent(ag);
+                            grid[i][j - 1].getAgents().add(ag);
+//                            grid[i][j - 1].addAgent(ag);
                             agentlistCopy.remove(ag);
                         } else if ((Math.max(Math.max(scoreNorth, scoreSouth), Math.max(scoreEast, scoreWest))) == scoreSouth) {
-                            grid[i][j + 1].addAgent(ag);
+                            grid[i][j + 1].getAgents().add(ag);
                             agentlistCopy.remove(ag);
                         } else if ((Math.max(Math.max(scoreNorth, scoreSouth), Math.max(scoreEast, scoreWest))) == scoreWest) {
-                            grid[i-1][j].addAgent(ag);
+                            grid[i-1][j].getAgents().add(ag);
                             agentlistCopy.remove(ag);
                         } else if ((Math.max(Math.max(scoreNorth, scoreSouth), Math.max(scoreEast, scoreWest))) == scoreEast) {
-                            grid[i+1][j].addAgent(ag);
+                            grid[i+1][j].getAgents().add(ag);
                             agentlistCopy.remove(ag);
                         }
                     }
@@ -249,10 +243,9 @@ public class Dmas {
             {
                 put("LENGTH", 20);
                 put("WIDTH", 20);
-                put("FOV", 1);                
                 put("EPOCH", 0);                
                 
-                put("NRCOPS", 40000);
+                put("NRCOPS", 37000);
                 put("MEANNEUTRAL", 200);
                 put("STDNEUTRAL", 40);
                 put("MEANHOSTILES", 100);
@@ -270,6 +263,7 @@ public class Dmas {
                 // (So actual value is divided by 100)
                 put("LEARNINGRATE", 50);
                 put("NOISE", 30);
+                put("AIM", 30);
             }
         };
 
