@@ -8,6 +8,7 @@ import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -101,13 +102,16 @@ public class GUIFrame extends javax.swing.JFrame {
                                 + "\t Number of hostiles on this site:\t\t" + grid[finalRow][finalCol].getNrHostiles() + '\n'
                                 + "\t Number of cops on this site:\t\t" + grid[finalRow][finalCol].getAgents().size()
                                 + "\n\n"
-                                + "\t Total number of neutrals at start:\t" + param.get("TOTALNRNEUTRAL") + '\n'
-                                + "\t Total number of hostiles at start:\t" + param.get("TOTALNRHOSTILES")
-                                + "\n\n"
+                                + "\t Total number of neutrals at start:\t\t" + param.get("TOTALNRNEUTRAL") + '\n'
+                                + "\t Total number of hostiles at start:\t\t" + param.get("TOTALNRHOSTILES") + '\n'
+                                + "\t Total number of cops at start:\t\t" + param.get("NRCOPS") + '\n'   
+                                + "\n"
                                 + "\t Saved number of neutrals:\t\t" + param.get("SAVEDNRNEUTRALS") + '\n'
-                                + "\t Remaining number of neutrals:\t" + param.get("REMAININGNRNEUTRALS") + '\n'
-                                + "\t Remaining number of hostiles:\t" + param.get("REMAININGNRHOSTILES") + '\n'
-                                + "\t Remaining number of cops :\t"    + param.get("REMAININGNRCOPS")
+                                + "\t Remaining number of neutrals:\t\t" + param.get("REMAININGNRNEUTRALS") + '\n'
+                                + "\t Remaining number of hostiles:\t\t" + param.get("REMAININGNRHOSTILES") + '\n'
+                                + "\t Remaining number of cops :\t\t"    + param.get("REMAININGNRCOPS") + '\n'
+                                + "\n"
+                                + "\t Total success for this simulation:\t" + new DecimalFormat("##.###").format(((double)(param.get("SAVEDNRNEUTRALS") + (param.get("TOTALNRHOSTILES")-param.get("REMAININGNRHOSTILES")) - (param.get("NRCOPS")-param.get("REMAININGNRCOPS")) - (param.get("TOTALNRNEUTRAL")-param.get("REMAININGNRNEUTRALS")-param.get("SAVEDNRNEUTRALS"))) / (double)(param.get("SAVEDNRNEUTRALS") + (param.get("TOTALNRHOSTILES")-param.get("REMAININGNRHOSTILES")) + (param.get("NRCOPS")-param.get("REMAININGNRCOPS")) + (param.get("TOTALNRNEUTRAL")-param.get("REMAININGNRNEUTRALS")))))
                         );
                     }
                 });
