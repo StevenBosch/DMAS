@@ -1,8 +1,6 @@
 /* TODO:
-1. Aantal epochs tot eind (neutrals are gone)
 2. Succes functie
 3. Movement
-4. Epochknop + simulatieknop
 5. Success zichtbaar
 */
 
@@ -127,7 +125,7 @@ public class Dmas {
         cell.setNrNeutral(nrNeutral - nrNeutralDeaths - nrNeutralSaves);
         cell.killAgents(nrCopDeaths);
         cell.setNrNeutralsSaved(cell.getNrNeutralsSaved() + nrNeutralSaves); 
-        
+
         // Update the parameters
         param.put("REMAININGNRNEUTRALS", param.get("REMAININGNRNEUTRALS")-nrNeutralDeaths - nrNeutralSaves);
         param.put("REMAININGNRHOSTILES", param.get("REMAININGNRHOSTILES") - nrHostileDeaths);
@@ -166,7 +164,20 @@ public class Dmas {
     public static void updateMovements(Cell[][] grid, Cell cell) {
 
     }
-
+    
+    public static int playOneRound (Cell[][] grid, HashMap<String, Integer> param, GUIFrame gFrame) {
+        int oldNrNeutrals = param.get("REMAININGNRNEUTRALS");
+        updateCells(grid, param);
+        gFrame.updateGridButtons(grid, param);
+        param.put("EPOCH", param.get("EPOCH")+1);
+        
+        // Click a button to update the infotext field
+        gFrame.clickAButton();
+        
+        if (param.get("REMAININGNRNEUTRALS") == oldNrNeutrals) return 0;
+        return 1;
+    }
+    
     public static void updateCells(Cell[][] grid, HashMap<String, Integer> param) {
         // Loop through all the cells, run the simulation in each cell and let all the agents move
         for (int i = 0; i < param.get("LENGTH"); ++i) 
@@ -184,6 +195,7 @@ public class Dmas {
                 put("LENGTH", 20);
                 put("WIDTH", 20);
                 put("FOV", 1);                
+                put("EPOCH", 0);                
                 
                 put("NRCOPS", 30000);
                 put("MEANNEUTRAL", 200);
@@ -224,16 +236,39 @@ public class Dmas {
         final Cell[][] grid2 = grid;
         btn.addActionListener(new ActionListener() {           
             public void actionPerformed(ActionEvent e) {
-                updateCells(grid2, param);
-                gFrame.updateGridButtons(grid2, param);
-                gFrame.clickSelectedButton(param);
+                playOneRound(grid2, param, gFrame);
+//                updateCells(grid2, param);
+//                gFrame.updateGridButtons(grid2, param);
+//                gFrame.clickSelectedButton(param);
                 
             }
         });
         gFrame.ControlFrame.add(btn);
         
+        JButton btn2 = new javax.swing.JButton("10 Epochs");
+        btn2.addActionListener(new ActionListener() {           
+            public void actionPerformed(ActionEvent e) {
+                  for (int count = 0; count < 10; ++count)
+                      if(playOneRound(grid2, param, gFrame) == 0)                           
+                          break;
+                    
+            }
+        });
+        gFrame.ControlFrame.add(btn2);
+                
+        JButton btn3 = new javax.swing.JButton("All Epochs");
+        btn3.addActionListener(new ActionListener() {           
+            public void actionPerformed(ActionEvent e) {
+                  while(true)
+                      if(playOneRound(grid2, param, gFrame) == 0)
+                              break;
+            }
+        });
+        gFrame.ControlFrame.add(btn3);
+        
         // SHOW IT ALL!!!
         gFrame.setVisible(true);    
+        gFrame.clickAButton();
 
     }
 }
