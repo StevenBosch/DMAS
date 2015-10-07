@@ -78,13 +78,17 @@ public class Dmas {
         int nrNeutral = cell.getNrNeutral();
         int nrCops = cell.getAgents().size();
         
-        // The number of neutrals saved
-        int nrNeutralSaves = 0; 
+        // The number of cops that want to save
+        int savingCops = 0; 
+        // The number of shooting cops
+        int shootingCops = 0;
         // The uncertainty of actually hitting someone
         double aim = (double)param.get("AIM")/100;
         double noise = (double)param.get("NOISE")/100;
         // The extent to which hostiles aim at cops.
-        double hostileAimCops = 0.5; 
+        double hostileAimCops = (double)param.get("HOSTILEAIMCOPS")/100;
+        // The probability that a cop saves
+        double saveProb = (double)param.get("SAVEPROB")/100;
         
         // For every agent
         for (Agent ag: cell.getAgents()) {
@@ -103,11 +107,11 @@ public class Dmas {
             // Determine the action based on awareness and danger
             determineAction(ag);
             // If the current agent chooses to save a civilian decrease the number of civilians
-            if (ag.getAction() == agentActions.SAVE && nrNeutral > 0) nrNeutralSaves++; 
+            if (ag.getAction() == agentActions.SAVE && nrNeutral > 0) savingCops++; 
             
         }
         // The number of shooting cops == all - the saves
-        int shootingCops = nrCops - nrNeutralSaves;
+        shootingCops = nrCops - savingCops;
         
         // Set the number of kills in this cell        
         // If the cops would kill more hostiles than available ,the amount of kills is the amount of hostiles
@@ -120,9 +124,9 @@ public class Dmas {
                 ? nrCops
                 : aim * hostileAimCops * nrHost
                 );        
-        int nrNeutralSave = ((nrNeutralSaves > nrNeutral)
+        int nrNeutralSaves = (int) ((savingCops*saveProb > nrNeutral)
                 ? nrNeutral
-                : nrNeutralSaves
+                : savingCops*saveProb
               );
 
         cell.setNrNeutral(nrNeutral - nrNeutralSaves);
@@ -219,6 +223,7 @@ public class Dmas {
         updateCells(grid, param);
         gFrame.updateGridButtons(grid, param);
         param.put("EPOCH", param.get("EPOCH")+1);
+        param.put("LEARNINGRATE", param.get("LEARNINGRATE")-5);
         
         // Click a button to update the infotext field
         gFrame.clickAButton();
@@ -245,10 +250,10 @@ public class Dmas {
                 put("WIDTH", 20);
                 put("EPOCH", 0);                
                 
-                put("NRCOPS", 37000);
-                put("MEANNEUTRAL", 200);
+                put("NRCOPS", 3700);
+                put("MEANNEUTRAL", 20);
                 put("STDNEUTRAL", 40);
-                put("MEANHOSTILES", 100);
+                put("MEANHOSTILES", 10);
                 put("STDHOSTILES", 5);
                 
                 put("TOTALNRNEUTRAL", 0);
@@ -261,9 +266,11 @@ public class Dmas {
                 
                 // Following parameters are in percentages! 
                 // (So actual value is divided by 100)
-                put("LEARNINGRATE", 50);
+                put("LEARNINGRATE", 100);
                 put("NOISE", 30);
                 put("AIM", 30);
+                put("HOSTILEAIMCOPS", 30);
+                put("SAVEPROB", 30);
             }
         };
 

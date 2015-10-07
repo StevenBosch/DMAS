@@ -107,6 +107,10 @@ public class GUIFrame extends javax.swing.JFrame {
                                 + "\t Total number of cops at start:\t\t" + param.get("NRCOPS") + '\n'   
                                 + "\n"
                                 + "\t Saved number of neutrals:\t\t" + param.get("SAVEDNRNEUTRALS") + '\n'
+                                + "\t Killed number of neutrals:\t\t\t" + (param.get("TOTALNRNEUTRAL") - param.get("SAVEDNRNEUTRALS")) + '\n'
+                                + "\t Killed number of cops:\t\t\t" + (param.get("NRCOPS") - param.get("REMAININGNRCOPS")) + '\n'
+                                + "\t Killed number of hostiles:\t\t\t" + (param.get("TOTALNRHOSTILES") - param.get("REMAININGNRHOSTILES")) + '\n'
+                                + "\n"
                                 + "\t Remaining number of neutrals:\t\t" + param.get("REMAININGNRNEUTRALS") + '\n'
                                 + "\t Remaining number of hostiles:\t\t" + param.get("REMAININGNRHOSTILES") + '\n'
                                 + "\t Remaining number of cops :\t\t"    + param.get("REMAININGNRCOPS") + '\n'

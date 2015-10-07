@@ -23,8 +23,8 @@ public class Cell {
 
     Cell(HashMap<String, Integer> param) {
         Random rand = new Random();
-        this.nrNeutral  = (int) Math.round(rand.nextGaussian() * param.get("STDNEUTRAL") + param.get("MEANNEUTRAL"));
-        this.nrHostiles = (int) Math.round(rand.nextGaussian() * param.get("STDHOSTILES") + param.get("MEANHOSTILES"));
+        this.nrNeutral  = Math.max((int) Math.round(rand.nextGaussian() * param.get("STDNEUTRAL") + param.get("MEANNEUTRAL")),0);
+        this.nrHostiles = Math.max((int) Math.round(rand.nextGaussian() * param.get("STDHOSTILES") + param.get("MEANHOSTILES")),0);
         param.put("TOTALNRNEUTRAL", param.get("TOTALNRNEUTRAL")+this.nrNeutral);
         param.put("TOTALNRHOSTILES", param.get("TOTALNRHOSTILES")+this.nrHostiles);
         
