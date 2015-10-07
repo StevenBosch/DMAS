@@ -104,6 +104,7 @@ public class GUIFrame extends javax.swing.JFrame {
                                 + "\t Total number of neutrals at start:\t" + param.get("TOTALNRNEUTRAL") + '\n'
                                 + "\t Total number of hostiles at start:\t" + param.get("TOTALNRHOSTILES")
                                 + "\n\n"
+                                + "\t Saved number of neutrals:\t\t" + param.get("SAVEDNRNEUTRALS") + '\n'
                                 + "\t Remaining number of neutrals:\t" + param.get("REMAININGNRNEUTRALS") + '\n'
                                 + "\t Remaining number of hostiles:\t" + param.get("REMAININGNRHOSTILES") + '\n'
                                 + "\t Remaining number of cops :\t"    + param.get("REMAININGNRCOPS")
@@ -121,7 +122,7 @@ public class GUIFrame extends javax.swing.JFrame {
         // Add the grid buttons
         for (int row = 0; row < param.get("LENGTH"); ++row) {
             for (int col = 0; col < param.get("WIDTH"); ++col) {
-                // Create the button
+                
                 int finalRow = row;
                 int finalCol = col;
                 int nrNeutral = grid[row][col].getNrNeutral();

@@ -116,6 +116,14 @@ public class Dmas {
                 ? nrCops
                 : aim * hostileAimCops * nrHost
                 );        
+        int nrNeutralSave = ((nrNeutralSaves > nrNeutral)
+                ? nrNeutral
+                : nrNeutralSaves
+              );
+
+        cell.setNrNeutral(nrNeutral - nrNeutralSaves);
+        nrNeutral -= nrNeutralSaves;
+
         int nrNeutralDeaths = (int) (((aim * (1 - hostileAimCops) * nrHost) > nrNeutral)
                 ? nrNeutral
                 : (aim * (1 - hostileAimCops) * nrHost) 
@@ -123,12 +131,13 @@ public class Dmas {
         
         // Update the numbers in the cell
         cell.setNrHostiles(nrHost - nrHostileDeaths);
-        cell.setNrNeutral(nrNeutral - nrNeutralDeaths - nrNeutralSaves);
+        cell.setNrNeutral(nrNeutral - nrNeutralDeaths);
         cell.killAgents(nrCopDeaths);
         cell.setNrNeutralsSaved(cell.getNrNeutralsSaved() + nrNeutralSaves); 
 
         // Update the parameters
         param.put("REMAININGNRNEUTRALS", param.get("REMAININGNRNEUTRALS")-nrNeutralDeaths - nrNeutralSaves);
+        param.put("SAVEDNRNEUTRALS", param.get("SAVEDNRNEUTRALS")+nrNeutralSaves);
         param.put("REMAININGNRHOSTILES", param.get("REMAININGNRHOSTILES") - nrHostileDeaths);
         param.put("REMAININGNRCOPS", param.get("REMAININGNRCOPS") - nrCopDeaths);
         
@@ -138,7 +147,7 @@ public class Dmas {
     public static void updateAgents(Cell cell, HashMap<String, Integer> param, double success) {
         // Update the decision tables of the agents
         double alpha = (double)param.get("LEARNINGRATE")/100;
-        System.out.println(success);
+        //System.out.println(success);
         for (Agent ag : cell.getAgents()) {
             if (ag.getAction() == agentActions.SAVE) {
                 ag.getDecTable()[0][ag.getCurrentSituation()] = ((((ag.getDecTable()[0][ag.getCurrentSituation()] + success * alpha) / (1 + alpha)) < 1)
@@ -179,7 +188,7 @@ public class Dmas {
         // Click a button to update the infotext field
         gFrame.clickAButton();
         
-        if (param.get("REMAININGNRNEUTRALS") == oldNrNeutrals) return 0;
+        if (param.get("REMAININGNRNEUTRALS") == 0) return 0;
         return 1;
     }
     
@@ -202,7 +211,7 @@ public class Dmas {
                 put("FOV", 1);                
                 put("EPOCH", 0);                
                 
-                put("NRCOPS", 30000);
+                put("NRCOPS", 40000);
                 put("MEANNEUTRAL", 200);
                 put("STDNEUTRAL", 40);
                 put("MEANHOSTILES", 100);
@@ -211,6 +220,7 @@ public class Dmas {
                 put("TOTALNRNEUTRAL", 0);
                 put("TOTALNRHOSTILES", 0);
                 put("REMAININGNRNEUTRALS", 0);
+                put("SAVEDNRNEUTRALS", 0);
                 put("REMAININGNRHOSTILES", 0);
                 put("REMAININGNRCOPS", 0);
                 
