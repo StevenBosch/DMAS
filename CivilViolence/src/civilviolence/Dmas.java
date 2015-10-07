@@ -59,7 +59,7 @@ public class Dmas {
             } else {
                 ag.setAction(agentActions.SHOOT); // SHOOT has a higher utility
             }
-        } else if (ag.getAwareness() >= 0.5 && ag.getDanger() <= 0.5) { // Cops and civilians are a minority
+        } else if (ag.getAwareness() <= 0.5 && ag.getDanger() <= 0.5) { // Cops and civilians are a minority
             ag.setCurrentSituation(3);
             if (ag.getDecTable()[0][3] > ag.getDecTable()[1][3]){ // SAVE save has a higher utility
                 ag.setAction(agentActions.SAVE);
@@ -98,7 +98,7 @@ public class Dmas {
 
             // Determine the action based on awareness and danger
             determineAction(ag);
-            
+            System.out.println(ag.getAction());
             // If the current agent chooses to save a civilian decrease the number of civilians
             if (ag.getAction() == agentActions.SAVE && nrNeutral > 0) nrNeutralSaves++; 
             
@@ -109,41 +109,56 @@ public class Dmas {
         // Set the number of kills in this cell        
         // If the cops would kill more hostiles than available ,the amount of kills is the amount of hostiles
         // Else just set the number of kills by cops
-        int nrKills = (int) (((shootingCops * aim) > nrHost) ? 
-                nrHost : 
-                shootingCops * aim
+        int nrHostileDeaths = (int) (((shootingCops * aim) > nrHost)
+                ? nrHost
+                : shootingCops * aim
                 );
-        int nrCopKills = (int) (((aim * hostileAimCops * nrHost) > nrCops) ? 
-                nrCops : 
-                aim * hostileAimCops * nrHost
+        int nrCopDeaths = (int) (((aim * hostileAimCops * nrHost) > nrCops)
+                ? nrCops
+                : aim * hostileAimCops * nrHost
                 );        
-        int nrNeutralKills = (int) (((aim * (1 - hostileAimCops) * nrHost) > nrNeutral) ?
-                nrNeutral :
-                (aim * (1 - hostileAimCops) * nrHost) 
+        int nrNeutralDeaths = (int) (((aim * (1 - hostileAimCops) * nrHost) > nrNeutral)
+                ? nrNeutral
+                : (aim * (1 - hostileAimCops) * nrHost) 
                 );
         
         // Update the numbers in the cell
-        cell.setNrHostiles(nrHost - nrKills);
-        cell.setNrNeutral(nrNeutral - nrNeutralKills - nrNeutralSaves);
-        cell.killAgents(nrCopKills);
+        cell.setNrHostiles(nrHost - nrHostileDeaths);
+        cell.setNrNeutral(nrNeutral - nrNeutralDeaths - nrNeutralSaves);
+        cell.killAgents(nrCopDeaths);
         cell.setNrNeutralsSaved(cell.getNrNeutralsSaved() + nrNeutralSaves); 
-        cell.setSuccess((this.saves + this.kills - this.lossesCops - this.lossesNeutral) / (this.saves + this.kills + this.lossesCops + this.lossesNeutral));
+        
         // Update the parameters
-        param.put("REMAININGNRNEUTRALS", param.get("REMAININGNRNEUTRALS")-nrNeutralKills - nrNeutralSaves);
-        param.put("REMAININGNRHOSTILES", param.get("REMAININGNRHOSTILES") - nrKills);
-        param.put("REMAININGNRCOPS", param.get("REMAININGNRCOPS") - nrCopKills);
+        param.put("REMAININGNRNEUTRALS", param.get("REMAININGNRNEUTRALS")-nrNeutralDeaths - nrNeutralSaves);
+        param.put("REMAININGNRHOSTILES", param.get("REMAININGNRHOSTILES") - nrHostileDeaths);
+        param.put("REMAININGNRCOPS", param.get("REMAININGNRCOPS") - nrCopDeaths);
+        
+        updateAgents(cell, param, (double) (nrNeutralSaves + nrHostileDeaths - nrCopDeaths - nrNeutralDeaths) / (double) (nrNeutralSaves + nrHostileDeaths + nrCopDeaths + nrNeutralDeaths));
     }
 
-    public static void updateAgents(Cell cell, HashMap<String, Integer> param) {
+    public static void updateAgents(Cell cell, HashMap<String, Integer> param, double success) {
         // Update the decision tables of the agents
-        double success = cell.getSuccess();
         double alpha = (double)param.get("LEARNINGRATE")/100;
-        
+        System.out.println(success);
         for (Agent ag : cell.getAgents()) {
             if (ag.getAction() == agentActions.SAVE) {
-                ag.getDecTable()[0][ag.getCurrentSituation()] = (ag.getDecTable()[0][ag.getCurrentSituation()] + cell.getSuccess() * alpha) / (1 + alpha);
+                ag.getDecTable()[0][ag.getCurrentSituation()] = ((((ag.getDecTable()[0][ag.getCurrentSituation()] + cell.getSuccess() * alpha) / (1 + alpha)) < 1)
+                        ? (ag.getDecTable()[0][ag.getCurrentSituation()] + cell.getSuccess() * alpha) / (1 + alpha)
+                        : 1
+                        );
+                ag.getDecTable()[1][ag.getCurrentSituation()] = ((((ag.getDecTable()[1][ag.getCurrentSituation()] - cell.getSuccess() * alpha) / (1 + alpha)) > 0)
+                        ? (ag.getDecTable()[1][ag.getCurrentSituation()] - cell.getSuccess() * alpha) / (1 + alpha)
+                        : 0
+                        );
             } else {
-                ag.getDecTable()[1][ag.getCurrentSituation()] = (ag.getDecTable()[1][ag.getCurrentSituation()] + cell.getSuccess() * alpha) / (1 + alpha);
+                ag.getDecTable()[1][ag.getCurrentSituation()] = ((((ag.getDecTable()[1][ag.getCurrentSituation()] + cell.getSuccess() * alpha) / (1 + alpha)) < 1)
+                        ? (ag.getDecTable()[1][ag.getCurrentSituation()] + cell.getSuccess() * alpha) / (1 + alpha)
+                        : 1
+                        );
+                ag.getDecTable()[0][ag.getCurrentSituation()] = ((((ag.getDecTable()[0][ag.getCurrentSituation()] - cell.getSuccess() * alpha) / (1 + alpha)) > 0)
+                        ? (ag.getDecTable()[0][ag.getCurrentSituation()] - cell.getSuccess() * alpha) / (1 + alpha)
+                        : 0
+                        );
             }
         }
     }
@@ -157,7 +172,6 @@ public class Dmas {
         for (int i = 0; i < param.get("LENGTH"); ++i) 
             for (int j = 0; j < param.get("WIDTH"); ++j) {
                 playGame(grid[i][j], param);                
-                updateAgents(grid[i][j], param);
                 updateMovements(grid, grid[i][j]);
             }
     }

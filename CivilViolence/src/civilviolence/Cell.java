@@ -13,6 +13,7 @@ import java.util.*;
  */
 public class Cell {
     // The available peoples
+    
     private int nrHostiles;
     private int nrNeutral;
     private int nrNeutralsSaved;
