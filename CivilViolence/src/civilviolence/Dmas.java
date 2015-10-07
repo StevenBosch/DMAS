@@ -1,3 +1,11 @@
+/* TODO:
+1. Aantal epochs tot eind (neutrals are gone)
+2. Succes functie
+3. Movement
+4. Epochknop + simulatieknop
+5. Success zichtbaar
+*/
+
 package civilviolence;
 /**
  *
@@ -92,7 +100,8 @@ public class Dmas {
             determineAction(ag);
             
             // If the current agent chooses to save a civilian decrease the number of civilians
-            if (ag.getAction() == agentActions.SAVE && nrNeutral > 0) nrNeutralSaves++;                
+            if (ag.getAction() == agentActions.SAVE && nrNeutral > 0) nrNeutralSaves++; 
+            
         }
         // The number of shooting cops == all - the saves
         int shootingCops = nrCops - nrNeutralSaves;
@@ -118,7 +127,7 @@ public class Dmas {
         cell.setNrNeutral(nrNeutral - nrNeutralKills - nrNeutralSaves);
         cell.killAgents(nrCopKills);
         cell.setNrNeutralsSaved(cell.getNrNeutralsSaved() + nrNeutralSaves); 
-                    
+        cell.setSuccess((this.saves + this.kills - this.lossesCops - this.lossesNeutral) / (this.saves + this.kills + this.lossesCops + this.lossesNeutral));
         // Update the parameters
         param.put("REMAININGNRNEUTRALS", param.get("REMAININGNRNEUTRALS")-nrNeutralKills - nrNeutralSaves);
         param.put("REMAININGNRHOSTILES", param.get("REMAININGNRHOSTILES") - nrKills);
@@ -177,8 +186,8 @@ public class Dmas {
                 
                 // Following parameters are in percentages! 
                 // (So actual value is divided by 100)
-                put("LEARNINGRATE", 90);
-                put("NOISE", 0);
+                put("LEARNINGRATE", 50);
+                put("NOISE", 30);
             }
         };
 

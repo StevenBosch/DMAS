@@ -16,6 +16,7 @@ public class Cell {
     private int nrHostiles;
     private int nrNeutral;
     private int nrNeutralsSaved;
+    private double success;
 
     // The available agents on this cell
     private List<Agent> agents = new ArrayList<>();
@@ -40,7 +41,10 @@ public class Cell {
     }
     
     public double getSuccess() {
-        return 1;//((this.saves + this.kills - this.lossesCops - this.lossesNeutral) / (this.saves + this.kills + this.lossesCops + this.lossesNeutral));
+        return success;
+    }
+    public void setSuccess(double success) {
+        this.success = success;        
     }
 
     public int getNrHostiles() {
