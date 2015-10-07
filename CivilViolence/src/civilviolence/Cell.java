@@ -17,7 +17,6 @@ public class Cell {
     private int nrHostiles;
     private int nrNeutral;
     private int nrNeutralsSaved;
-    private double success;
 
     // The available agents on this cell
     private List<Agent> agents = new ArrayList<>();
@@ -39,13 +38,6 @@ public class Cell {
     // Kill the number of agents == lossesCops
     public void killAgents (int kills) {
         setAgents(getAgents().subList(0, getAgents().size() - kills));
-    }
-    
-    public double getSuccess() {
-        return success;
-    }
-    public void setSuccess(double success) {
-        this.success = success;        
     }
 
     public int getNrHostiles() {

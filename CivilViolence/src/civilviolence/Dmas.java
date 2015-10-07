@@ -36,30 +36,31 @@ public class Dmas {
     }
 
     public static void determineAction(Agent ag) {
+        Random rand = new Random();
         if (ag.getAwareness() > 0.5 && ag.getDanger() > 0.5) { // Cops and civilians are a majority
             ag.setCurrentSituation(0);
-            if (ag.getDecTable()[0][0] > ag.getDecTable()[1][0]) { // SAVE save has a higher utility
+            if (rand.nextDouble() < ag.getDecTable()[0][0]) { // SAVE save has a higher utility
                 ag.setAction(agentActions.SAVE);
             } else {
                 ag.setAction(agentActions.SHOOT); // SHOOT has a higher utility
             }
         } else if (ag.getAwareness() > 0.5 && ag.getDanger() <= 0.5) { // Cops are a majority and civilians are a minority
             ag.setCurrentSituation(1);
-            if (ag.getDecTable()[0][1] > ag.getDecTable()[1][1]) { // SAVE save has a higher utility
+            if (rand.nextDouble() < ag.getDecTable()[0][1]) { // SAVE save has a higher utility
                 ag.setAction(agentActions.SAVE);
             } else {
                 ag.setAction(agentActions.SHOOT); // SHOOT has a higher utility
             }
         } else if (ag.getAwareness() <= 0.5 && ag.getDanger() > 0.5) { // Cops are a minority and civilians are a majority
             ag.setCurrentSituation(2);
-            if (ag.getDecTable()[0][2] > ag.getDecTable()[1][2]){ // SAVE save has a higher utility
+            if (rand.nextDouble() < ag.getDecTable()[0][2]){ // SAVE save has a higher utility
                 ag.setAction(agentActions.SAVE);
             } else {
                 ag.setAction(agentActions.SHOOT); // SHOOT has a higher utility
             }
         } else if (ag.getAwareness() <= 0.5 && ag.getDanger() <= 0.5) { // Cops and civilians are a minority
             ag.setCurrentSituation(3);
-            if (ag.getDecTable()[0][3] > ag.getDecTable()[1][3]){ // SAVE save has a higher utility
+            if (rand.nextDouble() < ag.getDecTable()[0][3]){ // SAVE save has a higher utility
                 ag.setAction(agentActions.SAVE);
             } else ag.setAction(agentActions.SHOOT); // SHOOT has a higher utility
         }
@@ -96,7 +97,7 @@ public class Dmas {
 
             // Determine the action based on awareness and danger
             determineAction(ag);
-            System.out.println(ag.getAction());
+            //System.out.println(ag.getAction());
             // If the current agent chooses to save a civilian decrease the number of civilians
             if (ag.getAction() == agentActions.SAVE && nrNeutral > 0) nrNeutralSaves++; 
             
@@ -140,24 +141,28 @@ public class Dmas {
         System.out.println(success);
         for (Agent ag : cell.getAgents()) {
             if (ag.getAction() == agentActions.SAVE) {
-                ag.getDecTable()[0][ag.getCurrentSituation()] = ((((ag.getDecTable()[0][ag.getCurrentSituation()] + cell.getSuccess() * alpha) / (1 + alpha)) < 1)
-                        ? (ag.getDecTable()[0][ag.getCurrentSituation()] + cell.getSuccess() * alpha) / (1 + alpha)
+                ag.getDecTable()[0][ag.getCurrentSituation()] = ((((ag.getDecTable()[0][ag.getCurrentSituation()] + success * alpha) / (1 + alpha)) < 1)
+                        ? (ag.getDecTable()[0][ag.getCurrentSituation()] + success * alpha) / (1 + alpha)
                         : 1
-                        );
-                ag.getDecTable()[1][ag.getCurrentSituation()] = ((((ag.getDecTable()[1][ag.getCurrentSituation()] - cell.getSuccess() * alpha) / (1 + alpha)) > 0)
-                        ? (ag.getDecTable()[1][ag.getCurrentSituation()] - cell.getSuccess() * alpha) / (1 + alpha)
-                        : 0
                         );
             } else {
-                ag.getDecTable()[1][ag.getCurrentSituation()] = ((((ag.getDecTable()[1][ag.getCurrentSituation()] + cell.getSuccess() * alpha) / (1 + alpha)) < 1)
-                        ? (ag.getDecTable()[1][ag.getCurrentSituation()] + cell.getSuccess() * alpha) / (1 + alpha)
+                ag.getDecTable()[1][ag.getCurrentSituation()] = ((((ag.getDecTable()[1][ag.getCurrentSituation()] + success * alpha) / (1 + alpha)) < 1)
+                        ? (ag.getDecTable()[1][ag.getCurrentSituation()] + success * alpha) / (1 + alpha)
                         : 1
                         );
-                ag.getDecTable()[0][ag.getCurrentSituation()] = ((((ag.getDecTable()[0][ag.getCurrentSituation()] - cell.getSuccess() * alpha) / (1 + alpha)) > 0)
-                        ? (ag.getDecTable()[0][ag.getCurrentSituation()] - cell.getSuccess() * alpha) / (1 + alpha)
-                        : 0
-                        );
             }
+            double temp = ag.getDecTable()[0][ag.getCurrentSituation()];
+            ag.getDecTable()[0][ag.getCurrentSituation()] = ag.getDecTable()[0][ag.getCurrentSituation()] / (ag.getDecTable()[0][ag.getCurrentSituation()] + ag.getDecTable()[1][ag.getCurrentSituation()]);
+            ag.getDecTable()[1][ag.getCurrentSituation()] = ag.getDecTable()[1][ag.getCurrentSituation()] / (temp + ag.getDecTable()[1][ag.getCurrentSituation()]);
+            
+//            System.out.println("++" + ag.getDecTable()[0][0]);
+//            System.out.println("++" + ag.getDecTable()[1][0]);
+//            System.out.println("+-" +ag.getDecTable()[0][1]);
+//            System.out.println("+-" +ag.getDecTable()[1][1]);
+//            System.out.println("-+" +ag.getDecTable()[0][2]);
+//            System.out.println("-+" +ag.getDecTable()[1][2]);
+//            System.out.println("-+" +ag.getDecTable()[0][3]);
+//            System.out.println("-+" +ag.getDecTable()[1][3]);
         }
     }
 
