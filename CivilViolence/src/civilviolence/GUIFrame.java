@@ -47,6 +47,8 @@ public class GUIFrame extends javax.swing.JFrame {
         System.out.println("height: " + screenSize.height);
         jSplitPane1.setDividerLocation(screenSize.height);
         jSplitPane1.setEnabled(false);
+        jSplitPane2.setDividerLocation(screenSize.height-GridPanel.getWidth()/4);
+        jSplitPane1.setEnabled(false);
 
         // Add the grid buttons
         setGridButtons(grid, param);
@@ -93,6 +95,7 @@ public class GUIFrame extends javax.swing.JFrame {
                         // Adjust the information box on buttonclick
                         // btn.addActionListener((ActionEvent e) -> {
                         infoField.setText(
+                                "Current Epoch:\t\t" + param.get("EPOCH") +
                                 "\n\n\t Number of neutrals on this site:\t\t" + grid[finalRow][finalCol].getNrNeutral() + '\n'
                                 + "\t Number of neutrals saved on this site:\t" + grid[finalRow][finalCol].getNrNeutralsSaved()+ '\n'
                                 + "\t Number of hostiles on this site:\t\t" + grid[finalRow][finalCol].getNrHostiles() + '\n'
@@ -146,7 +149,7 @@ public class GUIFrame extends javax.swing.JFrame {
         }
     }
 
-    public void clickSelectedButton(HashMap<String, Integer> param) {
+    public void clickAButton() {
         gridButtons[0][0].doClick();
     }
     /**
@@ -162,6 +165,7 @@ public class GUIFrame extends javax.swing.JFrame {
         jSplitPane1 = new javax.swing.JSplitPane();
         GridPanel = new javax.swing.JPanel();
         RightPanel = new javax.swing.JPanel();
+        jSplitPane2 = new javax.swing.JSplitPane();
         infoField = new javax.swing.JTextPane();
         ControlFrame = new javax.swing.JPanel();
 
@@ -192,21 +196,29 @@ public class GUIFrame extends javax.swing.JFrame {
 
         RightPanel.setLayout(new java.awt.GridLayout(0, 1));
 
+        jSplitPane2.setDividerLocation(100);
+        jSplitPane2.setDividerSize(1);
+        jSplitPane2.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
+
         infoField.setFont(new java.awt.Font("Cantarell", 0, 24)); // NOI18N
-        RightPanel.add(infoField);
+        jSplitPane2.setLeftComponent(infoField);
+
+        ControlFrame.setPreferredSize(new java.awt.Dimension(173, 100));
 
         javax.swing.GroupLayout ControlFrameLayout = new javax.swing.GroupLayout(ControlFrame);
         ControlFrame.setLayout(ControlFrameLayout);
         ControlFrameLayout.setHorizontalGroup(
             ControlFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 173, Short.MAX_VALUE)
+            .addGap(0, 596, Short.MAX_VALUE)
         );
         ControlFrameLayout.setVerticalGroup(
             ControlFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 199, Short.MAX_VALUE)
+            .addGap(0, 664, Short.MAX_VALUE)
         );
 
-        RightPanel.add(ControlFrame);
+        jSplitPane2.setBottomComponent(ControlFrame);
+
+        RightPanel.add(jSplitPane2);
 
         jSplitPane1.setRightComponent(RightPanel);
 
@@ -266,6 +278,7 @@ public class GUIFrame extends javax.swing.JFrame {
     public javax.swing.ButtonGroup buttonGroup1;
     public javax.swing.JTextPane infoField;
     public javax.swing.JSplitPane jSplitPane1;
+    private javax.swing.JSplitPane jSplitPane2;
     // End of variables declaration//GEN-END:variables
 
     // A grid to store the buttons
