@@ -45,7 +45,6 @@ public class GUIFrame extends javax.swing.JFrame {
 
         // Set the panel split
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        System.out.println("height: " + screenSize.height);
         jSplitPane1.setDividerLocation(screenSize.height);
         jSplitPane1.setEnabled(false);
         jSplitPane2.setDividerLocation(screenSize.height-GridPanel.getWidth()/4);
@@ -115,7 +114,7 @@ public class GUIFrame extends javax.swing.JFrame {
                                 + "\t Remaining number of hostiles:\t\t" + param.get("REMAININGNRHOSTILES") + '\n'
                                 + "\t Remaining number of cops :\t\t"    + param.get("REMAININGNRCOPS") + '\n'
                                 + "\n"
-                                + "\t Total success for this simulation:\t" + new DecimalFormat("##.###").format(((double)(param.get("SAVEDNRNEUTRALS") + (param.get("TOTALNRHOSTILES")-param.get("REMAININGNRHOSTILES")) - (param.get("NRCOPS")-param.get("REMAININGNRCOPS")) - (param.get("TOTALNRNEUTRAL")-param.get("REMAININGNRNEUTRALS")-param.get("SAVEDNRNEUTRALS"))) / (double)(param.get("SAVEDNRNEUTRALS") + (param.get("TOTALNRHOSTILES")-param.get("REMAININGNRHOSTILES")) + (param.get("NRCOPS")-param.get("REMAININGNRCOPS")) + (param.get("TOTALNRNEUTRAL")-param.get("REMAININGNRNEUTRALS")))))
+                                + "\t Total success for this simulation:\t" + new DecimalFormat("##.###").format((double) param.get("LASTSUCCESS1")/(double) param.get("LASTSUCCESS2"))
                         );
                     }
                 });

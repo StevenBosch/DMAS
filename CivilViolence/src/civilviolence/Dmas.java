@@ -1,6 +1,9 @@
 /* TODO:
- 2. Succes functie
- 3. Movement
+ 2. Is success function really a good succses function that says much?
+ 3. Run number of epochs and export output to cmv file with multiple options:
+    - Run every simulation with new agents
+    - Train agents and then run 100 simulations with those agents
+    - Let agents train during the 100 simulations and keep filling the agent pool
  */
 package civilviolence;
 
@@ -8,8 +11,12 @@ package civilviolence;
  *
  * @author maleco
  */
+import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Random;
 import java.util.ArrayList;
@@ -158,8 +165,8 @@ public class Dmas {
         param.put("REMAININGNRCOPS", param.get("REMAININGNRCOPS") - nrCopDeaths);
 
         double success = ((nrNeutralSaves + nrHostileDeaths + nrCopDeaths + nrNeutralDeaths) == 0) ? 0.000000
-                : ((double) (nrNeutralSaves + nrHostileDeaths - nrCopDeaths - nrNeutralDeaths)
-                / (double) (nrNeutralSaves + nrHostileDeaths + nrCopDeaths + nrNeutralDeaths));
+            : ((double) (nrNeutralSaves + nrHostileDeaths - nrCopDeaths - nrNeutralDeaths)
+            / (double) (nrNeutralSaves + nrHostileDeaths + nrCopDeaths + nrNeutralDeaths));
 
         updateAgents(cell, param, success);
     }
@@ -171,12 +178,12 @@ public class Dmas {
         for (Agent ag : cell.getAgents()) {
             if (ag.getAction() == agentActions.SAVE) {
                 ag.getDecTable()[0][ag.getCurrentSituation()] = ((((ag.getDecTable()[0][ag.getCurrentSituation()] + success * alpha) / (1 + alpha)) < 1)
-                        ? (ag.getDecTable()[0][ag.getCurrentSituation()] + success * alpha) / (1 + alpha)
-                        : 1);
+                    ? (ag.getDecTable()[0][ag.getCurrentSituation()] + success * alpha) / (1 + alpha)
+                    : 1);
             } else {
                 ag.getDecTable()[1][ag.getCurrentSituation()] = ((((ag.getDecTable()[1][ag.getCurrentSituation()] + success * alpha) / (1 + alpha)) < 1)
-                        ? (ag.getDecTable()[1][ag.getCurrentSituation()] + success * alpha) / (1 + alpha)
-                        : 1);
+                    ? (ag.getDecTable()[1][ag.getCurrentSituation()] + success * alpha) / (1 + alpha)
+                    : 1);
             }
             double temp = ag.getDecTable()[0][ag.getCurrentSituation()];
 
@@ -228,7 +235,6 @@ public class Dmas {
                                 break;
                         }
                         agentlistCopy.remove(ag);
-
                     }
                     grid[i][j].setAgents(agentlistCopy);
                 }
@@ -246,11 +252,11 @@ public static int calcMove(int desiredMove, HashMap<String, Integer> param, int 
             do {
                 move = rand.nextInt(4);
             } while (
-                    (move == 0 && j == 0)
-                    || (move == 1 && j == (param.get("LENGTH") - 1))
-                    || (move == 2 && i == 0)
-                    || (move == 3 && i == (param.get("WIDTH") - 1))
-                    );
+                (move == 0 && j == 0)
+                || (move == 1 && j == (param.get("LENGTH") - 1))
+                || (move == 2 && i == 0)
+                || (move == 3 && i == (param.get("WIDTH") - 1))
+                );
             //System.out.println(i + " " + j + " " + "Move " + move);
             return move;
         }
@@ -263,6 +269,12 @@ public static int calcMove(int desiredMove, HashMap<String, Integer> param, int 
         
         param.put("EPOCH", param.get("EPOCH")+1);
         param.put("LEARNINGRATE", param.get("LEARNINGRATE")/2);
+        param.put("LASTSUCCESS1", ((param.get("SAVEDNRNEUTRALS") + 
+            (param.get("TOTALNRHOSTILES")-param.get("REMAININGNRHOSTILES")) - (param.get("NRCOPS")-param.get("REMAININGNRCOPS")) - 
+            (param.get("TOTALNRNEUTRAL")-param.get("REMAININGNRNEUTRALS")-param.get("SAVEDNRNEUTRALS")))));
+        param.put("LASTSUCCESS2", (param.get("SAVEDNRNEUTRALS") + 
+            (param.get("TOTALNRHOSTILES")-param.get("REMAININGNRHOSTILES")) + (param.get("NRCOPS")-param.get("REMAININGNRCOPS")) + 
+            (param.get("TOTALNRNEUTRAL")-param.get("REMAININGNRNEUTRALS"))));
         
         // Click a button to update the infotext field
         gFrame.clickAButton();
@@ -282,92 +294,133 @@ public static int calcMove(int desiredMove, HashMap<String, Integer> param, int 
         updateMovements(grid, param);
     }
 
+    public static void writeOutput(HashMap<String, Integer> param, FileWriter writer, int n) {
+        // Append results for this simulation to the output file
+        try {	 
+	    writer.append(String.format("%d", n));
+	    writer.append(';');
+	    writer.append(String.format("%.3g%n", (double)param.get("LASTSUCCESS1")/(double)param.get("LASTSUCCESS2")));
+	    writer.append('\n');
+	}
+	catch(Exception e) {
+	     e.printStackTrace();
+	} 
+    }
+    
     public static void main(String[] args) {
+        FileWriter writer = null;
+        try {
+            writer = new FileWriter("Output");
+            
+            // Run the simulation a number of times
+            for (int i = 0; i < 5; i++) {
+                System.out.println("Epoch: " + (i+1));
+            // The parameters
+            final HashMap<String, Integer> param = new HashMap<String, Integer>() {
+                {
+                    put("LENGTH", 20);
+                    put("WIDTH", 20);
+                    put("EPOCH", 0);                
 
-        // The parameters
-        final HashMap<String, Integer> param = new HashMap<String, Integer>() {
-            {
-                put("LENGTH", 20);
-                put("WIDTH", 20);
-                put("EPOCH", 0);                
-                
-                put("NRCOPS", 3700);
-                put("MEANNEUTRAL", 20);
-                put("STDNEUTRAL", 40);
-                put("MEANHOSTILES", 10);
-                put("STDHOSTILES", 5);
-                
-                put("TOTALNRNEUTRAL", 0);
-                put("TOTALNRHOSTILES", 0);
-                put("REMAININGNRNEUTRALS", 0);
-                put("SAVEDNRNEUTRALS", 0);
-                put("REMAININGNRHOSTILES", 0);
-                put("REMAININGNRCOPS", 0);
-                
-                
-                // Following parameters are in percentages! 
-                // (So actual value is divided by 100)
-                put("LEARNINGRATE", 100);
-                put("NOISE", 30);
-                put("MOVENOISE", 70);
-                put("AIM", 30);
-                put("HOSTILEAIMCOPS", 30);
-                put("SAVEPROB", 30);
-            }
-        };
+                    put("NRCOPS", 3700);
+                    put("MEANNEUTRAL", 20);
+                    put("STDNEUTRAL", 40);
+                    put("MEANHOSTILES", 10);
+                    put("STDHOSTILES", 5);
 
-        // Create and initialize the griddy
-        Cell[][] grid = new Cell[param.get("LENGTH")][param.get("WIDTH")];
-        initGrid(grid, param);
-        initAgents(grid, param);
-        param.put("REMAININGNRNEUTRALS", param.get("TOTALNRNEUTRAL"));
-        param.put("REMAININGNRHOSTILES", param.get("TOTALNRHOSTILES"));
-        param.put("REMAININGNRCOPS", param.get("NRCOPS"));
+                    put("TOTALNRNEUTRAL", 0);
+                    put("TOTALNRHOSTILES", 0);
+                    put("REMAININGNRNEUTRALS", 0);
+                    put("SAVEDNRNEUTRALS", 0);
+                    put("REMAININGNRHOSTILES", 0);
+                    put("REMAININGNRCOPS", 0);
 
-        // Create a nice frame to show the griddy
-        JFrame frame = new JFrame();
+                    //These are used to determine the success per epoch, but have to be stored seperately because the result of their division is a double
+                    put("LASTSUCCESS1", 0);
+                    put("LASTSUCCESS2", 0);
 
-        // Import/Edit the layout to show the griddy
-        final GUIFrame gFrame = new GUIFrame(grid, param);
-        
-        // Add the epoch button
-        JButton btn = new javax.swing.JButton("Epoch");
-        final Cell[][] grid2 = grid;
-        btn.addActionListener(new ActionListener() {           
-            public void actionPerformed(ActionEvent e) {
-                playOneRound(grid2, param, gFrame);
-//                updateCells(grid2, param);
-//                gFrame.updateGridButtons(grid2, param);
-//                gFrame.clickSelectedButton(param);
-                
-            }
-        });
-        gFrame.ControlFrame.add(btn);
-        
-        JButton btn2 = new javax.swing.JButton("10 Epochs");
-        btn2.addActionListener(new ActionListener() {           
-            public void actionPerformed(ActionEvent e) {
-                  for (int count = 0; count < 10; ++count)
-                      if(playOneRound(grid2, param, gFrame) == 0)                           
-                          break;
-                    
-            }
-        });
-        gFrame.ControlFrame.add(btn2);
-                
-        JButton btn3 = new javax.swing.JButton("All Epochs");
-        btn3.addActionListener(new ActionListener() {           
-            public void actionPerformed(ActionEvent e) {
-                  while(true)
-                      if(playOneRound(grid2, param, gFrame) == 0)
+                    // Following parameters are in percentages! 
+                    // (So actual value is divided by 100)
+                    put("LEARNINGRATE", 100);
+                    put("NOISE", 30);
+                    put("MOVENOISE", 70);
+                    put("AIM", 50);
+                    put("HOSTILEAIMCOPS", 50);
+                    put("SAVEPROB", 50);
+                }
+            };
+
+            // Create and initialize the griddy
+            Cell[][] grid = new Cell[param.get("LENGTH")][param.get("WIDTH")];
+            initGrid(grid, param);
+            initAgents(grid, param);
+            param.put("REMAININGNRNEUTRALS", param.get("TOTALNRNEUTRAL"));
+            param.put("REMAININGNRHOSTILES", param.get("TOTALNRHOSTILES"));
+            param.put("REMAININGNRCOPS", param.get("NRCOPS"));
+
+            // Create a nice frame to show the griddy
+            JFrame frame = new JFrame();
+
+            // Import/Edit the layout to show the griddy
+            final GUIFrame gFrame = new GUIFrame(grid, param);
+
+            // Add the epoch button
+            JButton btn = new javax.swing.JButton("Epoch");
+            final Cell[][] grid2 = grid;
+            btn.addActionListener(new ActionListener() {           
+                public void actionPerformed(ActionEvent e) {
+                    playOneRound(grid2, param, gFrame);
+    //                updateCells(grid2, param);
+    //                gFrame.updateGridButtons(grid2, param);
+    //                gFrame.clickSelectedButton(param);
+
+                }
+            });
+            gFrame.ControlFrame.add(btn);
+
+            JButton btn2 = new javax.swing.JButton("10 Epochs");
+            btn2.addActionListener(new ActionListener() {           
+                public void actionPerformed(ActionEvent e) {
+                      for (int count = 0; count < 10; ++count)
+                          if(playOneRound(grid2, param, gFrame) == 0)                           
                               break;
-            }
-        });
-        gFrame.ControlFrame.add(btn3);
-        
-        // SHOW IT ALL!!!
-        gFrame.setVisible(true);    
-        gFrame.clickAButton();
 
+                }
+            });
+            gFrame.ControlFrame.add(btn2);
+
+            JButton btn3 = new javax.swing.JButton("All Epochs");
+            btn3.addActionListener(new ActionListener() {           
+                public void actionPerformed(ActionEvent e) {
+                    while(true)
+                        if(playOneRound(grid2, param, gFrame) == 0)
+                            break;
+                }
+            });
+            gFrame.ControlFrame.add(btn3);
+
+            // This while runs the simulation until it's finished and writes the final success to a csv-file
+            // Comment this loop and set i in the outer loop to 1 to run a simulation by hand
+            while(true) {
+                if(playOneRound(grid2, param, gFrame) == 0) {
+                    writeOutput(param, writer, i+1);
+                    break;
+                }
+            }
+            // SHOW IT ALL!!! (Uncomment to show the GUI)
+//            gFrame.setVisible(true);    
+//            gFrame.clickAButton();
+            }
+        } catch(IOException | HeadlessException e) {
+            e.printStackTrace();
+	} 
+        try {
+            // Write the output file
+            writer.flush();
+            writer.close();
+        } catch(IOException e) {
+            System.out.println("Error while flushing/closing fileWriter");
+            e.printStackTrace();
+	}
     }
 }
