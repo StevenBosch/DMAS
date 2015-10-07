@@ -161,8 +161,8 @@ public class Dmas {
         }
     }
 
-    public static void updateMovements(Cell[][] grid, Cell cell) {
-
+    public static void updateMovements(Cell[][] grid, Cell cell, HashMap<String, Integer> param) {
+            
     }
     
     public static int playOneRound (Cell[][] grid, HashMap<String, Integer> param, GUIFrame gFrame) {
@@ -183,7 +183,7 @@ public class Dmas {
         for (int i = 0; i < param.get("LENGTH"); ++i) 
             for (int j = 0; j < param.get("WIDTH"); ++j) {
                 playGame(grid[i][j], param);                
-                updateMovements(grid, grid[i][j]);
+                updateMovements(grid, grid[i][j],param);
             }
     }
 
