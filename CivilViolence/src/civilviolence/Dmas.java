@@ -186,9 +186,7 @@ public class Dmas {
          for (int i = 0; i < param.get("LENGTH"); ++i) {
             for (int j = 0; j < param.get("WIDTH"); ++j) {
                 // Only move if hostiles are gone
-                System.out.println(grid[i][j].getNrNeutral());
                 if (grid[i][j].getNrNeutral() == 0) {
-                    System.out.println("Lets move the agents in " + i + " " + j);
                     List<Agent> agentlistCopy = new ArrayList<Agent>(grid[i][j].getAgents() );
                     for (Agent ag : grid[i][j].getAgents()) {                        
                         int scoreNorth = (j == 0) ? Integer.MIN_VALUE
