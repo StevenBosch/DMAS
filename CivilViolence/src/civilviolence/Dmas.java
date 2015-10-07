@@ -1,7 +1,6 @@
 /* TODO:
 2. Succes functie
 3. Movement
-5. Success zichtbaar
 */
 
 package civilviolence;
@@ -154,7 +153,7 @@ public class Dmas {
     public static void updateAgents(Cell cell, HashMap<String, Integer> param, double success) {
         // Update the decision tables of the agents
         double alpha = (double)param.get("LEARNINGRATE")/100;
-        //System.out.println(success);
+        System.out.println(success);
         for (Agent ag : cell.getAgents()) {
             if (ag.getAction() == agentActions.SAVE) {
                 ag.getDecTable()[0][ag.getCurrentSituation()] = ((((ag.getDecTable()[0][ag.getCurrentSituation()] + success * alpha) / (1 + alpha)) < 1)
@@ -168,6 +167,8 @@ public class Dmas {
                         );
             }
             double temp = ag.getDecTable()[0][ag.getCurrentSituation()];
+            
+            // Scale the utilities to between 0 and 1
             ag.getDecTable()[0][ag.getCurrentSituation()] = ag.getDecTable()[0][ag.getCurrentSituation()] / (ag.getDecTable()[0][ag.getCurrentSituation()] + ag.getDecTable()[1][ag.getCurrentSituation()]);
             ag.getDecTable()[1][ag.getCurrentSituation()] = ag.getDecTable()[1][ag.getCurrentSituation()] / (temp + ag.getDecTable()[1][ag.getCurrentSituation()]);
             
@@ -221,7 +222,6 @@ public class Dmas {
     
     
     public static int playOneRound (Cell[][] grid, HashMap<String, Integer> param, GUIFrame gFrame) {
-        int oldNrNeutrals = param.get("REMAININGNRNEUTRALS");
         updateCells(grid, param);
         gFrame.updateGridButtons(grid, param);
         param.put("EPOCH", param.get("EPOCH")+1);
