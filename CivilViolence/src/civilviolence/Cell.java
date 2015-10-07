@@ -35,6 +35,10 @@ public class Cell {
         getAgents().add(agent);
     }
     
+    public void removeAgent(Agent agent) {
+        getAgents().remove(agent);
+    }
+    
     // Kill the number of agents == lossesCops
     public void killAgents (int kills) {
         setAgents(getAgents().subList(0, getAgents().size() - kills));

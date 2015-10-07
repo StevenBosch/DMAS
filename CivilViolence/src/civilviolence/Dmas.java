@@ -12,14 +12,21 @@ package civilviolence;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
+import java.util.Random;
+import java.lang.*;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JFrame;
-import java.util.Random;
 
 public class Dmas {
 
     public enum agentActions {
         SAVE, SHOOT;
+    }
+    
+    public enum agentMovements {
+        NORTH, SOUTH, EAST, WEST;
     }
 
     public static void initGrid(Cell grid[][], HashMap<String, Integer> param) {
@@ -175,9 +182,45 @@ public class Dmas {
         }
     }
 
-    public static void updateMovements(Cell[][] grid, Cell cell, HashMap<String, Integer> param) {
-            
+    public static void updateMovements(Cell[][] grid, HashMap<String, Integer> param) {
+         for (int i = 0; i < param.get("LENGTH"); ++i) {
+            for (int j = 0; j < param.get("WIDTH"); ++j) {
+                // Only move if hostiles are gone
+                System.out.println(grid[i][j].getNrNeutral());
+                if (grid[i][j].getNrNeutral() == 0) {
+                    System.out.println("Lets move the agents in " + i + " " + j);
+                    List<Agent> agentlistCopy = new ArrayList<Agent>(grid[i][j].getAgents() );
+                    for (Agent ag : grid[i][j].getAgents()) {                        
+                        int scoreNorth = (j == 0) ? Integer.MIN_VALUE
+                                : grid[i][j-1].getNrHostiles();
+                        int scoreSouth = (j == param.get("LENGTH") - 1) ? Integer.MIN_VALUE
+                                : grid[i][j+1].getNrHostiles();
+                        int scoreWest = (i == 0) ? Integer.MIN_VALUE
+                                : grid[i - 1][j].getNrHostiles();
+                        int scoreEast = (i == param.get("WIDTH") - 1) ? Integer.MIN_VALUE
+                                : grid[i + 1][j].getNrHostiles();
+
+                        if ((Math.max(Math.max(scoreNorth, scoreSouth), Math.max(scoreEast, scoreWest))) == scoreNorth) {
+                            grid[i][j - 1].addAgent(ag);
+                            agentlistCopy.remove(ag);
+                        } else if ((Math.max(Math.max(scoreNorth, scoreSouth), Math.max(scoreEast, scoreWest))) == scoreSouth) {
+                            grid[i][j + 1].addAgent(ag);
+                            agentlistCopy.remove(ag);
+                        } else if ((Math.max(Math.max(scoreNorth, scoreSouth), Math.max(scoreEast, scoreWest))) == scoreWest) {
+                            grid[i-1][j].addAgent(ag);
+                            agentlistCopy.remove(ag);
+                        } else if ((Math.max(Math.max(scoreNorth, scoreSouth), Math.max(scoreEast, scoreWest))) == scoreEast) {
+                            grid[i+1][j].addAgent(ag);
+                            agentlistCopy.remove(ag);
+                        }
+                    }
+                    grid[i][j].setAgents(agentlistCopy);
+                }
+                 
+            }
+         }
     }
+    
     
     public static int playOneRound (Cell[][] grid, HashMap<String, Integer> param, GUIFrame gFrame) {
         int oldNrNeutrals = param.get("REMAININGNRNEUTRALS");
@@ -196,9 +239,9 @@ public class Dmas {
         // Loop through all the cells, run the simulation in each cell and let all the agents move
         for (int i = 0; i < param.get("LENGTH"); ++i) 
             for (int j = 0; j < param.get("WIDTH"); ++j) {
-                playGame(grid[i][j], param);                
-                updateMovements(grid, grid[i][j],param);
+                playGame(grid[i][j], param);                                
             }
+        updateMovements(grid, param);
     }
 
     public static void main(String[] args) {
