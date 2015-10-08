@@ -1,4 +1,23 @@
-\section{Hypothesized Results}
-When comparing the first three simulation, in which the learning rate is fixed for the individual agents, we expect the following results to show. The group with a high learning rate (Group 1), will learning the successful strategies more quickly and adapt to that, compared to the two groups with a lower learning rate. However, because the high learning rate is also associated with more strategy changes due to 'accidental' outcomes, it is likely that a less optimal strategy will be taken more often than in the other two groups. This would result in a lower overall performance. Following this logic, the average learning rate group (Group 2) will be the next to achieve their best performance, which is a little higher compared to Group 1. The low learning rate group (Group 3) will be the last to achieve their best performance level. Because Group 3 does not change to a suboptimal strategy that quickly, it will most likely show the best performance. 
+\section{Results}
+The first three simulations were run with learning rate values of $0.8$, $0.5$, and $0.2$, corresponding to the inexperienced, mixed-experienced and experienced cops. Following, the simulation with a decreasing learning rate, starting at $0.8$ was run. The mean success value can be found in \autoref{tab:ResultsCur}. 
 
-The group with a decreasing learning rate over time (Group 4) is expected to have the best of both characteristics. Whereas the agents will initially learn the optimal strategy more quickly, over time the utility of the strategies will converge to an optimal level. In other words, over time the agents will stick to the strategies that have shown to have a higher utility in the beginning of the simulation. It is thus expected that Group 4 will show the best performance. 
+
+\begin{table}
+\begin{center}
+\begin{tabular}{l r  r}
+$\lambda$ & mean \# epochs & Success \\
+\hline
+0.8 & 55.6 & 0.218 \\
+0.5 & 46.8 & 0.230 \\
+0.2 & 58.2 & 0.210 \\
+<0.8 & 39.2 & 0.235 \\
+\hline
+\end{tabular}
+\caption{The amount of epochs necessary to finish and the success of the simulation for the differently experienced cop-teams}
+\label{tab:ResultsCur}
+\end{center}
+\end{table}
+
+A Repeated Measure ANOVA showed that there was no main effect of the different simulation on both the success (F(5,25) = 387; p = 0.853) or the amount of epochs (F(5,24) = 1.396; p = 0.261). Post-hoc pairwise comparison, using Bonferoni Correction, confirmed this, showing only non-significant differences between the different simulations.
+
+ 

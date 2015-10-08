@@ -268,7 +268,7 @@ public static int calcMove(int desiredMove, HashMap<String, Integer> param, int 
         gFrame.updateGridButtons(grid, param);
         
         param.put("EPOCH", param.get("EPOCH")+1);
-        param.put("LEARNINGRATE", param.get("LEARNINGRATE")/2);
+        param.put("LEARNINGRATE", param.get("LEARNINGRATE")/4*3); //*0.75
         param.put("LASTSUCCESS1", ((param.get("SAVEDNRNEUTRALS") + 
             (param.get("TOTALNRHOSTILES")-param.get("REMAININGNRHOSTILES")) - (param.get("NRCOPS")-param.get("REMAININGNRCOPS")) - 
             (param.get("TOTALNRNEUTRAL")-param.get("REMAININGNRNEUTRALS")-param.get("SAVEDNRNEUTRALS")))));
@@ -299,8 +299,10 @@ public static int calcMove(int desiredMove, HashMap<String, Integer> param, int 
         try {	 
 	    writer.append(String.format("%d", n));
 	    writer.append(';');
+            writer.append(String.format("%d", param.get("EPOCH")));
+            writer.append(';');
 	    writer.append(String.format("%.3g%n", (double)param.get("LASTSUCCESS1")/(double)param.get("LASTSUCCESS2")));
-	    writer.append('\n');
+            //writer.append('\n');
 	}
 	catch(Exception e) {
 	     e.printStackTrace();
@@ -341,7 +343,7 @@ public static int calcMove(int desiredMove, HashMap<String, Integer> param, int 
 
                     // Following parameters are in percentages! 
                     // (So actual value is divided by 100)
-                    put("LEARNINGRATE", 100);
+                    put("LEARNINGRATE", 80);
                     put("NOISE", 30);
                     put("MOVENOISE", 70);
                     put("AIM", 50);
