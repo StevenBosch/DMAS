@@ -13,18 +13,18 @@ import java.util.*;
  */
 public class Cell {
     // The available peoples
+    
     private int nrHostiles;
     private int nrNeutral;
     private int nrNeutralsSaved;
-    private double success;
 
     // The available agents on this cell
     private List<Agent> agents = new ArrayList<>();
 
     Cell(HashMap<String, Integer> param) {
         Random rand = new Random();
-        this.nrNeutral  = (int) Math.round(rand.nextGaussian() * param.get("STDNEUTRAL") + param.get("MEANNEUTRAL"));
-        this.nrHostiles = (int) Math.round(rand.nextGaussian() * param.get("STDHOSTILES") + param.get("MEANHOSTILES"));
+        this.nrNeutral  = Math.max((int) Math.round(rand.nextGaussian() * param.get("STDNEUTRAL") + param.get("MEANNEUTRAL")),0);
+        this.nrHostiles = Math.max((int) Math.round(rand.nextGaussian() * param.get("STDHOSTILES") + param.get("MEANHOSTILES")),0);
         param.put("TOTALNRNEUTRAL", param.get("TOTALNRNEUTRAL")+this.nrNeutral);
         param.put("TOTALNRHOSTILES", param.get("TOTALNRHOSTILES")+this.nrHostiles);
         
@@ -32,19 +32,12 @@ public class Cell {
    }
     
     public void addAgent(Agent agent) {
-        getAgents().add(agent);
+        agents.add(agent);
     }
-    
+        
     // Kill the number of agents == lossesCops
     public void killAgents (int kills) {
         setAgents(getAgents().subList(0, getAgents().size() - kills));
-    }
-    
-    public double getSuccess() {
-        return success;
-    }
-    public void setSuccess(double success) {
-        this.success = success;        
     }
 
     public int getNrHostiles() {

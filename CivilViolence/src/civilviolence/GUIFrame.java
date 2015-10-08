@@ -8,6 +8,7 @@ import java.awt.Insets;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -44,8 +45,9 @@ public class GUIFrame extends javax.swing.JFrame {
 
         // Set the panel split
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        System.out.println("height: " + screenSize.height);
         jSplitPane1.setDividerLocation(screenSize.height);
+        jSplitPane1.setEnabled(false);
+        jSplitPane2.setDividerLocation(screenSize.height-GridPanel.getWidth()/4);
         jSplitPane1.setEnabled(false);
 
         // Add the grid buttons
@@ -93,17 +95,26 @@ public class GUIFrame extends javax.swing.JFrame {
                         // Adjust the information box on buttonclick
                         // btn.addActionListener((ActionEvent e) -> {
                         infoField.setText(
+                                "Current Epoch:\t\t" + param.get("EPOCH") +
                                 "\n\n\t Number of neutrals on this site:\t\t" + grid[finalRow][finalCol].getNrNeutral() + '\n'
                                 + "\t Number of neutrals saved on this site:\t" + grid[finalRow][finalCol].getNrNeutralsSaved()+ '\n'
                                 + "\t Number of hostiles on this site:\t\t" + grid[finalRow][finalCol].getNrHostiles() + '\n'
                                 + "\t Number of cops on this site:\t\t" + grid[finalRow][finalCol].getAgents().size()
                                 + "\n\n"
-                                + "\t Total number of neutrals at start:\t" + param.get("TOTALNRNEUTRAL") + '\n'
-                                + "\t Total number of hostiles at start:\t" + param.get("TOTALNRHOSTILES")
-                                + "\n\n"
-                                + "\t Remaining number of neutrals:\t" + param.get("REMAININGNRNEUTRALS") + '\n'
-                                + "\t Remaining number of hostiles:\t" + param.get("REMAININGNRHOSTILES") + '\n'
-                                + "\t Remaining number of cops :\t"    + param.get("REMAININGNRCOPS")
+                                + "\t Total number of neutrals at start:\t\t" + param.get("TOTALNRNEUTRAL") + '\n'
+                                + "\t Total number of hostiles at start:\t\t" + param.get("TOTALNRHOSTILES") + '\n'
+                                + "\t Total number of cops at start:\t\t" + param.get("NRCOPS") + '\n'   
+                                + "\n"
+                                + "\t Saved number of neutrals:\t\t" + param.get("SAVEDNRNEUTRALS") + '\n'
+                                + "\t Killed number of neutrals:\t\t\t" + (param.get("TOTALNRNEUTRAL") - param.get("SAVEDNRNEUTRALS")) + '\n'
+                                + "\t Killed number of cops:\t\t\t" + (param.get("NRCOPS") - param.get("REMAININGNRCOPS")) + '\n'
+                                + "\t Killed number of hostiles:\t\t\t" + (param.get("TOTALNRHOSTILES") - param.get("REMAININGNRHOSTILES")) + '\n'
+                                + "\n"
+                                + "\t Remaining number of neutrals:\t\t" + param.get("REMAININGNRNEUTRALS") + '\n'
+                                + "\t Remaining number of hostiles:\t\t" + param.get("REMAININGNRHOSTILES") + '\n'
+                                + "\t Remaining number of cops :\t\t"    + param.get("REMAININGNRCOPS") + '\n'
+                                + "\n"
+                                + "\t Total success for this simulation:\t" + new DecimalFormat("##.###").format((double) param.get("LASTSUCCESS1")/(double) param.get("LASTSUCCESS2"))
                         );
                     }
                 });
@@ -118,7 +129,7 @@ public class GUIFrame extends javax.swing.JFrame {
         // Add the grid buttons
         for (int row = 0; row < param.get("LENGTH"); ++row) {
             for (int col = 0; col < param.get("WIDTH"); ++col) {
-                // Create the button
+                
                 int finalRow = row;
                 int finalCol = col;
                 int nrNeutral = grid[row][col].getNrNeutral();
@@ -146,7 +157,7 @@ public class GUIFrame extends javax.swing.JFrame {
         }
     }
 
-    public void clickSelectedButton(HashMap<String, Integer> param) {
+    public void clickAButton() {
         gridButtons[0][0].doClick();
     }
     /**
@@ -162,6 +173,7 @@ public class GUIFrame extends javax.swing.JFrame {
         jSplitPane1 = new javax.swing.JSplitPane();
         GridPanel = new javax.swing.JPanel();
         RightPanel = new javax.swing.JPanel();
+        jSplitPane2 = new javax.swing.JSplitPane();
         infoField = new javax.swing.JTextPane();
         ControlFrame = new javax.swing.JPanel();
 
@@ -192,21 +204,29 @@ public class GUIFrame extends javax.swing.JFrame {
 
         RightPanel.setLayout(new java.awt.GridLayout(0, 1));
 
+        jSplitPane2.setDividerLocation(100);
+        jSplitPane2.setDividerSize(1);
+        jSplitPane2.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
+
         infoField.setFont(new java.awt.Font("Cantarell", 0, 24)); // NOI18N
-        RightPanel.add(infoField);
+        jSplitPane2.setLeftComponent(infoField);
+
+        ControlFrame.setPreferredSize(new java.awt.Dimension(173, 100));
 
         javax.swing.GroupLayout ControlFrameLayout = new javax.swing.GroupLayout(ControlFrame);
         ControlFrame.setLayout(ControlFrameLayout);
         ControlFrameLayout.setHorizontalGroup(
             ControlFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 173, Short.MAX_VALUE)
+            .addGap(0, 596, Short.MAX_VALUE)
         );
         ControlFrameLayout.setVerticalGroup(
             ControlFrameLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 199, Short.MAX_VALUE)
+            .addGap(0, 664, Short.MAX_VALUE)
         );
 
-        RightPanel.add(ControlFrame);
+        jSplitPane2.setBottomComponent(ControlFrame);
+
+        RightPanel.add(jSplitPane2);
 
         jSplitPane1.setRightComponent(RightPanel);
 
@@ -266,6 +286,7 @@ public class GUIFrame extends javax.swing.JFrame {
     public javax.swing.ButtonGroup buttonGroup1;
     public javax.swing.JTextPane infoField;
     public javax.swing.JSplitPane jSplitPane1;
+    private javax.swing.JSplitPane jSplitPane2;
     // End of variables declaration//GEN-END:variables
 
     // A grid to store the buttons
