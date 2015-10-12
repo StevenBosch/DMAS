@@ -272,7 +272,7 @@ public class Dmas {
         gFrame.updateGridButtons(grid, param);
 
         param.put("EPOCH", param.get("EPOCH") + 1);
-        param.put("LEARNINGRATE", param.get("LEARNINGRATE") / 4 * 3); //*0.75
+        param.put("LEARNINGRATE", param.get("LEARNINGRATE"));
         param.put("LASTSUCCESS1", ((param.get("SAVEDNRNEUTRALS")
                 + (param.get("TOTALNRHOSTILES") - param.get("REMAININGNRHOSTILES")) - (param.get("NRCOPS") - param.get("REMAININGNRCOPS"))
                 - (param.get("TOTALNRNEUTRAL") - param.get("REMAININGNRNEUTRALS") - param.get("SAVEDNRNEUTRALS")))));
@@ -320,7 +320,7 @@ public class Dmas {
             writer = new FileWriter("Output");
 
             // Run the simulation a number of times
-            for (int i = 0; i < 5; i++) {
+            for (int i = 0; i < 50; i++) {
                 System.out.println("Epoch: " + (i + 1));
                 // The parameters
                 final HashMap<String, Integer> param = new HashMap<String, Integer>() {
@@ -329,7 +329,7 @@ public class Dmas {
                         put("WIDTH", 20);
                         put("EPOCH", 0);
 
-                        put("NRCOPS", 3700);
+                        put("NRCOPS", 4000);
                         put("MEANNEUTRAL", 20);
                         put("STDNEUTRAL", 40);
                         put("MEANHOSTILES", 10);
@@ -348,7 +348,7 @@ public class Dmas {
 
                     // Following parameters are in percentages! 
                         // (So actual value is divided by 100)
-                        put("LEARNINGRATE", 80);
+                        put("LEARNINGRATE", 20);
                         put("NOISE", 30);
                         put("MOVENOISE", 70);
                         put("AIM", 50);
@@ -420,7 +420,7 @@ public class Dmas {
                         break;
                     }
                 }
-                param.put("KEEPAGENTS", 1);
+                param.put("KEEPAGENTS", 1); // If commented, then no remembering
                 // SHOW IT ALL!!! (Uncomment to show the GUI)
 //            gFrame.setVisible(true);    
 //            gFrame.clickAButton();
@@ -436,5 +436,6 @@ public class Dmas {
             System.out.println("Error while flushing/closing fileWriter");
             e.printStackTrace();
         }
+        System.out.println("Klaar is Kees");
     }
 }
