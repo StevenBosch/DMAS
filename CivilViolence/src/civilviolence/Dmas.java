@@ -270,7 +270,13 @@ public class Dmas {
 
     public static int playOneRound(Cell[][] grid, HashMap<String, Integer> param, GUIFrame gFrame, double learningRate) {
         updateCells(grid, param, learningRate);
-        gFrame.updateGridButtons(grid, param);
+        // gFrame.updateGridButtons(grid, param);
+        
+        if (param.get("REMAININGNRHOSTILES") == 0) {
+            param.put("SAVEDNEUTRALS", param.get("SAVEDNEUTRALS")+param.get("REMAININGNEUTRALS"));
+            param.put("REMAININGHOSTILES", 0);
+            param.put("REMAININGNEUTRALS",0);
+        }
 
         param.put("EPOCH", param.get("EPOCH") + 1);
         param.put("LASTSUCCESS1", ((param.get("SAVEDNRNEUTRALS")
@@ -379,17 +385,17 @@ public class Dmas {
                 final GUIFrame gFrame = new GUIFrame(grid, param);
 
                 // Add the epoch button
-                JButton btn = new javax.swing.JButton("Epoch");
-                final Cell[][] grid2 = grid;
-                btn.addActionListener(new ActionListener() {
-                    public void actionPerformed(ActionEvent e) {
+                // JButton btn = new javax.swing.JButton("Epoch");
+//                final Cell[][] grid2 = grid;
+//                btn.addActionListener(new ActionListener() {
+//                    public void actionPerformed(ActionEvent e) {
                         //playOneRound(grid2, param, gFrame, learningRate);
                         //                updateCells(grid2, param);
                         //                gFrame.updateGridButtons(grid2, param);
                         //                gFrame.clickSelectedButton(param);
 
-                    }
-                });
+//                    }
+//                });
 //                gFrame.ControlFrame.add(btn);
 //
 //                JButton btn2 = new javax.swing.JButton("10 Epochs");
@@ -420,7 +426,7 @@ public class Dmas {
                 // This while runs the simulation until it's finished and writes the final success to a csv-file
                 // Comment this loop and set i in the outer loop to 1 to run a simulation by hand
                 while (true) {
-                    if (playOneRound(grid2, param, gFrame, learningRate) == 0) {
+                    if (playOneRound(grid, param, gFrame, learningRate) == 0) {
                         writeOutput(param, writer, i + 1);
                         break;
                     }
