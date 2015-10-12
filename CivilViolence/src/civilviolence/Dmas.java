@@ -16,6 +16,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.FileWriter;
 import java.io.IOException;
+import static java.lang.Math.round;
 import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Random;
@@ -61,28 +62,28 @@ public class Dmas {
 
     public static void determineAction(Agent ag) {
         Random rand = new Random();
-        if (ag.getAwareness() > 0.5 && ag.getDanger() > 0.5) { // Cops and civilians are a majority
+        if (ag.getAwareness() >= 0.5 && ag.getDanger() >= 0.5) { // Cops and civilians are a majority
             ag.setCurrentSituation(0);
             if (rand.nextDouble() < ag.getDecTable()[0][0]) { // SAVE save has a higher utility
                 ag.setAction(agentActions.SAVE);
             } else {
                 ag.setAction(agentActions.SHOOT); // SHOOT has a higher utility
             }
-        } else if (ag.getAwareness() > 0.5 && ag.getDanger() <= 0.5) { // Cops are a majority and civilians are a minority
+        } else if (ag.getAwareness() >= 0.5 && ag.getDanger() < 0.5) { // Cops are a majority and civilians are a minority
             ag.setCurrentSituation(1);
             if (rand.nextDouble() < ag.getDecTable()[0][1]) { // SAVE save has a higher utility
                 ag.setAction(agentActions.SAVE);
             } else {
                 ag.setAction(agentActions.SHOOT); // SHOOT has a higher utility
             }
-        } else if (ag.getAwareness() <= 0.5 && ag.getDanger() > 0.5) { // Cops are a minority and civilians are a majority
+        } else if (ag.getAwareness() < 0.5 && ag.getDanger() >= 0.5) { // Cops are a minority and civilians are a majority
             ag.setCurrentSituation(2);
             if (rand.nextDouble() < ag.getDecTable()[0][2]) { // SAVE save has a higher utility
                 ag.setAction(agentActions.SAVE);
             } else {
                 ag.setAction(agentActions.SHOOT); // SHOOT has a higher utility
             }
-        } else if (ag.getAwareness() <= 0.5 && ag.getDanger() <= 0.5) { // Cops and civilians are a minority
+        } else if (ag.getAwareness() < 0.5 && ag.getDanger() < 0.5) { // Cops and civilians are a minority
             ag.setCurrentSituation(3);
             if (rand.nextDouble() < ag.getDecTable()[0][3]) { // SAVE save has a higher utility
                 ag.setAction(agentActions.SAVE);
@@ -106,7 +107,8 @@ public class Dmas {
 
         // The uncertainty of actually hitting someone
         double aim = (double) param.get("AIM") / 100;
-        double noise = (double) param.get("NOISE") / 100;
+        Random nextRand = new Random();
+        double noise = nextRand.nextDouble();
         // The extent to which hostiles aim at cops.
 
         double hostileAimCops = (double) param.get("HOSTILEAIMCOPS") / 100;
@@ -118,12 +120,12 @@ public class Dmas {
             // Calculate the awareness and danger in this cell
             ag.setAwareness(
                     ((nrHost + nrCops) != 0)
-                            ? (double) (nrCops / (nrHost + nrCops)) * noise
+                            ? ((double) nrCops / (double) (nrHost + nrCops)) * (noise + 0.5)
                             : 1
             );
             ag.setDanger(
                     ((nrHost + nrNeutral) != 0)
-                            ? (double) (nrNeutral / (nrHost + nrNeutral)) * noise
+                            ? ((double) nrNeutral / (double)(nrHost + nrNeutral)) * (noise + 0.5)
                             : 1
             );
 
@@ -171,7 +173,7 @@ public class Dmas {
         param.put("REMAININGNRHOSTILES", param.get("REMAININGNRHOSTILES") - nrHostileDeaths);
         param.put("REMAININGNRCOPS", param.get("REMAININGNRCOPS") - nrCopDeaths);
 
-        double success = ((nrNeutralSaves + nrHostileDeaths + nrCopDeaths + nrNeutralDeaths) == 0) ? 0.000000
+        double success = ((nrNeutralSaves + nrHostileDeaths + nrCopDeaths + nrNeutralDeaths) == 0) ? 0.0
                 : ((double) (nrNeutralSaves + nrHostileDeaths - nrCopDeaths - nrNeutralDeaths)
                 / (double) (nrNeutralSaves + nrHostileDeaths + nrCopDeaths + nrNeutralDeaths));
 
@@ -184,13 +186,15 @@ public class Dmas {
         //System.out.println(success);
         for (Agent ag : cell.getAgents()) {
             if (ag.getAction() == agentActions.SAVE) {
-                ag.getDecTable()[0][ag.getCurrentSituation()] = ((((ag.getDecTable()[0][ag.getCurrentSituation()] + success * learningRate) / (1 + learningRate)) < 1)
-                        ? (ag.getDecTable()[0][ag.getCurrentSituation()] + success * learningRate) / (1 + learningRate)
-                        : 1);
+                ag.getDecTable()[0][ag.getCurrentSituation()] = 
+                        ((((ag.getDecTable()[0][ag.getCurrentSituation()] + success * learningRate) / (1 + learningRate)) > 1) ? 1
+                        : (ag.getDecTable()[0][ag.getCurrentSituation()] + success * learningRate) / (1 + learningRate) < 0 ? 0
+                        : ag.getDecTable()[0][ag.getCurrentSituation()] + success * learningRate) / (1 + learningRate);
             } else {
-                ag.getDecTable()[1][ag.getCurrentSituation()] = ((((ag.getDecTable()[1][ag.getCurrentSituation()] + success * learningRate) / (1 + learningRate)) < 1)
-                        ? (ag.getDecTable()[1][ag.getCurrentSituation()] + success * learningRate) / (1 + learningRate)
-                        : 1);
+                ag.getDecTable()[1][ag.getCurrentSituation()] = 
+                        ((((ag.getDecTable()[1][ag.getCurrentSituation()] + success * learningRate) / (1 + learningRate)) > 1) ? 1
+                        : (ag.getDecTable()[1][ag.getCurrentSituation()] + success * learningRate) / (1 + learningRate) < 0 ? 0
+                        : ag.getDecTable()[1][ag.getCurrentSituation()] + success * learningRate) / (1 + learningRate);
             }
             double temp = ag.getDecTable()[0][ag.getCurrentSituation()];
 
@@ -268,14 +272,16 @@ public class Dmas {
 
     }
 
-    public static int playOneRound(Cell[][] grid, HashMap<String, Integer> param, GUIFrame gFrame, double learningRate) {
+    public static int playOneRound(Cell[][] grid, HashMap<String, Integer> param, GUIFrame gFrame, double learningRate, List<Agent> agentList) {
         updateCells(grid, param, learningRate);
         // gFrame.updateGridButtons(grid, param);
         
         if (param.get("REMAININGNRHOSTILES") == 0) {
-            param.put("SAVEDNEUTRALS", param.get("SAVEDNEUTRALS")+param.get("REMAININGNEUTRALS"));
-            param.put("REMAININGHOSTILES", 0);
-            param.put("REMAININGNEUTRALS",0);
+            param.put("SAVEDNRNEUTRALS", param.get("SAVEDNRNEUTRALS")+param.get("REMAININGNRNEUTRALS"));
+            param.put("REMAININGNRNEUTRALS",0);
+        }
+        if (param.get("REMAININGNRCOPS") == 0) {
+            param.put("REMAININGNRNEUTRALS",0);
         }
 
         param.put("EPOCH", param.get("EPOCH") + 1);
@@ -284,11 +290,32 @@ public class Dmas {
                 - (param.get("TOTALNRNEUTRAL") - param.get("REMAININGNRNEUTRALS") - param.get("SAVEDNRNEUTRALS")))));
         param.put("LASTSUCCESS2", (param.get("SAVEDNRNEUTRALS")
                 + (param.get("TOTALNRHOSTILES") - param.get("REMAININGNRHOSTILES")) + (param.get("NRCOPS") - param.get("REMAININGNRCOPS"))
-                + (param.get("TOTALNRNEUTRAL") - param.get("REMAININGNRNEUTRALS"))));
+                + (param.get("TOTALNRNEUTRAL") - param.get("REMAININGNRNEUTRALS") - param.get("SAVEDNRNEUTRALS"))));
 
         // Click a button to update the infotext field
         // gFrame.clickAButton();
-
+        
+        double mean = 0;
+        
+        
+        // Printstuff
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 4; j++) {
+                // System.out.printf("nummer: " + i + ","+ j + "\n");
+                for (Agent ag : agentList) {
+                    // System.out.printf("%.2f", ag.getDecTable()[i][j]);
+                    // System.out.printf(" ");
+                    mean += ag.getDecTable()[i][j];
+                }
+                System.out.printf("%.2f", mean/agentList.size());
+                System.out.printf(" ");
+                mean = 0;
+                // System.out.println("\n");
+            }
+            System.out.println("\n");
+        }
+        
+        
         if (param.get("REMAININGNRNEUTRALS") == 0) {
             return 0;
         }
@@ -327,23 +354,22 @@ public class Dmas {
                 put("WIDTH", 20);
                     
                 put("NRCOPS", 4000);
-                put("MEANNEUTRAL", 20);
+                put("MEANNEUTRAL", 200);
                 put("STDNEUTRAL", 40);
-                put("MEANHOSTILES", 10);
-                put("STDHOSTILES", 5);
+                put("MEANHOSTILES", 50);
+                put("STDHOSTILES", 20);
                 
                 // Following parameters are in percentages! 
                 // (So actual value is divided by 100)
-                put("NOISE", 30);
                 put("MOVENOISE", 70);
                 put("AIM", 50);
-                put("HOSTILEAIMCOPS", 50);
-                put("SAVEPROB", 50);
+                put("HOSTILEAIMCOPS", 30);
+                put("SAVEPROB", 80);
                 put("KEEPAGENTS", 0);
             }
         };
         
-        double learningRate = 0.8;
+        double learningRate = 0.05;
 
         List<Agent> agentList = new ArrayList<>();
         FileWriter writer = null;
@@ -367,7 +393,7 @@ public class Dmas {
                 param.put("LASTSUCCESS1", 0);
                 param.put("LASTSUCCESS2", 0);
                 
-                learningRate = learningRate * 0.95;
+                //learningRate = learningRate * 0.95;
 
                 // Create and initialize the griddy
                 Cell[][] grid = new Cell[param.get("LENGTH")][param.get("WIDTH")];
@@ -425,8 +451,11 @@ public class Dmas {
 
                 // This while runs the simulation until it's finished and writes the final success to a csv-file
                 // Comment this loop and set i in the outer loop to 1 to run a simulation by hand
+                int n = 0;
                 while (true) {
-                    if (playOneRound(grid, param, gFrame, learningRate) == 0) {
+                    n++;
+                    System.out.println("epoch: " + n);
+                    if (playOneRound(grid, param, gFrame, learningRate, agentList) == 0) {
                         writeOutput(param, writer, i + 1);
                         break;
                     }
