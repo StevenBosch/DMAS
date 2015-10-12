@@ -368,7 +368,7 @@ public class Dmas {
                 put("KEEPAGENTS", 0);
             }
         };
-        
+
         double learningRate = 0.05;
 
         List<Agent> agentList = new ArrayList<>();
@@ -377,11 +377,10 @@ public class Dmas {
             writer = new FileWriter("Output");
 
             // Run the simulation a number of times
-            for (int i = 0; i < 100; i++) {
+            for (int i = 0; i < 1000; i++) {
                 System.out.println("Epoch: " + (i + 1));
                 // The parameters
                 param.put("EPOCH", 0);
-                
                 param.put("TOTALNRNEUTRAL", 0);
                 param.put("TOTALNRHOSTILES", 0);
                 param.put("REMAININGNRNEUTRALS", 0);
@@ -460,7 +459,7 @@ public class Dmas {
                         break;
                     }
                 }
-                param.put("KEEPAGENTS", 1);
+                param.put("KEEPAGENTS", 1); // If commented, then no remembering
                 // SHOW IT ALL!!! (Uncomment to show the GUI)
 //            gFrame.setVisible(true);    
 //            gFrame.clickAButton();
