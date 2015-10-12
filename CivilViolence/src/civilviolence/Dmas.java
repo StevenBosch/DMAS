@@ -436,5 +436,6 @@ public class Dmas {
             System.out.println("Error while flushing/closing fileWriter");
             e.printStackTrace();
         }
+        return;
     }
 }
