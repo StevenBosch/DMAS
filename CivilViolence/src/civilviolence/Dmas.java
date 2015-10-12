@@ -44,7 +44,7 @@ public class Dmas {
         }
     }
 
-       public static void initAgents(Cell grid[][], HashMap<String, Integer> param, List<Agent> agentList) {
+    public static void initAgents(Cell grid[][], HashMap<String, Integer> param, List<Agent> agentList) {
         Random rand = new Random();
         for (int i = 0; i < param.get("NRCOPS"); ++i) {
             if (param.get("KEEPAGENTS") == 0) {
@@ -52,10 +52,11 @@ public class Dmas {
                 Agent ag = new Agent();
                 grid[rand.nextInt(param.get("LENGTH"))][rand.nextInt(param.get("WIDTH"))].addAgent(ag);
                 agentList.add(ag);
-            } else
-                // Initialize the grid with an old set of agents
+            } else // Initialize the grid with an old set of agents
+            {
                 grid[rand.nextInt(param.get("LENGTH"))][rand.nextInt(param.get("WIDTH"))].addAgent(agentList.get(i));
             }
+        }
     }
 
     public static void determineAction(Agent ag) {
@@ -92,7 +93,7 @@ public class Dmas {
     }
 
     // Let all the agents in the cell determine their action and update the number of saves, kills and losses accordingly
-    public static void playGame(Cell cell, HashMap<String, Integer> param) {
+    public static void playGame(Cell cell, HashMap<String, Integer> param, double learningRate) {
         // Some cell variables 
         int nrHost = cell.getNrHostiles();
         int nrNeutral = cell.getNrNeutral();
@@ -174,21 +175,21 @@ public class Dmas {
                 : ((double) (nrNeutralSaves + nrHostileDeaths - nrCopDeaths - nrNeutralDeaths)
                 / (double) (nrNeutralSaves + nrHostileDeaths + nrCopDeaths + nrNeutralDeaths));
 
-        updateAgents(cell, param, success);
+        updateAgents(cell, param, success, learningRate);
     }
 
-    public static void updateAgents(Cell cell, HashMap<String, Integer> param, double success) {
+    public static void updateAgents(Cell cell, HashMap<String, Integer> param, double success, double learningRate) {
         // Update the decision tables of the agents
-        double alpha = (double) param.get("LEARNINGRATE") / 100;
+        
         //System.out.println(success);
         for (Agent ag : cell.getAgents()) {
             if (ag.getAction() == agentActions.SAVE) {
-                ag.getDecTable()[0][ag.getCurrentSituation()] = ((((ag.getDecTable()[0][ag.getCurrentSituation()] + success * alpha) / (1 + alpha)) < 1)
-                        ? (ag.getDecTable()[0][ag.getCurrentSituation()] + success * alpha) / (1 + alpha)
+                ag.getDecTable()[0][ag.getCurrentSituation()] = ((((ag.getDecTable()[0][ag.getCurrentSituation()] + success * learningRate) / (1 + learningRate)) < 1)
+                        ? (ag.getDecTable()[0][ag.getCurrentSituation()] + success * learningRate) / (1 + learningRate)
                         : 1);
             } else {
-                ag.getDecTable()[1][ag.getCurrentSituation()] = ((((ag.getDecTable()[1][ag.getCurrentSituation()] + success * alpha) / (1 + alpha)) < 1)
-                        ? (ag.getDecTable()[1][ag.getCurrentSituation()] + success * alpha) / (1 + alpha)
+                ag.getDecTable()[1][ag.getCurrentSituation()] = ((((ag.getDecTable()[1][ag.getCurrentSituation()] + success * learningRate) / (1 + learningRate)) < 1)
+                        ? (ag.getDecTable()[1][ag.getCurrentSituation()] + success * learningRate) / (1 + learningRate)
                         : 1);
             }
             double temp = ag.getDecTable()[0][ag.getCurrentSituation()];
@@ -267,12 +268,11 @@ public class Dmas {
 
     }
 
-    public static int playOneRound(Cell[][] grid, HashMap<String, Integer> param, GUIFrame gFrame) {
-        updateCells(grid, param);
+    public static int playOneRound(Cell[][] grid, HashMap<String, Integer> param, GUIFrame gFrame, double learningRate) {
+        updateCells(grid, param, learningRate);
         gFrame.updateGridButtons(grid, param);
 
         param.put("EPOCH", param.get("EPOCH") + 1);
-        param.put("LEARNINGRATE", param.get("LEARNINGRATE"));
         param.put("LASTSUCCESS1", ((param.get("SAVEDNRNEUTRALS")
                 + (param.get("TOTALNRHOSTILES") - param.get("REMAININGNRHOSTILES")) - (param.get("NRCOPS") - param.get("REMAININGNRCOPS"))
                 - (param.get("TOTALNRNEUTRAL") - param.get("REMAININGNRNEUTRALS") - param.get("SAVEDNRNEUTRALS")))));
@@ -281,7 +281,7 @@ public class Dmas {
                 + (param.get("TOTALNRNEUTRAL") - param.get("REMAININGNRNEUTRALS"))));
 
         // Click a button to update the infotext field
-        gFrame.clickAButton();
+        // gFrame.clickAButton();
 
         if (param.get("REMAININGNRNEUTRALS") == 0) {
             return 0;
@@ -289,11 +289,11 @@ public class Dmas {
         return 1;
     }
 
-    public static void updateCells(Cell[][] grid, HashMap<String, Integer> param) {
+    public static void updateCells(Cell[][] grid, HashMap<String, Integer> param, double learningRate) {
         // Loop through all the cells, run the simulation in each cell and let all the agents move
         for (int i = 0; i < param.get("LENGTH"); ++i) {
             for (int j = 0; j < param.get("WIDTH"); ++j) {
-                playGame(grid[i][j], param);
+                playGame(grid[i][j], param, learningRate);
             }
         }
         updateMovements(grid, param);
@@ -314,55 +314,60 @@ public class Dmas {
     }
 
     public static void main(String[] args) {
+        // The parameters
+        final HashMap<String, Integer> param = new HashMap<String, Integer>() {
+            {
+                put("LENGTH", 20);
+                put("WIDTH", 20);
+                    
+                put("NRCOPS", 4000);
+                put("MEANNEUTRAL", 20);
+                put("STDNEUTRAL", 40);
+                put("MEANHOSTILES", 10);
+                put("STDHOSTILES", 5);
+                
+                // Following parameters are in percentages! 
+                // (So actual value is divided by 100)
+                put("NOISE", 30);
+                put("MOVENOISE", 70);
+                put("AIM", 50);
+                put("HOSTILEAIMCOPS", 50);
+                put("SAVEPROB", 50);
+                put("KEEPAGENTS", 0);
+            }
+        };
+        
+        double learningRate = 0.1;
+
         List<Agent> agentList = new ArrayList<>();
         FileWriter writer = null;
         try {
             writer = new FileWriter("Output");
 
             // Run the simulation a number of times
-            for (int i = 0; i < 50; i++) {
+            for (int i = 0; i < 1000; i++) {
                 System.out.println("Epoch: " + (i + 1));
                 // The parameters
-                final HashMap<String, Integer> param = new HashMap<String, Integer>() {
-                    {
-                        put("LENGTH", 20);
-                        put("WIDTH", 20);
-                        put("EPOCH", 0);
+                param.put("EPOCH", 0);
+                param.put("TOTALNRNEUTRAL", 0);
+                param.put("TOTALNRHOSTILES", 0);
+                param.put("REMAININGNRNEUTRALS", 0);
+                param.put("SAVEDNRNEUTRALS", 0);
+                param.put("REMAININGNRHOSTILES", 0);
+                param.put("REMAININGNRCOPS", 0);
 
-                        put("NRCOPS", 4000);
-                        put("MEANNEUTRAL", 20);
-                        put("STDNEUTRAL", 40);
-                        put("MEANHOSTILES", 10);
-                        put("STDHOSTILES", 5);
+                //These are used to determine the success per epoch, but have to be stored seperately because the result of their division is a double
+                param.put("LASTSUCCESS1", 0);
+                param.put("LASTSUCCESS2", 0);
+                
+                learningRate = learningRate; //* 0.95;
 
-                        put("TOTALNRNEUTRAL", 0);
-                        put("TOTALNRHOSTILES", 0);
-                        put("REMAININGNRNEUTRALS", 0);
-                        put("SAVEDNRNEUTRALS", 0);
-                        put("REMAININGNRHOSTILES", 0);
-                        put("REMAININGNRCOPS", 0);
-
-                        //These are used to determine the success per epoch, but have to be stored seperately because the result of their division is a double
-                        put("LASTSUCCESS1", 0);
-                        put("LASTSUCCESS2", 0);
-
-                    // Following parameters are in percentages! 
-                        // (So actual value is divided by 100)
-                        put("LEARNINGRATE", 20);
-                        put("NOISE", 30);
-                        put("MOVENOISE", 70);
-                        put("AIM", 50);
-                        put("HOSTILEAIMCOPS", 50);
-                        put("SAVEPROB", 50);
-                        put("KEEPAGENTS", 0);                    
-                    }
-                };
 
                 // Create and initialize the griddy
                 Cell[][] grid = new Cell[param.get("LENGTH")][param.get("WIDTH")];
                 initGrid(grid, param);
                 initAgents(grid, param, agentList);
-                 
+
                 param.put("REMAININGNRNEUTRALS", param.get("TOTALNRNEUTRAL"));
                 param.put("REMAININGNRHOSTILES", param.get("TOTALNRHOSTILES"));
                 param.put("REMAININGNRCOPS", param.get("NRCOPS"));
@@ -378,44 +383,44 @@ public class Dmas {
                 final Cell[][] grid2 = grid;
                 btn.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
-                        playOneRound(grid2, param, gFrame);
-    //                updateCells(grid2, param);
+                        //playOneRound(grid2, param, gFrame, learningRate);
+                        //                updateCells(grid2, param);
                         //                gFrame.updateGridButtons(grid2, param);
                         //                gFrame.clickSelectedButton(param);
 
                     }
                 });
-                gFrame.ControlFrame.add(btn);
+//                gFrame.ControlFrame.add(btn);
+//
+//                JButton btn2 = new javax.swing.JButton("10 Epochs");
+//                btn2.addActionListener(new ActionListener() {
+//                    public void actionPerformed(ActionEvent e) {
+//                        for (int count = 0; count < 10; ++count) {
+//                            if (playOneRound(grid2, param, gFrame, learningRate) == 0) {
+//                                break;
+//                            }
+//                        }
+//
+//                    }
+//                });
+//                gFrame.ControlFrame.add(btn2);
+//
+//                JButton btn3 = new javax.swing.JButton("All Epochs");
+//                btn3.addActionListener(new ActionListener() {
+//                    public void actionPerformed(ActionEvent e) {
+//                        while (true) {
+//                            if (playOneRound(grid2, param, gFrame, learningRate) == 0) {
+//                                break;
+//                            }
+//                        }
+//                    }
+//                });
+//                gFrame.ControlFrame.add(btn3);
 
-                JButton btn2 = new javax.swing.JButton("10 Epochs");
-                btn2.addActionListener(new ActionListener() {
-                    public void actionPerformed(ActionEvent e) {
-                        for (int count = 0; count < 10; ++count) {
-                            if (playOneRound(grid2, param, gFrame) == 0) {
-                                break;
-                            }
-                        }
-
-                    }
-                });
-                gFrame.ControlFrame.add(btn2);
-
-                JButton btn3 = new javax.swing.JButton("All Epochs");
-                btn3.addActionListener(new ActionListener() {
-                    public void actionPerformed(ActionEvent e) {
-                        while (true) {
-                            if (playOneRound(grid2, param, gFrame) == 0) {
-                                break;
-                            }
-                        }
-                    }
-                });
-                gFrame.ControlFrame.add(btn3);
-
-            // This while runs the simulation until it's finished and writes the final success to a csv-file
+                // This while runs the simulation until it's finished and writes the final success to a csv-file
                 // Comment this loop and set i in the outer loop to 1 to run a simulation by hand
                 while (true) {
-                    if (playOneRound(grid2, param, gFrame) == 0) {
+                    if (playOneRound(grid2, param, gFrame, learningRate) == 0) {
                         writeOutput(param, writer, i + 1);
                         break;
                     }
@@ -436,6 +441,6 @@ public class Dmas {
             System.out.println("Error while flushing/closing fileWriter");
             e.printStackTrace();
         }
-        System.out.println("Klaar is Kees");
+        System.out.println("Done");
     }
 }
