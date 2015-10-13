@@ -383,14 +383,14 @@ public class Dmas {
                 // Following parameters are in percentages! 
                 // (So actual value is divided by 100)
                 put("MOVENOISE", 50);
-                put("AIM", 50);
+                put("AIM", 25);
                 put("HOSTILEAIMCOPS", 50);
-                put("SAVEPROB", 50);
+                put("SAVEPROB", 25);
                 put("KEEPAGENTS", 0);
             }
         };
 
-        double learningRate = 0.5;
+        double learningRate = 0.0;
 
         List<Agent> agentList = new ArrayList<>();
         FileWriter writer = null;

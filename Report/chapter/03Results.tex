@@ -1,16 +1,16 @@
 \section{Results}
-The first three simulations were run with learning rate values of $0.8$, $0.5$, and $0.2$, corresponding to the inexperienced, mixed-experienced and experienced cops. Following, the simulation with a decreasing learning rate, starting at $1.0$ was run. The mean success value can be found in \autoref{tab:ResultsCur}. 
 
-
+The first simulations were run with learning rate values of $0.8$, $0.5$, $0.2$ and $0.0$, corresponding to the inexperienced, mixed-experienced, experienced and non-learning cops. Following, the simulation with a decreasing learning rate, starting at $0.8$ was run. The mean performance and standard deviation (SD) can be found in \autoref{tab:ResultsCur}. 
 \begin{table}
 \begin{center}
 \begin{tabular}{l r  r}
-$\lambda$ & mean \# epochs & Success \\
+$\lambda$ &  \# epochs (SD) & success (SD)\\
 \hline
-0.8 & 55.6 & 0.218 \\
-0.5 & 46.8 & 0.230 \\
-0.2 & 58.2 & 0.210 \\
-<1.0 & 39.2 & 0.235 \\
+0.0 & 17.79 (1.623) & 0.25 (0.036) \\
+0.2 & 17.66 (2.194) & 0.25 (0.036) \\
+0.5 & 18.12 (2.502) & 0.25 (0.036) \\
+0.8 & 18.45 (2.288) & 0.25 (0.036) \\
+<0.8 & 17.53 (1.825) & 0.25 (0.036) \\
 \hline
 \end{tabular}
 \caption{The amount of epochs necessary to finish and the success of the simulation for the cop-teams with different levels of experience. }
@@ -20,4 +20,20 @@ $\lambda$ & mean \# epochs & Success \\
 
 A Repeated Measure ANOVA showed that there was no main effect of the different simulation on both the success (F(5,25) = 387; p = 0.853) or the amount of epochs (F(5,24) = 1.396; p = 0.261). Post-hoc pairwise comparison, using Bonferoni Correction, confirmed this, showing only non-significant differences between the different simulations.
 
- 
+\subsection{Bias}
+\begin{table}[!ht]
+\begin{center}
+\begin{tabular}{l r  r | l r  r}
+$\lambda$ &  \# epochs (SD) & success (SD) & $\lambda$ &  \# epochs (SD) & success (SD)\\
+\hline
+0.0 & 350.58 (49.631) & 0.30 (0.050) & 0.0 & 9.32 (0.864) & 0.15 (0.032)\\
+0.2 & 19.89 (2.690) & 0.39 (0.026) & 0.2 & 13.41 (1.893) & 0.17 (0.039)\\
+0.5 & 20.64 (2.354) & 0.37 (0.027) & 0.5 & 14.57 (1.936) & 0.17 (0.039)\\
+0.8 & 20.64 (2.344) & 0.35 (0.029) & 0.8 & 14.90 (1.937) & 0.17 (0.039)\\
+<0.8 & 20.28 (2.145) & 0.37 (0.027) & <0.8 & 11.55 (1.214) & 0.16 (0.035)\\
+\hline
+\end{tabular}
+\caption{The amount of epochs necessary to finish and the success of the simulation for the cop-teams with different levels of experience. The cops have a bias for shooting (left) and saving (right).}
+\label{tab:ResultsBias}
+\end{center}
+\end{table}
