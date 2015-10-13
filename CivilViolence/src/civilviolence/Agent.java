@@ -24,8 +24,8 @@ public class Agent {
     public Agent() {
 
         this.decTable = new double[][] {
-        {0.5, 0.5, 0.5, 0.5}, // Action save. ++, +-, -+, --
-        {0.5, 0.5, 0.5, 0.5} // Action shoot. ++, +-, -+, --
+        {0.1, 0.1, 0.1, 0.1}, // Action save. ++, +-, -+, --
+        {0.9, 0.9, 0.9, 0.9} // Action shoot. ++, +-, -+, --
         };
     }
     

@@ -1,9 +1,16 @@
 /* TODO: Simulations
     standard learning 0.8 0.5 0.2 and 0.8 decl. 
+    Initial stance: Shooters/Neutral/Savers - Learning/No learning
     Almost only shooting no learning
     Almost only saving no learning
     Same but with learning ( )
     Punishment for shooting? Future research
+
+    Print per step (or run):
+       Average decision table values
+    Print per run:
+        Succes
+
  */
 package civilviolence;
 
@@ -12,18 +19,12 @@ package civilviolence;
  * @author maleco
  */
 import java.awt.HeadlessException;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.FileWriter;
 import java.io.IOException;
-import static java.lang.Math.round;
-import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Random;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import javax.swing.JButton;
 import javax.swing.JFrame;
 
 public class Dmas {
@@ -188,9 +189,11 @@ public class Dmas {
         for (Agent ag : cell.getAgents()) {
             if (ag.getAction() == agentActions.SAVE) {
                 ag.getDecTable()[0][ag.getCurrentSituation()] = 
-                        ((ag.getDecTable()[0][ag.getCurrentSituation()] + (success * learningRate) / (1 + learningRate)) > 1) ? 1
-                        : ag.getDecTable()[0][ag.getCurrentSituation()] + (success * learningRate) / (1 + learningRate) < 0 ? 0
-                        : ag.getDecTable()[0][ag.getCurrentSituation()] + (success * learningRate) / (1 + learningRate);
+                        ((ag.getDecTable()[0][ag.getCurrentSituation()] + (success * learningRate) / (1 + learningRate)) > 1) 
+                            ? 1
+                            : (ag.getDecTable()[0][ag.getCurrentSituation()] + (success * learningRate) / (1 + learningRate)) < 0 
+                                ? 0
+                                : ag.getDecTable()[0][ag.getCurrentSituation()] + (success * learningRate) / (1 + learningRate);
             } else {
                 ag.getDecTable()[1][ag.getCurrentSituation()] = 
                         ((ag.getDecTable()[1][ag.getCurrentSituation()] + (success * learningRate) / (1 + learningRate)) > 1) ? 1
@@ -365,12 +368,12 @@ public class Dmas {
                 put("MOVENOISE", 70);
                 put("AIM", 25);
                 put("HOSTILEAIMCOPS", 30);
-                put("SAVEPROB", 100);
+                put("SAVEPROB", 50);
                 put("KEEPAGENTS", 0);
             }
         };
 
-        double learningRate = 0.8;
+        double learningRate = 0.2;
 
         List<Agent> agentList = new ArrayList<>();
         FileWriter writer = null;
