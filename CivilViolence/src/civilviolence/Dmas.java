@@ -1,15 +1,15 @@
 /* TODO: Simulations
-    standard learning 0.8 0.5 0.2 and 0.8 decl. 
-    Initial stance: Shooters/Neutral/Savers - Learning/No learning
-    Almost only shooting no learning
-    Almost only saving no learning
-    Same but with learning ( )
-    Punishment for shooting? Future research
+ standard learning 0.8 0.5 0.2 and 0.8 decl. 
+ Initial stance: Shooters/Neutral/Savers - Learning/No learning
+ Almost only shooting no learning
+ Almost only saving no learning
+ Same but with learning ( )
+ Punishment for shooting? Future research
 
-    Print per step (or run):
-       Average decision table values
-    Print per run:
-        Succes
+ Print per step (or run):
+ Average decision table values
+ Print per run:
+ Succes
 
  */
 package civilviolence;
@@ -127,7 +127,7 @@ public class Dmas {
             );
             ag.setDanger(
                     ((nrHost + nrNeutral) != 0)
-                            ? ((double) nrNeutral / (double)(nrHost + nrNeutral)) * (noise + 0.5)
+                            ? ((double) nrNeutral / (double) (nrHost + nrNeutral)) * (noise + 0.5)
                             : 1
             );
 
@@ -184,21 +184,21 @@ public class Dmas {
 
     public static void updateAgents(Cell cell, HashMap<String, Integer> param, double success, double learningRate) {
         // Update the decision tables of the agents
-        
+
         //System.out.println(success);
         for (Agent ag : cell.getAgents()) {
             if (ag.getAction() == agentActions.SAVE) {
-                ag.getDecTable()[0][ag.getCurrentSituation()] = 
-                        ((ag.getDecTable()[0][ag.getCurrentSituation()] + (success * learningRate) / (1 + learningRate)) > 1) 
-                            ? 1
-                            : (ag.getDecTable()[0][ag.getCurrentSituation()] + (success * learningRate) / (1 + learningRate)) < 0 
-                                ? 0
-                                : ag.getDecTable()[0][ag.getCurrentSituation()] + (success * learningRate) / (1 + learningRate);
+                ag.getDecTable()[0][ag.getCurrentSituation()]
+                        = ((ag.getDecTable()[0][ag.getCurrentSituation()] + (success * learningRate) / (1 + learningRate)) > 1)
+                                ? 1
+                                : (ag.getDecTable()[0][ag.getCurrentSituation()] + (success * learningRate) / (1 + learningRate)) < 0
+                                        ? 0
+                                        : ag.getDecTable()[0][ag.getCurrentSituation()] + (success * learningRate) / (1 + learningRate);
             } else {
-                ag.getDecTable()[1][ag.getCurrentSituation()] = 
-                        ((ag.getDecTable()[1][ag.getCurrentSituation()] + (success * learningRate) / (1 + learningRate)) > 1) ? 1
-                        : ag.getDecTable()[1][ag.getCurrentSituation()] + (success * learningRate) / (1 + learningRate) < 0 ? 0
-                        : ag.getDecTable()[1][ag.getCurrentSituation()] + (success * learningRate) / (1 + learningRate);
+                ag.getDecTable()[1][ag.getCurrentSituation()]
+                        = ((ag.getDecTable()[1][ag.getCurrentSituation()] + (success * learningRate) / (1 + learningRate)) > 1) ? 1
+                                : ag.getDecTable()[1][ag.getCurrentSituation()] + (success * learningRate) / (1 + learningRate) < 0 ? 0
+                                        : ag.getDecTable()[1][ag.getCurrentSituation()] + (success * learningRate) / (1 + learningRate);
             }
             double temp = ag.getDecTable()[0][ag.getCurrentSituation()];
 
@@ -279,13 +279,13 @@ public class Dmas {
     public static int playOneRound(Cell[][] grid, HashMap<String, Integer> param, GUIFrame gFrame, double learningRate, List<Agent> agentList) {
         updateCells(grid, param, learningRate);
         // gFrame.updateGridButtons(grid, param);
-        
+
 //        if (param.get("REMAININGNRHOSTILES") == 0) {
 //            param.put("SAVEDNRNEUTRALS", param.get("SAVEDNRNEUTRALS")+param.get("REMAININGNRNEUTRALS"));
 //            param.put("REMAININGNRNEUTRALS",0);
 //        }
         if (param.get("REMAININGNRCOPS") == 0) {
-            param.put("REMAININGNRNEUTRALS",0);
+            param.put("REMAININGNRNEUTRALS", 0);
         }
 
         param.put("EPOCH", param.get("EPOCH") + 1);
@@ -298,28 +298,25 @@ public class Dmas {
 
         // Click a button to update the infotext field
         // gFrame.clickAButton();
-        
         double mean = 0;
-        
-        
+
         // Printstuff
-        for (int i = 0; i < 2; i++) {
-            for (int j = 0; j < 4; j++) {
-                //System.out.printf("nummer: " + i + ","+ j + "\n");
-                for (Agent ag : agentList) {
-                    //System.out.printf("%.2f", ag.getDecTable()[i][j]);
-                    //System.out.printf(" ");
-                    mean += ag.getDecTable()[i][j];
-                }
-                System.out.printf("%.2f", mean/agentList.size());
-                System.out.printf(" ");
-                mean = 0;
-                //System.out.println("\n");
-            }
-            System.out.println("\n");
-        }
-        
-        
+//        for (int i = 0; i < 2; i++) {
+//            for (int j = 0; j < 4; j++) {
+//                //System.out.printf("nummer: " + i + ","+ j + "\n");
+//                for (Agent ag : agentList) {
+//                    //System.out.printf("%.2f", ag.getDecTable()[i][j]);
+//                    //System.out.printf(" ");
+//                    mean += ag.getDecTable()[i][j];
+//                }
+//                System.out.printf("%.2f", mean / agentList.size());
+//                System.out.printf(" ");
+//                mean = 0;
+//                //System.out.println("\n");
+//            }
+//            System.out.println("\n");
+//        }
+
         if (param.get("REMAININGNRNEUTRALS") == 0) {
             return 0;
         }
@@ -336,14 +333,34 @@ public class Dmas {
         updateMovements(grid, param);
     }
 
-    public static void writeOutput(HashMap<String, Integer> param, FileWriter writer, int n) {
+    public static void writeOutput(HashMap<String, Integer> param, FileWriter writer, int run, List<Agent> agentList) {
         // Append results for this simulation to the output file
         try {
-            writer.append(String.format("%d", n));
+            writer.append(String.format("%d", run));
             writer.append(';');
             writer.append(String.format("%d", param.get("EPOCH")));
             writer.append(';');
-            writer.append(String.format("%.3g%n", (double) param.get("LASTSUCCESS1") / (double) param.get("LASTSUCCESS2")));
+            writer.append(String.format("%.3g", (double) param.get("LASTSUCCESS1") / (double) param.get("LASTSUCCESS2")));
+            // Printstuff
+            double mean = 0;
+            for (int i = 0; i < 2; i++) {
+                for (int j = 0; j < 4; j++) {
+                    //System.out.printf("nummer: " + i + ","+ j + "\n");
+                    for (Agent ag : agentList) {
+                    //System.out.printf("%.2f", ag.getDecTable()[i][j]);
+                        //System.out.printf(" ");
+                        mean += ag.getDecTable()[i][j];
+                    }
+                    // System.out.printf("%.2f", mean / agentList.size());
+                    // System.out.printf(" ");
+                    writer.append(';');
+                    writer.append(String.format("%.2f", mean / agentList.size()));
+                    mean = 0;
+                    //System.out.println("\n");
+                }
+                // System.out.println("\n");
+            }
+            writer.append("\n");
             //writer.append('\n');
         } catch (Exception e) {
             e.printStackTrace();
@@ -356,24 +373,24 @@ public class Dmas {
             {
                 put("LENGTH", 20);
                 put("WIDTH", 20);
-                    
+
                 put("NRCOPS", 4000);
                 put("MEANNEUTRAL", 10);
                 put("STDNEUTRAL", 5);
                 put("MEANHOSTILES", 10);
                 put("STDHOSTILES", 5);
-                
+
                 // Following parameters are in percentages! 
                 // (So actual value is divided by 100)
-                put("MOVENOISE", 70);
-                put("AIM", 25);
-                put("HOSTILEAIMCOPS", 30);
+                put("MOVENOISE", 50);
+                put("AIM", 50);
+                put("HOSTILEAIMCOPS", 50);
                 put("SAVEPROB", 50);
                 put("KEEPAGENTS", 0);
             }
         };
 
-        double learningRate = 0.2;
+        double learningRate = 0.5;
 
         List<Agent> agentList = new ArrayList<>();
         FileWriter writer = null;
@@ -381,7 +398,7 @@ public class Dmas {
             writer = new FileWriter("Output");
 
             // Run the simulation a number of times
-            for (int i = 0; i < 100; i++) {
+            for (int i = 0; i < 1000; i++) {
                 System.out.println("Run: " + (i + 1));
                 // The parameters
                 param.put("EPOCH", 0);
@@ -395,9 +412,8 @@ public class Dmas {
                 //These are used to determine the success per epoch, but have to be stored seperately because the result of their division is a double
                 param.put("LASTSUCCESS1", 0);
                 param.put("LASTSUCCESS2", 0);
-                
-                //learningRate = learningRate * 0.95;
 
+                //learningRate = learningRate * 0.95;
                 // Create and initialize the griddy
                 Cell[][] grid = new Cell[param.get("LENGTH")][param.get("WIDTH")];
                 initGrid(grid, param);
@@ -418,11 +434,10 @@ public class Dmas {
 //                final Cell[][] grid2 = grid;
 //                btn.addActionListener(new ActionListener() {
 //                    public void actionPerformed(ActionEvent e) {
-                        //playOneRound(grid2, param, gFrame, learningRate);
-                        //                updateCells(grid2, param);
-                        //                gFrame.updateGridButtons(grid2, param);
-                        //                gFrame.clickSelectedButton(param);
-
+                //playOneRound(grid2, param, gFrame, learningRate);
+                //                updateCells(grid2, param);
+                //                gFrame.updateGridButtons(grid2, param);
+                //                gFrame.clickSelectedButton(param);
 //                    }
 //                });
 //                gFrame.ControlFrame.add(btn);
@@ -451,20 +466,13 @@ public class Dmas {
 //                    }
 //                });
 //                gFrame.ControlFrame.add(btn3);
-
                 // This while runs the simulation until it's finished and writes the final success to a csv-file
                 // Comment this loop and set i in the outer loop to 1 to run a simulation by hand
                 int n = 0;
-                while (true) {
+                while (playOneRound(grid, param, gFrame, learningRate, agentList) == 1) {
                     n++;
-                    System.out.println("epoch: " + n);
-                    if (playOneRound(grid, param, gFrame, learningRate, agentList) == 0) {
-                        writeOutput(param, writer, i + 1);
-                        break;
-                    }
-                    //double[][] temp = agentList.get(agentList.size()-1000).getDecTable();
-                    //System.out.println(Arrays.toString(temp) + "\n");
                 }
+                writeOutput(param, writer, i + 1, agentList);
                 param.put("KEEPAGENTS", 1); // If commented, then no remembering
                 // SHOW IT ALL!!! (Uncomment to show the GUI)
 //            gFrame.setVisible(true);    
