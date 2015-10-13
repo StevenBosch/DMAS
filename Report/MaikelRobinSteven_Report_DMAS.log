@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2015.9.8)  8 OCT 2015 11:51
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013/Debian) (format=pdflatex 2015.9.8)  13 OCT 2015 11:28
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -633,29 +633,28 @@ LaTeX Font Info:    Font shape `T1/ptm/bx/n' in size <10.95> not available
 (Font)              Font shape `T1/ptm/b/n' tried instead on input line 5.
 LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <10.95> on input line 10.
- [2] [3])
-(./chapter/03Results.tex [4]) (./chapter/09Reflection.tex)
-(./MaikelRobinSteven_Report_DMAS.bbl [5])
+ [2] [3] [4])
+(./chapter/03Results.tex) (./chapter/09Reflection.tex [5])
+(./MaikelRobinSteven_Report_DMAS.bbl)
 Package atveryend Info: Empty hook `BeforeClearDocument' on input line 33.
  [6]
 Package atveryend Info: Empty hook `AfterLastShipout' on input line 33.
-
-(./MaikelRobinSteven_Report_DMAS.aux)
+ (./MaikelRobinSteven_Report_DMAS.aux)
 Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 33.
 Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 33.
 Package rerunfilecheck Info: File `MaikelRobinSteven_Report_DMAS.out' has not c
 hanged.
-(rerunfilecheck)             Checksum: 3EAAEE8844D423A7798D774B0B3AB949;629.
+(rerunfilecheck)             Checksum: D9EDD1FF9B5BDB1DBC4A17147715E243;772.
 Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 33.
  ) 
 Here is how much of TeX's memory you used:
- 9145 strings out of 494985
- 134919 string characters out of 6180357
- 225896 words of memory out of 5000000
- 12203 multiletter control sequences out of 15000+600000
+ 9149 strings out of 494985
+ 134999 string characters out of 6180357
+ 225910 words of memory out of 5000000
+ 12205 multiletter control sequences out of 15000+600000
  39226 words of font info for 49 fonts, out of 8000000 for 9000
  36 hyphenation exceptions out of 8191
- 43i,9n,40p,1058b,441s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 43i,9n,40p,1058b,361s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/share/texlive/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/share/texliv
 e/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/share/texlive/texm
 f-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/share/texlive/texmf-dist/
@@ -665,10 +664,10 @@ lic/amsfonts/cm/cmsy10.pfb></usr/share/texlive/texmf-dist/fonts/type1/public/am
 sfonts/cm/cmsy8.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmb8a
 .pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/shar
 e/texlive/texmf-dist/fonts/type1/urw/times/utmri8a.pfb>
-Output written on MaikelRobinSteven_Report_DMAS.pdf (6 pages, 119512 bytes).
+Output written on MaikelRobinSteven_Report_DMAS.pdf (6 pages, 119425 bytes).
 PDF statistics:
- 146 PDF objects out of 1000 (max. 8388607)
- 127 compressed objects within 2 object streams
- 30 named destinations out of 1000 (max. 500000)
- 89 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 155 PDF objects out of 1000 (max. 8388607)
+ 136 compressed objects within 2 object streams
+ 32 named destinations out of 1000 (max. 500000)
+ 105 words of extra memory for PDF output out of 10000 (max. 10000000)
 
