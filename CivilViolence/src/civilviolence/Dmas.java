@@ -1,9 +1,9 @@
-/* TODO:
- 2. Is success function really a good succses function that says much?
- 3. Run number of epochs and export output to cmv file with multiple options:
- - Run every simulation with new agents
- - Train agents and then run 100 simulations with those agents
- - Let agents train during the 100 simulations and keep filling the agent pool
+/* TODO: Simulations
+    standard learning 0.8 0.5 0.2 and 0.8 decl. 
+    Almost only shooting no learning
+    Almost only saving no learning
+    Same but with learning ( )
+    Punishment for shooting? Future research
  */
 package civilviolence;
 
@@ -21,6 +21,7 @@ import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Random;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -187,14 +188,14 @@ public class Dmas {
         for (Agent ag : cell.getAgents()) {
             if (ag.getAction() == agentActions.SAVE) {
                 ag.getDecTable()[0][ag.getCurrentSituation()] = 
-                        ((((ag.getDecTable()[0][ag.getCurrentSituation()] + success * learningRate) / (1 + learningRate)) > 1) ? 1
-                        : (ag.getDecTable()[0][ag.getCurrentSituation()] + success * learningRate) / (1 + learningRate) < 0 ? 0
-                        : ag.getDecTable()[0][ag.getCurrentSituation()] + success * learningRate) / (1 + learningRate);
+                        ((ag.getDecTable()[0][ag.getCurrentSituation()] + (success * learningRate) / (1 + learningRate)) > 1) ? 1
+                        : ag.getDecTable()[0][ag.getCurrentSituation()] + (success * learningRate) / (1 + learningRate) < 0 ? 0
+                        : ag.getDecTable()[0][ag.getCurrentSituation()] + (success * learningRate) / (1 + learningRate);
             } else {
                 ag.getDecTable()[1][ag.getCurrentSituation()] = 
-                        ((((ag.getDecTable()[1][ag.getCurrentSituation()] + success * learningRate) / (1 + learningRate)) > 1) ? 1
-                        : (ag.getDecTable()[1][ag.getCurrentSituation()] + success * learningRate) / (1 + learningRate) < 0 ? 0
-                        : ag.getDecTable()[1][ag.getCurrentSituation()] + success * learningRate) / (1 + learningRate);
+                        ((ag.getDecTable()[1][ag.getCurrentSituation()] + (success * learningRate) / (1 + learningRate)) > 1) ? 1
+                        : ag.getDecTable()[1][ag.getCurrentSituation()] + (success * learningRate) / (1 + learningRate) < 0 ? 0
+                        : ag.getDecTable()[1][ag.getCurrentSituation()] + (success * learningRate) / (1 + learningRate);
             }
             double temp = ag.getDecTable()[0][ag.getCurrentSituation()];
 
@@ -276,10 +277,10 @@ public class Dmas {
         updateCells(grid, param, learningRate);
         // gFrame.updateGridButtons(grid, param);
         
-        if (param.get("REMAININGNRHOSTILES") == 0) {
-            param.put("SAVEDNRNEUTRALS", param.get("SAVEDNRNEUTRALS")+param.get("REMAININGNRNEUTRALS"));
-            param.put("REMAININGNRNEUTRALS",0);
-        }
+//        if (param.get("REMAININGNRHOSTILES") == 0) {
+//            param.put("SAVEDNRNEUTRALS", param.get("SAVEDNRNEUTRALS")+param.get("REMAININGNRNEUTRALS"));
+//            param.put("REMAININGNRNEUTRALS",0);
+//        }
         if (param.get("REMAININGNRCOPS") == 0) {
             param.put("REMAININGNRNEUTRALS",0);
         }
@@ -301,16 +302,16 @@ public class Dmas {
         // Printstuff
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 4; j++) {
-                // System.out.printf("nummer: " + i + ","+ j + "\n");
+                //System.out.printf("nummer: " + i + ","+ j + "\n");
                 for (Agent ag : agentList) {
-                    // System.out.printf("%.2f", ag.getDecTable()[i][j]);
-                    // System.out.printf(" ");
+                    //System.out.printf("%.2f", ag.getDecTable()[i][j]);
+                    //System.out.printf(" ");
                     mean += ag.getDecTable()[i][j];
                 }
                 System.out.printf("%.2f", mean/agentList.size());
                 System.out.printf(" ");
                 mean = 0;
-                // System.out.println("\n");
+                //System.out.println("\n");
             }
             System.out.println("\n");
         }
@@ -354,22 +355,22 @@ public class Dmas {
                 put("WIDTH", 20);
                     
                 put("NRCOPS", 4000);
-                put("MEANNEUTRAL", 200);
-                put("STDNEUTRAL", 40);
-                put("MEANHOSTILES", 50);
-                put("STDHOSTILES", 20);
+                put("MEANNEUTRAL", 10);
+                put("STDNEUTRAL", 5);
+                put("MEANHOSTILES", 10);
+                put("STDHOSTILES", 5);
                 
                 // Following parameters are in percentages! 
                 // (So actual value is divided by 100)
                 put("MOVENOISE", 70);
-                put("AIM", 50);
+                put("AIM", 25);
                 put("HOSTILEAIMCOPS", 30);
-                put("SAVEPROB", 80);
+                put("SAVEPROB", 100);
                 put("KEEPAGENTS", 0);
             }
         };
 
-        double learningRate = 0.05;
+        double learningRate = 0.8;
 
         List<Agent> agentList = new ArrayList<>();
         FileWriter writer = null;
@@ -377,8 +378,8 @@ public class Dmas {
             writer = new FileWriter("Output");
 
             // Run the simulation a number of times
-            for (int i = 0; i < 1000; i++) {
-                System.out.println("Epoch: " + (i + 1));
+            for (int i = 0; i < 100; i++) {
+                System.out.println("Run: " + (i + 1));
                 // The parameters
                 param.put("EPOCH", 0);
                 param.put("TOTALNRNEUTRAL", 0);
@@ -458,6 +459,8 @@ public class Dmas {
                         writeOutput(param, writer, i + 1);
                         break;
                     }
+                    //double[][] temp = agentList.get(agentList.size()-1000).getDecTable();
+                    //System.out.println(Arrays.toString(temp) + "\n");
                 }
                 param.put("KEEPAGENTS", 1); // If commented, then no remembering
                 // SHOW IT ALL!!! (Uncomment to show the GUI)

@@ -40,7 +40,7 @@ When there is no threat in the area of an cop anymore, that is, if there are no 
 Many reinforcement learning algorithms, such as Q-learning, have implemented the fact that newer experiences have a reduced influence  \citep*{watkins1992q}. This is implemented with a learning rate variable $\lambda$. High learning rates allow agents to learn more quickly compared to a low learning rate, but this also allows the agents to switch to suboptimal strategies more often. This may result in a lower performance compared to the low learning rate. Gradually changing the learning rate over time allows the function to converge to the true Q-value, that is the utility value. In the current simulation, a similar approach will be taken. 
 
 The utility will be updated according to the following function:
-$$ U(s,a)_{new}(t) = \frac{U(s,a)_{old} + \lambda * R(s,a)}{1+\lambda} $$
+$$ U(s,a)_{new}(t) = U(s,a)_{old} + \frac{\lambda * R(s,a)}{1+\lambda} $$
 in which $U_x(t)$ is the new utility (ranging from -1 to 1) of an action $a$ in situation $s$, $t$ is the moment in time, $\lambda$ is the learning rate factor ranging from 0 to 1, and $R(t)$ is the reward, as calculated before. After each epoch, in which one action could be taken by each agent, the utility functions will be updated. Following the utilities will be normalized, such that the utility of the two actions in a particular situation will sum up to one. In a way, the success of one action will also mean the discounting of another, therefore producing a stronger preference for what is successfull. 
 
 \subsection{Experiment Design}
