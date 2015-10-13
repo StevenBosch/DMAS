@@ -43,8 +43,9 @@ The utility will be updated according to the following function:
 $$ U(s,a)_{new}(t) = U(s,a)_{old} + \frac{\lambda * R(s,a)}{1+\lambda} $$
 in which $U_x(t)$ is the new utility (ranging from -1 to 1) of an action $a$ in situation $s$, $t$ is the moment in time, $\lambda$ is the learning rate factor ranging from 0 to 1, and $R(t)$ is the reward, as calculated before. After each epoch, in which one action could be taken by each agent, the utility functions will be updated. Following the utilities will be normalized, such that the utility of the two actions in a particular situation will sum up to one. In a way, the success of one action will also mean the discounting of another, therefore producing a stronger preference for what is successfull. 
 
-\subsection{Experiment Design}
-Four different simulations were run consisting of 100 civil wars, that is, 100 runs. In the first three simulations the agents receive a learning rate of $0.8$, $0.5$ and $0.2$ respectively, which will be fixed over the 100 runs. In the final simulation, the agents will start with a high learning rate value of $0.8$, which will be decreased by a factor of $0.05$ every run. In other words, people gain experience on the job and will become less adaptive with every civil war.
+\subsection{Experimental Design}
+\subsubsection{Learning rates}
+Four different simulations were run consisting of 1000 civil wars, that is, 1000 runs. In the first three simulations the agents receive a learning rate of $0.8$, $0.5$ and $0.2$ respectively, which will be fixed over the 100 runs. In the final simulation, the agents will start with a high learning rate value of $0.8$, which will be decreased by a factor of $0.05$ every run. In other words, people gain experience on the job and will become less adaptive with every civil war.
 
 During the simulations, the following information was kept track of: (1) The number of killed hostiles per box, and the overall number of kills, (2) the number of overall dead cops and per box, and the amount of saved and killed civilians, (3) the number of saved civilians per box and the overall amount, and (4) the amount of epochs necassary to finish the simulation. The simulation of one riot is finished when there are no civilians left in the area.
  
