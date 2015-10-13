@@ -11,6 +11,8 @@
  Print per run:
  Succes
 
+
+TODO: TAKE INTO ACCOUNT THAT CIVILIANS ARE SAVED WHEN HOSTILES ARE DEAD
  */
 package civilviolence;
 
@@ -337,9 +339,9 @@ public class Dmas {
         // Append results for this simulation to the output file
         try {
             writer.append(String.format("%d", run));
-            writer.append(';');
+            writer.append(',');
             writer.append(String.format("%d", param.get("EPOCH")));
-            writer.append(';');
+            writer.append(',');
             writer.append(String.format("%.3g", (double) param.get("LASTSUCCESS1") / (double) param.get("LASTSUCCESS2")));
             // Printstuff
             double mean = 0;
@@ -353,7 +355,7 @@ public class Dmas {
                     }
                     // System.out.printf("%.2f", mean / agentList.size());
                     // System.out.printf(" ");
-                    writer.append(';');
+                    writer.append(',');
                     writer.append(String.format("%.2f", mean / agentList.size()));
                     mean = 0;
                     //System.out.println("\n");
@@ -382,15 +384,15 @@ public class Dmas {
 
                 // Following parameters are in percentages! 
                 // (So actual value is divided by 100)
-                put("MOVENOISE", 50);
-                put("AIM", 50);
-                put("HOSTILEAIMCOPS", 50);
-                put("SAVEPROB", 50);
+                put("MOVENOISE", 70); // Default: 70
+                put("AIM", 25); // Default: 25
+                put("HOSTILEAIMCOPS", 50); // Default: 50
+                put("SAVEPROB", 25); // Default: 25
                 put("KEEPAGENTS", 0);
             }
         };
 
-        double learningRate = 0.5;
+        double learningRate = 0.8; // Default: 0.5
 
         List<Agent> agentList = new ArrayList<>();
         FileWriter writer = null;
@@ -413,7 +415,7 @@ public class Dmas {
                 param.put("LASTSUCCESS1", 0);
                 param.put("LASTSUCCESS2", 0);
 
-                //learningRate = learningRate * 0.95;
+                // learningRate = learningRate * 0.95;
                 // Create and initialize the griddy
                 Cell[][] grid = new Cell[param.get("LENGTH")][param.get("WIDTH")];
                 initGrid(grid, param);
