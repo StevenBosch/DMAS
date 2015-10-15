@@ -1,7 +1,8 @@
 \section{Results}
 
 The first simulations were run with learning rate values of $0.8$, $0.5$, $0.2$ and $0.0$, corresponding to the inexperienced, mixed-experienced, experienced and non-learning cops. Following, the simulation with a decreasing learning rate, starting at $0.8$ was run. The mean performance and standard deviation (SD) can be found in \autoref{tab:ResultsCur}. 
-\begin{table}
+
+\begin{table}[!ht]
 \begin{center}
 \begin{tabular}{l r  r}
 $\lambda$ &  \# epochs (SD) & success (SD)\\
@@ -18,9 +19,10 @@ $\lambda$ &  \# epochs (SD) & success (SD)\\
 \end{center}
 \end{table}
 
-A Repeated Measure ANOVA showed that there was no main effect of the different simulation on both the success (F(5,25) = 387; p = 0.853) or the amount of epochs (F(5,24) = 1.396; p = 0.261). Post-hoc pairwise comparison, using Bonferoni Correction, confirmed this, showing only non-significant differences between the different simulations.
+A Repeated Measure ANOVA showed that there was a main effect on learning rate for the amount of epochs (F(4,4995) = 31.204, p < 0.001), but not for the success value (F(4,4995) = 2.306, p = 0.054). Post-hoc pairwise comparison, using Bonferoni Correction, showed that the 0.0, 0.2 and <0.8 simulations were significantly faster compared to the 0.5 and 0.8 simulation. This suggests that a(n ultimately) lower learning rate and, therefore, more stable performance, ensure better performance. Note, however, that the difference is at most 1 epoch, meaning that the effect is not very large. 
 
 \subsection{Bias}
+In \autoref{tab:ResultsBias}
 \begin{table}[!ht]
 \begin{center}
 \begin{tabular}{l r  r | l r  r}
