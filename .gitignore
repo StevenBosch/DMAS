@@ -16,5 +16,25 @@ hs_err_pid*
 
 # Latex Files 
 *.aux
+*.glo
+*.idx
 *.log
-*.backup
+*.toc
+*.ist
+*.acn
+*.acr
+*.alg
+*.bbl
+*.blg
+*.dvi
+*.glg
+*.gls
+*.ilg
+*.ind
+*.lof
+*.lot
+*.maf
+*.mtc
+*.mtc1
+*.out
+*.synctex.gz
