@@ -21,7 +21,6 @@ Depending on the amount of civilians and cops, one group has a larger possibilit
 When, for example, only cops and hostiles reside in a box, the possibility that cops are targeted is 100 percent.
 It depends on the amount of hostiles how many civilians and cops may die.
 
-
 \begin{table}[!ht]
   \begin{center}
     \begin{tabular}{l l | l l}
@@ -65,20 +64,18 @@ Because hostiles only have one action, no learning is necessary.
 As \autoref{tab:scenarios} also shows, there is no situation in which the teams are of equal size.
 The cops must decide whether they have the overhand or not, which is done according to the following function:
 $$ \Omega = \frac{n_{cops}}{n_{cops} + n_{hostiles}}*\sigma $$
-in which $\Omega$ is a value between 0 and 1, $n$ is the amount of agents of a group in that box and $\sigma$ is a random value between 0.
+in which $\Omega$ is a value between 0 and 1, $n$ is the amount of agents of a group in that cell and $\sigma$ is a random value between 0.
 5 and 1.
-5 to make the decision stochastic.
-It is assumed namely that the cops have no perfect knowledge of their environmnet.
+5 to make the decision stochastic, because it is assumed that the cops have no perfect knowledge of their environment.
 If $\Omega$ is higher than $0.
 5$, the cops assume they have the overhand.
 The same function is used to assess the amount of civilians; The number of cops is then replaced by the amount of civilians.
 
 
-When there is no threat in the area of an cop anymore, that is, if there are no more hostiles left, it can move to one of (at most) four neighboring boxes in the matrix.
+When there is no threat in the area of a cop any more, that is, if there are no more hostiles left, it can move to one of (at most) four neighboring cells in the matrix.
 The cop will move to the cell where he is needed most.
-In other words, the cops will move to where there is the biggest discrepency between the amount of agents and the sum of hostiles and civilians.
-This way, the cops can always search for a place where he can be of use.
-
+In other words, the cops will move to where there is the biggest discrepancy between the amount of agents and the sum of hostiles and civilians.
+This way, the cops can always search for a place where they can be of use.
 
 \subsubsection{Learning}
 Many reinforcement learning algorithms, such as Q-learning, have implemented the fact that newer experiences have a reduced influence  \citep*{watkins1992q}.
@@ -133,22 +130,7 @@ The cops with a lower learning rate should adjust there behavior less quickly co
 Over time, the cops with a lower learning rate (and the cops with decreasing learning rate) should show more stable performance.
 However, it will take longer to adapt to the world and learn what strategy is best.
 
-
 \subsubsection{Initial biases}
-Another point of interest is how behavior evolves over time, when bias does exist.
-Can old dogs learn new tricks, and how quickly could that happen.
-To investigate this, a preference of either shooting or saving was given by setting the utility to 0.
-9 for one action, and 0.
-1 for the other.
-When a bias for shooting exists, there will be no more hostiles to shoot after a while.
-It is expected that after some iterations, the cops learn that saving is more usefull.
-Similarly, when cops only save, it is expected that shooting will receive a higher utility over time.
-For the cops having a lower learning rate this will most likely happen more gradually compared to the cops having a higher learning rate.
+Another point of interest is how behavior evolves over time, when bias does exist. Can old dogs learn new tricks, and how quickly could that happen. To investigate this, a preference of either shooting or saving was given by setting the utility to 0.9 for one action, and 0.1 for the other. When a bias for shooting exists, there will be no more hostiles to shoot after a while. It is expected that after some iterations, the cops learn that saving is more useful. Similarly, when cops only save, it is expected that shooting will receive a higher utility over time. For the cops having a lower learning rate this will most likely happen more gradually compared to the cops having a higher learning rate.
 
-
-The same results are hypothesised for the biased simulations, as were for the no-bias simulation.
-That is, over time the lower learning rate will show more stable performance and the optimal level will take longer to achieve.
-However, a difference may show when looking at performance.
-If, for example, the cops are initialized with a bias for shooting, but the best strategy is to save everyone, then the quick learning may ensure an overal better performance.
-However, if the cops are initialized with shooting, and shooting is the best strategy, then lower learning rate cops will perform best.
-
+The same results are hypothesised for the biased simulations, as were for the no-bias simulation. That is, over time the lower learning rate will show more stable performance and the optimal level will take longer to achieve. However, a difference may show when looking at performance. If, for example, the cops are initialized with a bias for shooting, but the best strategy is to save everyone, then the quick learning may ensure an overall better performance. However, if the cops are initialized with shooting, and shooting is the best strategy, then lower learning rate cops will perform best. 
