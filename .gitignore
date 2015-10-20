@@ -15,5 +15,5 @@ hs_err_pid*
 /CivilViolence/dist/
 
 # Latex Files 
-*.aux 
+*.aux
 *.log
