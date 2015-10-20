@@ -20,7 +20,8 @@ $\lambda$ &  \# epochs (SD) & success (SD)\\
 \end{table}
 A Repeated Measure Analysis of Variance (RM-ANOVA) showed that there was a main effect on learning rate for the amount of epochs (F(4,4995) = 31.204, p < 0.001), but not for the success value (F(4,4995) = 2.306, p = 0.054). Post-hoc pairwise comparison, using Bonferoni correction, showed that the 0.0, 0.2 and <0.8 simulations were significantly faster compared to the 0.5 and 0.8 simulation. This suggests that a(n ultimately) lower learning rate and, therefore, more stable performance, ensure better performance. Note, however, that the difference is at most 1 epoch, meaning that the effect is not very large. 
 
-In \autoref{tab:ResultsBias} the mean amount of epochs and the mean success of the five conditions are shown for both the incapacitate- and save-biased cops. The first value that deserves some explanation is the speed of the incapacitate-biased cops that do not learn ($\lambda = 0.0$). In this situation there is 90\% possibility that the cops will incapacitate a hostile in every step. Even when there are no more hostiles, the cops will keep trying to incapacitate a hostile most of the time. Saving civilians will only occur once in ten times and will, therefore, take a very long time. In the statistical analysis, this scenario was excluded. 
+In \autoref{tab:ResultsBias} the mean amount of epochs and the mean success of the five conditions are shown for both the incapacitate- and save-biased cops. The first value that deserves some explanation is the speed of the incapacitate-biased cops that do not learn ($\lambda = 0.0$). In this situation there is 90\% possibility that the cops will incapacitate a hostile in every step. Even when there are no more hostiles left, the cops will keep trying to incapacitate a hostile most of the time. Saving civilians will only occur once every ten times and will, therefore, take a very long time. In the statistical analysis, this scenario was excluded. 
+
 \begin{table}
 \begin{center}
 \begin{tabular}{l r  r | l r  r}
@@ -44,6 +45,7 @@ For the save-biased cops a main effect was found on speed (F(4,4995) = 2025.756;
 \subsection{Effects of Bias}
 The results in \autoref{tab:ResultsCur} and \autoref{tab:ResultsBias} showed another interesting pattern. It appeared that there was an inverse relation between speed and success given the two actions. Whereas the no-bias simulation shows intermediate results ($m_{epochs} = 17.91 (SD = 2.136)$; $m_{success} = 0.23 (SD = 0.075) $), the incapacitate-bias simulation shows a low speed ($m_{epochs} = 20.36 (SD = 2.41)$) and high success ($m_{success} = 0.33 (SD = 0.111$), as opposed to the save bias ($m_{epochs} = 12.75 (SD = 2.641)$; $m_{success} = 0.18 (SD = 0.143)$). A RM-ANOVA showed that these differences were highly significant (p < 0.001). Note that for the incapacitate-bias, the no-learning cops were again excluded. These results suggest that a bias for an action has a large effect on the success of mitigating civil violence. 
 \begin{figure}[!ht]
+
 \centering
 \begin{subfigure}[b]{0.62\textwidth}
         \includegraphics[width=\textwidth]{./pictures/Utility05NoBias.png}
@@ -64,4 +66,5 @@ The results in \autoref{tab:ResultsCur} and \autoref{tab:ResultsBias} showed ano
 \label{fig:utilities}
 \end{figure}
 In \autoref{fig:utilities}, we show how the biases evolve over time with a medium learning rate ($\lambda = 0.5$). In this figure, the global mean utility for the different actions in the different situations is depicted for all three bias conditions. As is true for all other learning-cop groups, the utilities will converge towards a value of 0.5, though some bias will still exist. Individual agents do show preferences in particular situations, but averaged over all cops, a mixed strategy of saving and shooting appears to be the preferred approach. When the cops are outnumbered by hostiles (the red and blue lines), it does show little changes regardless of the bias. This may indicate that little is learnt because the hostiles take out the cops rather quickly. 
+
 
