@@ -62,23 +62,29 @@ The cops determine their desired action by selecting the action corresponding to
 Because the agents are not perfect, some noise is introduced in the selection of the highest value.
 Mistakes can thus be made, which increases the realism of the simulation.
 
-At the beginning of the simulation, all the utilities are set to equal values, so that no biases exist.
 The reward of an action can be calculated as follows: 
-$$ R(s,a) = \frac{Incapacitations(s) + Saves(s') - Losses(s')}{Incapacitations(s') + Saves(s') + Losses(s')}$$
+\begin{equation} \label{eq:reward}
+R(s,a) = \frac{Incapacitations(s) + Saves(s') - Losses(s')}{Incapacitations(s') + Saves(s') + Losses(s')}
+\end{equation}
 in which $R$ is the reward of action $a$ in situation $s$, $Incapacitations$ are the amount of incapacitated hostiles in the new situation $s'$, $Saves$ the amount of saved civilians, and $Losses$ the amount of incapacitated cops and civilians.
 Based on these calculations the reward will lie between -1 (only cops incapacitated) and 1 (only hostiles incapacitated and neutrals saved).
-Because hostiles only have one action, no learning is necessary for them.
-
+This translates to an outcome where only cops are incapacitated as being as bad as possible,
+the situation where civilians are saved and no cops or civilians hurt as being the best possible outcome,
+and every situation in between is rewarded accordingly.
+This corresponds to real life where the objective of a cop should be to save as much civilians as possible, 
+while also neutralizing any threats.
 
 As \autoref{tab:scenarios} also shows, there is no situation in which the teams are of equal size.
 The cops must decide whether they are in majority or not, which is done according to the following function:
-$$ \Omega = \frac{n_{cops}}{n_{cops} + n_{hostiles}}*\sigma $$
+\begin{equation} \label{eq:omega}
+\Omega = \frac{n_{cops}}{n_{cops} + n_{hostiles}}*\sigma 
+\end{equation}
 in which $\Omega$ is a value between 0 and 1, $n$ is the amount of agents of a group in that cell and $\sigma$ is a random value between 0.
 5 and 1.
-5 to make the decision stochastic, because it is assumed that the cops have no perfect knowledge of their environment.
+5 to make the decision stochastic, as it is assumed that the cops have no perfect knowledge of their environment.
 If $\Omega$ is higher than $0.
 5$, the cops assume they are in majority.
-The same function is used to assess the amount of civilians; The number of cops is then replaced by the amount of civilians.
+The same function is used to assess the amount of civilians versus hostiles; The number of cops is then replaced by the number of civilians.
 
 \subsubsection{Movement}
 When there are no more civilians left in the a cell, no more agents are needed there.
@@ -91,19 +97,32 @@ Many reinforcement learning algorithms, such as Q-learning, have implemented the
 This is implemented with a learning rate variable $\lambda$.
 High learning rates allow agents to learn more quickly compared to a low learning rate, but this also allows the agents to switch to suboptimal strategies more often.
 This may result in a lower performance compared to the low learning rate.
-Gradually changing the learning rate over time allows the function to converge to the true Q-value, that is the utility value.
-In the current simulation, a similar approach will be taken.
+Gradually changing the learning rate over time allows the function to converge to the true Q-value.
 
+In the current simulation, a similar approach will be taken for updating our utility.
+However, no calculations that involve Q-values are used,
+as our simulation poses a highly dynamic environment that does not allow for convergence on true Q-values,
+as these values change per epoch and per simulation.
+The learning rate will be updated according to the following function:
+\begin{equation} \label{eq:lambda}
+\lambda_{new} = \lambda_{old} * \alpha_{\lambda}
+\end{equation}
+in which $\alpha_\lambda$ is the update factor that is applied to the learning rate each epoch.
 
-The utility will be updated according to the following function:
-$$ U(s,a)_{new} = U(s,a)_{old} + \frac{\lambda * R(s,a)}{1+\lambda} $$
-in which $U_x(t)$ is the new utility (ranging from 0 to 1) of an action $a$ in situation $s$, $t$ is the moment in time, $\lambda$ is the learning rate factor ranging from 0 to 1, and $R(t)$ is the reward, as calculated before.
-After each epoch, in which one action could be taken by each agent, the utility functions will be updated.
-Following the utilities will be normalized, such that the utility of the two actions in a particular situation will sum up to one.
-In a way, the success of one action will also mean the discounting of another, therefore producing a stronger preference for what is successfull.
+Subsequently, the utility will be updated according to the following function:
+\begin{equation} \label{eq:utility}
+U_{x~new} = U_{x~old} + \frac{\lambda * R(s,a)}{1+\lambda}
+\end{equation}
+in which $U_{x~new}$ is the new utility of the cell's  situation and calculated desired action combination as shown in \autoref{tab:scenarios},
+$\lambda$ is the learning rate as calculated in \autoref{eq:lambda}, and $R(t)$ is the reward resulting from the actions taken in the cell, as calculated with \autoref{eq:reward}.
+
+Finally, to ensure that for every situation the sum of the actions is equal to one (allowing for easier calculations), 
+the action utilities are normalized per each situation.
+In a way, the success of one action will then also mean the discounting of another, therefore producing a stronger preference for what is successfull.
 According to the formula, henever there is a reward of zero, no changes in utility will occur
 
 \subsubsection{Pseudocode}
+In the following code-block a simplified overview of the actions taken per simulation is shown.
 \begin{lstlisting}
 Initialize the grid
 Do
@@ -111,7 +130,7 @@ Do
   Calculate the overall performance in each cell
   Adjust each cell's properties (incapacitations, saves, ...)
   Update each agent's Utility matrix, according to their chosen action and the overall cell success
-  Move agents if necessary
+  Move agents(If necessary)
 While there are still civilians present in the grid
 \end{lstlisting}
 
@@ -122,9 +141,8 @@ In the first four simulations the agents receive a learning rate of $0.
 5$, $0.
 2$ and $0.
 0$ respectively, which will be fixed over the 100 runs.
-In the final simulation, the agents will start with a high learning rate value of $0.
-8$, which will be decreased by a factor of $0.
-05$ every run.
+In the final simulation, the agents will start with a high learning rate $\lambda = 0.8$, 
+which will be decreased by using a factor  $\alpha_\lambda = 0.95$ every run.
 In other words, people gain experience on the job and will become less adaptive with every civil war.
 
 
