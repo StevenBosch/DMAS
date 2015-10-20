@@ -5,21 +5,25 @@ The goal of the cops is to keep (civil and cop) casualties as low as possible.
 The hostiles on the other hand have only one goal: to cause as much mayhem and despair as possible by hurting civilians.
 Civilians have no particular functions, but are subject to the actions taken by cops and hostiles.
 The simulation takes place in a 20x20 2D matrix.
-In every box reside a mean of 20 civilians, 10 hostiles and 9 cops.
-The agents that reside in this box can only see the other agents in that box.
-This allows for easier computation of interactions with visible agents.
-In every simulation, the agents will be randomly spawned in the matrix.
+In every cell reside a number of civilians, hostiles, and cops.
+The number of civilians and hostiles is selected randomly from a normal distribution 
+with a mean of 10 and standard deviation of 5 for both the civilians and the hostiles.
+A fixed number of cops (4000) is distributed randomly over the entire grid,
+thus on average every cell also contains 10 cops.
 
+This initalization ensures that, on average, the amount of cops, hostiles, and neutrals is 
+similar in every simulation, while also adding some variation in the individual cells.
 
 \subsubsection{Goals and Actions}
-The cops' goal is to keep casualties as low as possible.
+The goal of the cops is to keep the number of casualties as low as possible.
 To achieve this, every cop must choose one of two actions.
-The cop can shoot a hostile, which has a chance to incapacitate the threat, but at the same time there is a risk of hurting a civilian.
+A cop can shoot a hostile, which has a chance to incapacitate a hostile.
 The second action is to to save a civilian, who is then safe from getting hurt, but this does not incapacitate any hostiles, so the threat persists. 
 Hostiles only have one action: to hurt.
-Depending on the amount of civilians and cops, one group has a larger possibility of getting attacked by the hostiles.
-When, for example, only cops and hostiles reside in a box, the possibility that cops are targeted is 100 percent.
-It depends on the amount of hostiles how many civilians and cops may die.
+Hostiles shoot with a 50/50 chance on either a cop or a civilian. 
+An ``aim'' parameter ensures that every shot has a chance of being missed,
+for our simulation we set the aim at a 25\% chance of actually hitting the desired target,
+and a 75\% chance of hitting nothing.
 
 \begin{table}[!ht]
   \begin{center}
@@ -27,11 +31,13 @@ It depends on the amount of hostiles how many civilians and cops may die.
       \hline
       & & Shoot & Save \\
       \hline
-      \multirow{2}{*}{\# Cops > \# Hostiles} & Many civilians & Ux & Uy \\
-      & Few civilians & Ur & Ut \\
+      \multirow{2}{*}{\# Cops > \# Hostiles} 
+      & {\# Civilians > \# Hostiles} & Ua & Ub \\
+      & {\# Civilians < \# Hostiles} & Uc & Ud \\
       \hline
-      \multirow{2}{*}{\# Cops < \# Hostiles} & Many civilians & Ua & Ub\\
-      & Few civilians & Uc & Ud\\
+      \multirow{2}{*}{\# Cops < \# Hostiles} 
+      & {\# Civilians > \# Hostiles} & Ue & Uf \\
+      & {\# Civilians < \# Hostiles} & Ug & Uh \\
       \hline
     \end{tabular}
     \caption{The different scenarios an agent can encounter and fictional success values for each action.
@@ -39,42 +45,45 @@ It depends on the amount of hostiles how many civilians and cops may die.
     \label{tab:scenarios}
   \end{center}
 \end{table}
-All the cops, during every epoch, can either save or shoot once.
-Based on the overall result in that block, a reward is given to the individual agent.
-This reward can be either positive or negative.
-If many civilians die, for instance, a negative reward will be given, whilst when many hostiles were killed, a positive reward will be given.
-The decision that rewards are given based on group success, as opposed to individual success, is based on the idea that in a crowded situation it is not always clear what the results of individual actions are, but that a general idea of group performance can be perceived.
 
+All the cops make the decision to either save or shoot once in every epoch.
+Based on the overall result in a cell, a reward is given to the individual agent.
+This reward can be either positive or negative.
+If, for instance, many civilians die a negative reward will be given, whilst when many hostiles were incapacitated, a positive reward will be given.
+The decision that rewards are given based on group success, as opposed to individual success, is based on the idea that in a crowded situation it is not always clear what the results of individual actions are, but that a general idea of group performance can be perceived.
 
 The reward is used to update the utility of the particular actions in a specific circumstance.
 These circumstances are shown in \autoref{tab:scenarios}.
-The cops must thus decide, based on the amount of team members, opponents and civilians what action would be most successful, that is, which action has the highest utility.
-Because the agents are not perfect, their judgement of the situation and the decision for an action may be erroneous.
+The different circumstances are based on the proportion of number of cops versus number of hostiles (Cops are in a majority or minority), 
+and the proportion of number of civilians versus number of hostiles. 
+This effectively produces 4 different situations, which combined with the two possible actions give eight different utility values ($U_a..U_h$).
+
+The cops determine their desired action by selecting the action corresponding to the highest utility value given the current situation in their cell.
+Because the agents are not perfect, some noise is introduced in the selection of the highest value.
 Mistakes can thus be made, which increases the realism of the simulation.
 
-
-In the beginning of the simulation, all the utilities are set to equal values, such that no biases may exist.
-Reward of an action can be calculated as following: 
-$$ R(s,a) = \frac{Kills(s) + Saves(s') - Losses(s')}{Kills(s') + Saves(s') + Losses(s')}$$
-in which $R$ is the reward of action $a$ in situation $s$, $Kills$ are the amount of killed hostiles in the new situation $s'$, $Saves$ the amount of saved civilians, and $Losses$ the amount of killed cops and civilians.
-Based on these calculations the reward will lie between -1 (only deaths) and 1 (only kills and saves).
-Because hostiles only have one action, no learning is necessary.
+At the beginning of the simulation, all the utilities are set to equal values, so that no biases exist.
+The reward of an action can be calculated as follows: 
+$$ R(s,a) = \frac{Incapacitations(s) + Saves(s') - Losses(s')}{Incapacitations(s') + Saves(s') + Losses(s')}$$
+in which $R$ is the reward of action $a$ in situation $s$, $Incapacitations$ are the amount of incapacitated hostiles in the new situation $s'$, $Saves$ the amount of saved civilians, and $Losses$ the amount of incapacitated cops and civilians.
+Based on these calculations the reward will lie between -1 (only cops incapacitated) and 1 (only hostiles incapacitated and neutrals saved).
+Because hostiles only have one action, no learning is necessary for them.
 
 
 As \autoref{tab:scenarios} also shows, there is no situation in which the teams are of equal size.
-The cops must decide whether they have the overhand or not, which is done according to the following function:
+The cops must decide whether they are in majority or not, which is done according to the following function:
 $$ \Omega = \frac{n_{cops}}{n_{cops} + n_{hostiles}}*\sigma $$
 in which $\Omega$ is a value between 0 and 1, $n$ is the amount of agents of a group in that cell and $\sigma$ is a random value between 0.
 5 and 1.
 5 to make the decision stochastic, because it is assumed that the cops have no perfect knowledge of their environment.
 If $\Omega$ is higher than $0.
-5$, the cops assume they have the overhand.
+5$, the cops assume they are in majority.
 The same function is used to assess the amount of civilians; The number of cops is then replaced by the amount of civilians.
 
-
-When there is no threat in the area of a cop any more, that is, if there are no more hostiles left, it can move to one of (at most) four neighboring cells in the matrix.
-The cop will move to the cell where he is needed most.
-In other words, the cops will move to where there is the biggest discrepancy between the amount of agents and the sum of hostiles and civilians.
+\subsubsection{Movement}
+When there are no more civilians left in the a cell, no more agents are needed there.
+Cops who are still present on the said cell will then move to a neighboring cell where they are needed most.
+That is, the cops will move (with a noise factor to ensure some random movement) to where there is the biggest discrepancy between the amount of agents and the sum of hostiles and civilians.
 This way, the cops can always search for a place where they can be of use.
 
 \subsubsection{Learning}
@@ -93,6 +102,18 @@ After each epoch, in which one action could be taken by each agent, the utility 
 Following the utilities will be normalized, such that the utility of the two actions in a particular situation will sum up to one.
 In a way, the success of one action will also mean the discounting of another, therefore producing a stronger preference for what is successfull.
 According to the formula, henever there is a reward of zero, no changes in utility will occur
+
+\subsubsection{Pseudocode}
+\begin{lstlisting}
+Initialize the grid
+Do
+  Determine each agent's action 
+  Calculate the overall performance in each cell
+  Adjust each cell's properties (incapacitations, saves, ...)
+  Update each agent's Utility matrix, according to their chosen action and the overall cell success
+  Move agents if necessary
+While there are still civilians present in the grid
+\end{lstlisting}
 
 \subsection{Experimental Design}
 To see the influence of learning rates on behavioral learning, 1000 runs, that is, 1000 civil wars were run.
