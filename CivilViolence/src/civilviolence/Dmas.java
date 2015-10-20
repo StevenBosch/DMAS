@@ -281,7 +281,7 @@ public class Dmas {
 
     }
 
-    public static int playOneRound(Cell[][] grid, HashMap<String, Integer> param, GUIFrame gFrame, double learningRate, List<Agent> agentList) {
+    public static int playOneRound(Cell[][] grid, HashMap<String, Integer> param, double learningRate, List<Agent> agentList) {
         updateCells(grid, param, learningRate);
         // gFrame.updateGridButtons(grid, param);
 
@@ -395,15 +395,15 @@ public class Dmas {
             }
         };
 
-        double learningRate = 0.8; // Default: 0.5
+        double learningRate = 0.01; // Default: 0.5
         List<Agent> agentList = new ArrayList<>();
-//        FileWriter writer = null;
-//        try {
-//            writer = new FileWriter("Output");
+       FileWriter writer = null;
+        try {
+           writer = new FileWriter("Output");
 
-            // Run the simulation a number of times
-//            for (int i = 0; i < 1000; i++) {
-//                System.out.println("Run: " + (i + 1));
+          // Run the simulation a number of times
+           for (int i = 0; i < 1000; i++) {
+           System.out.println("Run: " + (i + 1));
                 // The parameters
                 param.put("EPOCH", 0);
                 param.put("TOTALNRNEUTRAL", 0);
@@ -428,10 +428,10 @@ public class Dmas {
                 param.put("REMAININGNRCOPS", param.get("NRCOPS"));
 
                 // Create a nice frame to show the griddy
-                JFrame frame = new JFrame();
+                //JFrame frame = new JFrame();
 
                 // Import/Edit the layout to show the griddy
-                final GUIFrame gFrame = new GUIFrame(grid, param);
+                //final GUIFrame gFrame = new GUIFrame(grid, param);
 
                 // Add the epoch button
                  JButton btn = new javax.swing.JButton("Epoch");
@@ -440,62 +440,62 @@ public class Dmas {
                 final List<Agent> aList = agentList;
                 btn.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
-                playOneRound(grid2, param, gFrame, lRate, aList);
+                playOneRound(grid2, param, lRate, aList);
                                 updateCells(grid2, param, lRate);
-                                gFrame.updateGridButtons(grid2, param);
-                                gFrame.clickAButton();
+                                //gFrame.updateGridButtons(grid2, param);
+                                //gFrame.clickAButton();
                     }
                 });
-                gFrame.ControlFrame.add(btn);
+                //gFrame.ControlFrame.add(btn);
 
-                JButton btn2 = new javax.swing.JButton("10 Epochs");
-                btn2.addActionListener(new ActionListener() {
-                    public void actionPerformed(ActionEvent e) {
-                        for (int count = 0; count < 10; ++count) {
-                            if (playOneRound(grid2, param, gFrame, lRate, aList) == 0) {
-                                break;
-                            }
-                        }
-
-                    }
-                });
-                gFrame.ControlFrame.add(btn2);
-
-                JButton btn3 = new javax.swing.JButton("All Epochs");
-                btn3.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        while (true) {
-                            if (playOneRound(grid2, param, gFrame, lRate, aList) == 0) {
-                                break;
-                            }
-                        }
-                    }
-                });
-                gFrame.ControlFrame.add(btn3);
+                //JButton btn2 = new javax.swing.JButton("10 Epochs");
+//                btn2.addActionListener(new ActionListener() {
+//                    public void actionPerformed(ActionEvent e) {
+//                        for (int count = 0; count < 10; ++count) {
+//                            if (playOneRound(grid2, param, lRate, aList) == 0) {
+//                                break;
+//                            }
+//                        }
+//
+//                    }
+//                });
+//                gFrame.ControlFrame.add(btn2);
+//
+//                JButton btn3 = new javax.swing.JButton("All Epochs");
+//                btn3.addActionListener(new ActionListener() {
+//                    @Override
+//                    public void actionPerformed(ActionEvent e) {
+//                        while (true) {
+//                            if (playOneRound(grid2, param, gFrame, lRate, aList) == 0) {
+//                                break;
+//                            }
+//                        }
+//                    }
+//                });
+//                gFrame.ControlFrame.add(btn3);
 //                 This while runs the simulation until it's finished and writes the final success to a csv-file
                 // Comment this loop and set i in the outer loop to 1 to run a simulation by hand
-//                int n = 0;
-//                while (playOneRound(grid, param, gFrame, learningRate, agentList) == 1) {
-//                    n++;
-//                }
-//                writeOutput(param, writer, i + 1, agentList);
-//                param.put("KEEPAGENTS", 1); // If commented, then no remembering
-//                 SHOW IT ALL!!! (Uncomment to show the GUI)
-            gFrame.setVisible(true);    
-            gFrame.clickAButton();
-//            }
-//        } catch (IOException | HeadlessException e) {
-//            e.printStackTrace();
-//        }
-//        try {
-//            // Write the output file
-//            writer.flush();
-//            writer.close();
-//        } catch (IOException e) {
-//            System.out.println("Error while flushing/closing fileWriter");
-//            e.printStackTrace();
-//        }
-//        System.out.println("Done");
+                int n = 0;
+                while (playOneRound(grid, param, learningRate, agentList) == 1) {
+                    n++;
+                }
+                writeOutput(param, writer, i + 1, agentList);
+                param.put("KEEPAGENTS", 1); // If commented, then no remembering
+                //SHOW IT ALL!!! (Uncomment to show the GUI)
+            //gFrame.setVisible(true);    
+            //gFrame.clickAButton();
+            }
+        } catch (IOException | HeadlessException e) {
+            e.printStackTrace();
+        }
+        try {
+            // Write the output file
+            writer.flush();
+            writer.close();
+        } catch (IOException e) {
+            System.out.println("Error while flushing/closing fileWriter");
+            e.printStackTrace();
+        }
+        System.out.println("Done");
     }
 }
