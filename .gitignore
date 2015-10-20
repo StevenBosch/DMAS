@@ -37,4 +37,5 @@ hs_err_pid*
 *.mtc
 *.mtc1
 *.out
+*.pdf
 *.synctex.gz
