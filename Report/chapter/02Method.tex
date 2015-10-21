@@ -1,7 +1,7 @@
 \section{Method}
 \subsection{Simulation model}
-Three types of agents will be included in this simulation: cops, hostiles and civilians.
-The goal of the cops is to keep (civil and cop) casualties as low as possible.
+Three types of agents are included in this simulation: cops, hostiles and civilians.
+The main goal of the cops is to keep (civil and cop) casualties as low as possible. Aside from this they also gain success by incapacitating hostiles.
 The hostiles on the other hand have only one goal: to cause as much mayhem and despair as possible by hurting civilians.
 Civilians have no particular functions, but are subject to the actions taken by cops and hostiles.
 The simulation takes place in a 20x20 2D matrix.
@@ -11,115 +11,104 @@ with a mean of 10 and standard deviation of 5 for both the civilians and the hos
 A fixed number of cops (4000) is distributed randomly over the entire grid,
 thus on average every cell also contains 10 cops.
 
-This initalization ensures that, on average, the amount of cops, hostiles, and neutrals is 
+This initialization ensures that, on average, the amount of cops, hostiles, and neutrals is 
 similar in every simulation, while also adding some variation in the individual cells.
 
 \subsubsection{Goals and Actions}
-The goal of the cops is to keep the number of casualties as low as possible.
-To achieve this, every cop must choose one of two actions.
-A cop can shoot a hostile, which has a chance to incapacitate a hostile.
-The second action is to to save a civilian, who is then safe from getting hurt, but this does not incapacitate any hostiles, so the threat persists. 
-Hostiles only have one action: to hurt.
+To achieve his goal, every cop must choose one of two actions every time step (epoch).
+A cop can shoot at a hostile, which has a chance to incapacitate said hostile.
+The second action is to save a civilian, who is then safe from getting hurt.
+Hostiles only have one action: to shoot.
 Hostiles shoot with a 50/50 chance on either a cop or a civilian. 
 An ``aim'' parameter ensures that every shot has a chance of being missed,
 for our simulation we set the aim at a 25\% chance of actually hitting the desired target,
 and a 75\% chance of hitting nothing.
 
-\begin{table}[!ht]
-  \begin{center}
-    \begin{tabular}{l l | l l}
-      \hline
-      & & Shoot & Save \\
-      \hline
-      \multirow{2}{*}{\# Cops > \# Hostiles} 
-      & {\# Civilians > \# Hostiles} & Ua & Ub \\
-      & {\# Civilians < \# Hostiles} & Uc & Ud \\
-      \hline
-      \multirow{2}{*}{\# Cops < \# Hostiles} 
-      & {\# Civilians > \# Hostiles} & Ue & Uf \\
-      & {\# Civilians < \# Hostiles} & Ug & Uh \\
-      \hline
-    \end{tabular}
-    \caption{The different scenarios an agent can encounter and fictional success values for each action.
-    }
-    \label{tab:scenarios}
-  \end{center}
+\begin{table}[H]
+	\begin{center}
+		\begin{tabular}{l l | l l}
+			\hline
+			& & Shoot & Save \\
+			\hline
+			\multirow{2}{*}{\# Cops > \# Hostiles} 
+			& {\# Civilians > \# Hostiles} & Ua & Ub \\
+			& {\# Civilians < \# Hostiles} & Uc & Ud \\
+			\hline
+			\multirow{2}{*}{\# Cops < \# Hostiles} 
+			& {\# Civilians > \# Hostiles} & Ue & Uf \\
+			& {\# Civilians < \# Hostiles} & Ug & Uh \\
+			\hline
+		\end{tabular}
+		\caption{The different scenarios an agent can encounter and fictional success values for each action.
+		}
+		\label{tab:scenarios}
+	\end{center}
 \end{table}
-
-All the cops make the decision to either save or shoot once in every epoch.
-Based on the overall result in a cell, a reward is given to the individual agent.
-This reward can be either positive or negative.
-If, for instance, many civilians die a negative reward will be given, whilst when many hostiles were incapacitated, a positive reward will be given.
-The decision that rewards are given based on group success, as opposed to individual success, is based on the idea that in a crowded situation it is not always clear what the results of individual actions are, but that a general idea of group performance can be perceived.
-
-The reward is used to update the utility of the particular actions in a specific circumstance.
+\noindent Agents choose their actions depending on utility values given specific circumstances.
 These circumstances are shown in \autoref{tab:scenarios}.
 The different circumstances are based on the proportion of number of cops versus number of hostiles (Cops are in a majority or minority), 
 and the proportion of number of civilians versus number of hostiles. 
 This effectively produces 4 different situations, which combined with the two possible actions give eight different utility values ($U_a..U_h$).
-
-The cops determine their desired action by selecting the action corresponding to the highest utility value given the current situation in their cell.
-Because the agents are not perfect, some noise is introduced in the selection of the highest value.
-Mistakes can thus be made, which increases the realism of the simulation.
-
-The reward of an action can be calculated as follows: 
-\begin{equation} \label{eq:reward}
-R(s,a) = \frac{Incapacitations(s) + Saves(s') - Losses(s')}{Incapacitations(s') + Saves(s') + Losses(s')}
+To decide the situation a cop is in, the following function is used:
+\begin{equation} \label{eq:omega}
+\Omega = \frac{n_{cops}}{n_{cops} + n_{hostiles}}*\sigma 
 \end{equation}
-in which $R$ is the reward of action $a$ in situation $s$, $Incapacitations$ are the amount of incapacitated hostiles in the new situation $s'$, $Saves$ the amount of saved civilians, and $Losses$ the amount of incapacitated cops and civilians.
-Based on these calculations the reward will lie between -1 (only cops incapacitated) and 1 (only hostiles incapacitated and neutrals saved).
-This translates to an outcome where only cops are incapacitated as being as bad as possible,
-the situation where civilians are saved and no cops or civilians hurt as being the best possible outcome,
+in which $\Omega$ is a value between 0 and 1, $n$ is the amount of agents of a group in that cell and $\sigma$ is a random value between 0.5 and 1.5 to make the decision stochastic, as it is assumed that the cops have no perfect knowledge of their environment.
+If $\Omega$ is higher than $0.5$, the cops assume they are in majority.
+The same function is used to assess the amount of civilians versus hostiles; the number of cops is then replaced by the number of civilians.
+
+The utility values lie between 0 and 1 and function as probabilities that the cops choose their respective action in the given situation. For example, if the cop finds himself in a situation in which there are more cops then hostiles and less civilians than hostiles, he needs to look at the utilities in the second row of \autoref{tab:scenarios}, for which he produces a random number between 0 and 1 and depending on that number he either chooses the action shoot (Uc) or save (Ud).
+Since the utilities work as probabilities, agents can choose suboptimal behavior given their past experiences. This simulates the realistic aspect of imperfect human behavior. 
+
+Every epoch the total reward per cell is calculated as follows:
+\begin{equation} \label{eq:reward}
+S(c, e) = \frac{Incapacitations + Saves - Losses}{Incapacitations + Saves + Losses}
+\end{equation}
+in which $S$ is the success for cell $c$ in the current epoch $e$. $Incapacitations$ are the amount of incapacitated hostiles in the current epoch, $Saves$ the amount of saved civilians, and $Losses$ the amount of incapacitated cops and civilians.
+Based on these calculations the reward always lies between -1 (only losses) and 1 (only hostiles incapacitated and neutrals saved).
+This translates to an outcome in which only losing cops and civilians is as bad as possible,
+only civilian saves and hostile incapacitations is the best possible outcome,
 and every situation in between is rewarded accordingly.
 This corresponds to real life where the objective of a cop should be to save as much civilians as possible, 
 while also neutralizing any threats.
 
-As \autoref{tab:scenarios} also shows, there is no situation in which the teams are of equal size.
-The cops must decide whether they are in majority or not, which is done according to the following function:
-\begin{equation} \label{eq:omega}
-\Omega = \frac{n_{cops}}{n_{cops} + n_{hostiles}}*\sigma 
-\end{equation}
-in which $\Omega$ is a value between 0 and 1, $n$ is the amount of agents of a group in that cell and $\sigma$ is a random value between 0.
-5 and 1.
-5 to make the decision stochastic, as it is assumed that the cops have no perfect knowledge of their environment.
-If $\Omega$ is higher than $0.
-5$, the cops assume they are in majority.
-The same function is used to assess the amount of civilians versus hostiles; The number of cops is then replaced by the number of civilians.
-
-\subsubsection{Movement}
-When there are no more civilians left in the a cell, no more agents are needed there.
-Cops who are still present on the said cell will then move to a neighboring cell where they are needed most.
-That is, the cops will move (with a noise factor to ensure some random movement) to where there is the biggest discrepancy between the amount of agents and the sum of hostiles and civilians.
-This way, the cops can always search for a place where they can be of use.
-
 \subsubsection{Learning}
+Based on the overall success in a cell after one epoch (so the success achieved by all the agents in the cell), a reward is given to the individual agent.
+This reward can be either positive or negative, depending on the value of the success.
+The decision to make rewards dependent on group success, as opposed to individual success, is based on the idea that in a crowded situation it is not always clear what the results of individual actions are, but that a general idea of group performance can be perceived.
+
 Many reinforcement learning algorithms, such as Q-learning, have implemented the fact that newer experiences have a reduced influence  \citep*{watkins1992q}.
 This is implemented with a learning rate variable $\lambda$.
 High learning rates allow agents to learn more quickly compared to a low learning rate, but this also allows the agents to switch to suboptimal strategies more often.
 This may result in a lower performance compared to the low learning rate.
 Gradually changing the learning rate over time allows the function to converge to the true Q-value.
 
-In the current simulation, a similar approach will be taken for updating our utility.
+In the current simulation, a similar approach is taken for updating our utility.
 However, no calculations that involve Q-values are used,
 as our simulation poses a highly dynamic environment that does not allow for convergence on true Q-values,
 as these values change per epoch and per simulation.
-The learning rate will be updated according to the following function:
+The learning rate is updated according to the following function:
 \begin{equation} \label{eq:lambda}
 \lambda_{new} = \lambda_{old} * \alpha_{\lambda}
 \end{equation}
 in which $\alpha_\lambda$ is the update factor that is applied to the learning rate each epoch.
 
-Subsequently, the utility will be updated according to the following function:
+Subsequently, every epoch the utility of an agent is updated according to the following function:
 \begin{equation} \label{eq:utility}
-U_{x~new} = U_{x~old} + \frac{\lambda * R(s,a)}{1+\lambda}
+U_{x~new} = U_{x~old} + \frac{\lambda * S(c)}{1+\lambda}
 \end{equation}
-in which $U_{x~new}$ is the new utility of the cell's  situation and calculated desired action combination as shown in \autoref{tab:scenarios},
-$\lambda$ is the learning rate as calculated in \autoref{eq:lambda}, and $R(t)$ is the reward resulting from the actions taken in the cell, as calculated with \autoref{eq:reward}.
+in which $U_{x~new}$ is the new utility given the situation the agent was in and action he chose (see \autoref{tab:scenarios} in the previous section), $U_{x~new}$ is the old utility for this situation and action,
+$\lambda$ is the learning rate as calculated in \autoref{eq:lambda}, and $S(c)$ is the success resulting from the actions taken in the cell, as calculated with \autoref{eq:reward}.
 
-Finally, to ensure that for every situation the sum of the actions is equal to one (allowing for easier calculations), 
-the action utilities are normalized per each situation.
-In a way, the success of one action will then also mean the discounting of another, therefore producing a stronger preference for what is successfull.
-According to the formula, henever there is a reward of zero, no changes in utility will occur
+Finally, to ensure that for every situation the sum of the actions is equal to one so that they can be treated as probabilities, 
+the action utilities are normalized.
+According to the formula, whenever the success or learning rate is zero, no changes in utility occur.
+
+\subsubsection{Movement}
+When there are no more civilians left in the a cell, no more cops are needed there (since their primary goal is to save civilians).
+Cops who are still present in said cell then move to a neighbouring cell where they are needed most.
+That is, the cops move (with a noise factor to ensure some random movement) to where there is the biggest discrepancy between the amount of agents and the sum of hostiles and civilians.
+This way, the cops can always search for a place where they can be of use.
 
 \subsubsection{Pseudocode}
 In the following code-block a simplified overview of the actions taken per simulation is shown.
@@ -127,63 +116,48 @@ In the following code-block a simplified overview of the actions taken per simul
 Initialize the grid
 Do
   Determine each agent's action 
-  Calculate the overall performance in each cell
-  Adjust each cell's properties (incapacitations, saves, ...)
-  Update each agent's Utility matrix, according to their chosen action and the overall cell success
-  Move agents(If necessary)
+  Adjust each cell's properties depending on the actonis (incapacitations, saves, numbers of agents)  
+  Calculate the overall success in each cell
+  Update each agent's utility matrix, according to their chosen action and the overall cell success
+  Move agents(if necessary)
 While there are still civilians present in the grid
 \end{lstlisting}
 
 \subsection{Experimental Design}
-To see the influence of learning rates on behavioral learning, 1000 runs, that is, 1000 civil wars were run.
-In the first four simulations the agents receive a learning rate of $0.
-8$, $0.
-5$, $0.
-2$ and $0.
-0$ respectively, which will be fixed over the 100 runs.
-In the final simulation, the agents will start with a high learning rate $\lambda = 0.8$, 
-which will be decreased by using a factor  $\alpha_\lambda = 0.95$ every run.
-In other words, people gain experience on the job and will become less adaptive with every civil war.
+To see the influence of learning rates on behavioral learning, 1000 runs, that is, 1000 civil wars is run.
+In the first four simulations the agents receive a learning rate of $0.8$, $0.5$, $0.2$ and $0.0$ respectively, which is fixed over the 1000 runs.
+In the final simulation, the agents start with a high learning rate $\lambda = 0.8$, 
+which is decreased by using a factor  $\alpha_\lambda = 0.95$ every run.
+In other words, cops gain experience on the job and become less adaptive with every civil war.
 
-
-During the simulations, we will record the global success value of each run and the amount of epochs of these runs.
-Moreover, the global mean utility table of every run will be saved.
+During the simulations, we record the global success value of each run and the amount of epochs of these runs.
+Moreover, the global mean utility table of every run is saved.
 The simulation of one riot is finished when there are no civilians left in the area.
 
-
-One simulation is considered to be more successful if the mean successvalue, which is the same as the reward function, was significantly higher compared to the other simulations.
-If no difference in success is found, we will look at the amount of epochs it takes to finish a simulation, that is, the speed of solving the problem.
-After every run, the utility tables will be remembered and used to initialize agents in the next run.
+A simulation is considered to be more successful if the mean success value is significantly higher compared to the other simulations.
+If no difference in success is found, we look at the amount of epochs it takes to finish a simulation, that is, the speed of `solving the problem'.
+After every run, the utility tables are remembered and used to initialize agents in the next run.
 This allows the agents to learn over the different civil wars.
 
-
 \subsubsection{No bias}
-In the first simulations, the focus lied on which behaviours would be most useful.
-Therefore, the all the agents were initialized with the default utility values, which is 0.
-5 for both actions in all situations.
-It is expected that the tendency to save will be higher when there are many civilians and that the tendency to shoot is higher when many hostiles are present.
+In the first simulations, the focus lies on which behaviors are most useful.
+Therefore, all the agents are initialized with the default utility values, which is 0.5 for both actions in all situations.
+It is expected that the tendency to save is higher when there are many civilians and that the tendency to shoot is higher when many hostiles are present.
 Learning this behavior should over time increase performance, which should show either in success or in speed.
 
-
-The cops with a lower learning rate should adjust there behavior less quickly compared to the cops with a higher learning rate.
-Over time, the cops with a lower learning rate (and the cops with decreasing learning rate) should show more stable performance.
-However, it will take longer to adapt to the world and learn what strategy is best.
+The cops with a lower learning rate should adjust their behavior less quickly compared to the cops with a higher learning rate, but over time, they (and the cops with decreasing learning rate) should show a more stable performance.
 
 \subsubsection{Initial biases}
 Another point of interest is how behavior evolves over time, when bias does exist.
-Can old dogs learn new tricks, and how quickly could that happen.
-To investigate this, a preference of either shooting or saving was given by setting the utility to 0.
-9 for one action, and 0.
-1 for the other.
-When a bias for shooting exists, there will be no more hostiles to shoot after a while.
-It is expected that after some iterations, the cops learn that saving is more useful.
-Similarly, when cops only save, it is expected that shooting will receive a higher utility over time.
-For the cops having a lower learning rate this will most likely happen more gradually compared to the cops having a higher learning rate.
-
+Can old dogs learn new tricks, and how quickly could that happen?
+To investigate this, a preference of either shooting or saving is given by setting the utility to 0.9 for one action, and 0.1 for the other.
+When a bias for shooting exists, hostiles are incapacitated relatively quickly, but at the cost of civilians being lost.
+Therefore it is expected that after some iterations, the cops learn that hardly any saving does not yield a very high success.
+Similarly, when cops only save, it is expected that shooting receives a higher utility over time.
+For the cops having a lower learning rate this most likely happens more gradually compared to the cops having a higher learning rate.
 
 The same results are hypothesised for the biased simulations, as were for the no-bias simulation.
-That is, over time the lower learning rate will show more stable performance and the optimal level will take longer to achieve.
+That is, over time the lower learning rate probably shows more stable performance and the optimal level takes longer to achieve.
 However, a difference may show when looking at performance.
 If, for example, the cops are initialized with a bias for shooting, but the best strategy is to save everyone, then the quick learning may ensure an overall better performance.
 However, if the cops are initialized with shooting, and shooting is the best strategy, then lower learning rate cops will perform best.
-
