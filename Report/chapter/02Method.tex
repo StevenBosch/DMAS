@@ -14,9 +14,10 @@ This initialization ensures that, on average, the amount of cops, hostiles, and 
 similar in every simulation, while also adding some variation in the individual cells.
 
 \subsubsection{Goals and Actions}
-To achieve their goal, each cop must choose one of two actions every time step (epoch).
-A cop can try to incapacitate said hostile to remove him from further battling.
-The second action is to save a civilian, who is then safe from getting hurt.
+To achieve their goal, each cop must choose one of two actions at every time step (epoch).
+A cop can try to incapacitate (Shoot) a hostile to remove him from the simulation,
+thereby preventing any future damage from the said hostile.
+The other possible action is to save a civilian, also by removing him from the simulation, who is then safe from getting hurt.
 Hostiles only have one action: to shoot.
 Hostiles shoot with a 50/50 chance on either a cop or a civilian. 
 An ``aim'' parameter ensures that every shot has a chance of being missed,
@@ -30,12 +31,12 @@ and a 75\% chance of hitting nothing.
 			& & Shoot & Save \\
 			\hline
 			\multirow{2}{*}{\# Cops > \# Hostiles} 
-			& {\# Civilians > \# Hostiles} & Ua & Ub \\
-			& {\# Civilians < \# Hostiles} & Uc & Ud \\
+			& {\# Civilians > \# Hostiles} & $U_a$ & $U_b$ \\
+			& {\# Civilians < \# Hostiles} & $U_c$ & $U_d$ \\
 			\hline
 			\multirow{2}{*}{\# Cops < \# Hostiles} 
-			& {\# Civilians > \# Hostiles} & Ue & Uf \\
-			& {\# Civilians < \# Hostiles} & Ug & Uh \\
+			& {\# Civilians > \# Hostiles} & $U_e$ & $U_f$ \\
+			& {\# Civilians < \# Hostiles} & $U_g$ & $U_h$ \\
 			\hline
 		\end{tabular}
 		\caption{The different scenarios an agent can encounter and fictional success values for each action.
@@ -47,7 +48,7 @@ and a 75\% chance of hitting nothing.
 These circumstances are shown in \autoref{tab:scenarios}.
 The different circumstances are based on the proportion of number of cops versus number of hostiles (Cops are in a majority or minority), 
 and the proportion of number of civilians versus number of hostiles. 
-This effectively produces 4 different situations, which combined with the two possible actions give eight different utility values ($U_a..U_h$).
+This effectively produces four different situations, which combined with the two possible actions give eight different utility values ($U_a..U_h$).
 To decide the situation a cop is in, the following function is used:
 \begin{equation} \label{eq:omega}
 \Omega = \frac{n_{cops}}{n_{cops} + n_{hostiles}}*\sigma 
@@ -56,7 +57,11 @@ in which $\Omega$ is a value between 0 and 1, $n$ is the amount of agents of a g
 If $\Omega$ is higher than $0.5$, the cops assume they are in majority.
 The same function is used to assess the amount of civilians versus hostiles; the number of cops is then replaced by the number of civilians.
 
-The utility values lie between 0 and 1 and function as probabilities that the cops choose their respective action in the given situation. For example, if the cop finds himself in a situation in which there are more cops then hostiles and less civilians than hostiles, he needs to look at the utilities in the second row of \autoref{tab:scenarios}, for which he produces a random number between 0 and 1 and depending on that number he either chooses the action shoot (Uc) or save (Ud).
+The utility values lie between 0 and 1 and function as probabilities that the cops choose that action in the given situation. For example, if the cop finds himself in a situation in which there are more cops then hostiles and less civilians than hostiles, he needs to look at the utilities in the second row of \autoref{tab:scenarios}. 
+As the two probabilities sum to 1 ($U_d = 1 - U_c$), 
+an action is selected by generation of a random number between 0 and 1 and selecting the action in whose range the random number falls.
+Effectively, if the number is smaller than or equal to $U_c$, the desired action of the agent will be Shoot.
+If the number is larger than $U_c$, the agent will desire the action Save.
 Since the utilities work as probabilities, agents can choose suboptimal behavior given their past experiences. This simulates the realistic aspect of imperfect human behavior. 
 
 Every epoch the total reward per cell is calculated as follows:
@@ -85,7 +90,7 @@ Gradually changing the learning rate over time allows the function to converge t
 In the current simulation, a similar approach is taken for updating our utility.
 However, no calculations that involve Q-values are used,
 as our simulation poses a highly dynamic environment that does not allow for convergence on true Q-values,
-as these values change per epoch and per simulation.
+as these values vary per epoch and per simulation.
 The learning rate is updated according to the following function:
 \begin{equation} \label{eq:lambda}
 \lambda_{new} = \lambda_{old} * \alpha_{\lambda}
