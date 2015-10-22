@@ -1,25 +1,17 @@
-/* TODO: Simulations
- standard learning 0.8 0.5 0.2 and 0.8 decl. 
- Initial stance: Shooters/Neutral/Savers - Learning/No learning
- Almost only shooting no learning
- Almost only saving no learning
- Same but with learning ( )
- Punishment for shooting? Future research
-
- Print per step (or run):
- Average decision table values
- Print per run:
- Succes
-
-
-TODO: TAKE INTO ACCOUNT THAT CIVILIANS ARE SAVED WHEN HOSTILES ARE DEAD
- */
 package civilviolence;
 
 /**
  *
- * @author maleco
+ * @author Maikel
+ * 
+ * NOTE!
+ * All the GUI stuff is commented out so that our tests of multiple simulations
+ * were performed in 1-2 seconds each instead of 1-2 minutes...
+ * 
+ * To re-enable to GUI, uncomment all the GUI-stuff comments 
+ * (gframe, buttons and such)and remove the game loop in main.
  */
+
 import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -285,10 +277,6 @@ public class Dmas {
         updateCells(grid, param, learningRate);
         // gFrame.updateGridButtons(grid, param);
 
-//        if (param.get("REMAININGNRHOSTILES") == 0) {
-//            param.put("SAVEDNRNEUTRALS", param.get("SAVEDNRNEUTRALS")+param.get("REMAININGNRNEUTRALS"));
-//            param.put("REMAININGNRNEUTRALS",0);
-//        }
         if (param.get("REMAININGNRCOPS") == 0) {
             param.put("REMAININGNRNEUTRALS", 0);
         }
@@ -304,23 +292,6 @@ public class Dmas {
         // Click a button to update the infotext field
         // gFrame.clickAButton();
         double mean = 0;
-
-        // Printstuff
-//        for (int i = 0; i < 2; i++) {
-//            for (int j = 0; j < 4; j++) {
-//                //System.out.printf("nummer: " + i + ","+ j + "\n");
-//                for (Agent ag : agentList) {
-//                    //System.out.printf("%.2f", ag.getDecTable()[i][j]);
-//                    //System.out.printf(" ");
-//                    mean += ag.getDecTable()[i][j];
-//                }
-//                System.out.printf("%.2f", mean / agentList.size());
-//                System.out.printf(" ");
-//                mean = 0;
-//                //System.out.println("\n");
-//            }
-//            System.out.println("\n");
-//        }
 
         if (param.get("REMAININGNRNEUTRALS") == 0) {
             return 0;
@@ -346,27 +317,20 @@ public class Dmas {
             writer.append(String.format("%d", param.get("EPOCH")));
             writer.append(',');
             writer.append(String.format("%.3g", (double) param.get("LASTSUCCESS1") / (double) param.get("LASTSUCCESS2")));
-            // Printstuff
+
             double mean = 0;
             for (int i = 0; i < 2; i++) {
                 for (int j = 0; j < 4; j++) {
-                    //System.out.printf("nummer: " + i + ","+ j + "\n");
                     for (Agent ag : agentList) {
-                    //System.out.printf("%.2f", ag.getDecTable()[i][j]);
-                        //System.out.printf(" ");
                         mean += ag.getDecTable()[i][j];
                     }
-                    // System.out.printf("%.2f", mean / agentList.size());
-                    // System.out.printf(" ");
                     writer.append(',');
                     writer.append(String.format("%.2f", mean / agentList.size()));
                     mean = 0;
-                    //System.out.println("\n");
                 }
-                // System.out.println("\n");
             }
             writer.append("\n");
-            //writer.append('\n');
+
         } catch (Exception e) {
             e.printStackTrace();
         }
