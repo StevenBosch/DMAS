@@ -2,7 +2,7 @@
 \subsection{Simulation model}
 Three types of agents are included in this simulation: cops, hostiles and civilians.
 The main goal of the cops is to keep (civil and cop) casualties as low as possible. Aside from this they also gain success by incapacitating hostiles.
-The hostiles on the other hand have only one goal: to cause as much mayhem and despair as possible by hurting civilians.
+The hostiles on the other hand have only one goal: to cause as much mayhem and despair as possible by hurting civilians and cops.
 Civilians have no particular functions, but are subject to the actions taken by cops and hostiles.
 The simulation takes place in a 20x20 2D matrix.
 In every cell reside a number of civilians, hostiles, and cops.
@@ -10,13 +10,12 @@ The number of civilians and hostiles is selected randomly from a normal distribu
 with a mean of 10 and standard deviation of 5 for both the civilians and the hostiles.
 A fixed number of cops (4000) is distributed randomly over the entire grid,
 thus on average every cell also contains 10 cops.
-
 This initialization ensures that, on average, the amount of cops, hostiles, and neutrals is 
 similar in every simulation, while also adding some variation in the individual cells.
 
 \subsubsection{Goals and Actions}
-To achieve his goal, every cop must choose one of two actions every time step (epoch).
-A cop can shoot at a hostile, which has a chance to incapacitate said hostile.
+To achieve their goal, each cop must choose one of two actions every time step (epoch).
+A cop can try to incapacitate said hostile to remove him from further battling.
 The second action is to save a civilian, who is then safe from getting hurt.
 Hostiles only have one action: to shoot.
 Hostiles shoot with a 50/50 chance on either a cop or a civilian. 
@@ -81,7 +80,7 @@ Many reinforcement learning algorithms, such as Q-learning, have implemented the
 This is implemented with a learning rate variable $\lambda$.
 High learning rates allow agents to learn more quickly compared to a low learning rate, but this also allows the agents to switch to suboptimal strategies more often.
 This may result in a lower performance compared to the low learning rate.
-Gradually changing the learning rate over time allows the function to converge to the true Q-value.
+Gradually changing the learning rate over time allows the function to converge to what is supposed to be an optimal Q-value.
 
 In the current simulation, a similar approach is taken for updating our utility.
 However, no calculations that involve Q-values are used,
@@ -116,7 +115,7 @@ In the following code-block a simplified overview of the actions taken per simul
 Initialize the grid
 Do
   Determine each agent's action 
-  Adjust each cell's properties depending on the actonis (incapacitations, saves, numbers of agents)  
+  Adjust each cell's properties depending on the actions (incapacitations, saves, numbers of agents)  
   Calculate the overall success in each cell
   Update each agent's utility matrix, according to their chosen action and the overall cell success
   Move agents(if necessary)
@@ -124,7 +123,7 @@ While there are still civilians present in the grid
 \end{lstlisting}
 
 \subsection{Experimental Design}
-To see the influence of learning rates on behavioral learning, 1000 runs, that is, 1000 civil wars is run.
+To see the influence of learning rates on behavioral learning, 1000 runs, that is, 1000 civil wars are run.
 In the first four simulations the agents receive a learning rate of $0.8$, $0.5$, $0.2$ and $0.0$ respectively, which is fixed over the 1000 runs.
 In the final simulation, the agents start with a high learning rate $\lambda = 0.8$, 
 which is decreased by using a factor  $\alpha_\lambda = 0.95$ every run.
